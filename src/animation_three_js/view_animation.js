@@ -14,7 +14,7 @@ export const ViewAnimation= (props) => {
   return (
   <div style={{backgroundImage: `url(${background})`}} className="h-screen">
     <Canvas camera={{fov:70, position: [0, 15, 55]}}>
-      <Suspense fallback={<Loader_ />}>
+      <Suspense fallback={null}>
         <AmbientLight />
         <ModelViewAnimation props= {props}/>
         <OrbitControls />

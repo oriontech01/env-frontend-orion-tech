@@ -86,31 +86,25 @@ export default function ViewObjectsModel() {
 
   useEffect(() => {
 
-      handleGetCookie();
-      if (access_token === null){
-          navigate('/admin-login', {relative: true});
-      }
 
-      else{
 
-          const req= axios.request(
-              {
-                  method: 'get',
-                  // maxBodyLength: Infinity,
-                  url: api_root + 'home-models/get-a-model/'+dynamicParam,
-                  headers: { 
-                    'Content-Type': 'application/json'
-                  }
-                  
+      const req= axios.request(
+          {
+              method: 'get',
+              // maxBodyLength: Infinity,
+              url: api_root + 'home-models/get-a-model/'+dynamicParam,
+              headers: { 
+                'Content-Type': 'application/json'
               }
-          )
-          .then(res => model_json_data_(res))
-          .catch((error) => {
-              is_expired_(error);
-              console.log(error);
-          });
+              
+          }
+      )
+      .then(res => model_json_data_(res))
+      .catch((error) => {
+          is_expired_(error);
+          console.log(error);
+      });
 
-      }
   }, []); //the em
 
 
