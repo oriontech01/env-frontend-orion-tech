@@ -178,6 +178,7 @@ export default function AdminAddModel() {
             .then(res => loginPostRes(res))
             .catch((error) => {
                 console.log(error);
+                setshowProcessing(false);
             });
         }
         // else{
