@@ -12,9 +12,9 @@ import { has_model_loaded, keep_for_edit_url, keep_for_view_url, keep_objects_da
 import AddObjectsModel from "../../pages/add_objects_model";
 import { Html, Text, useFBX } from "@react-three/drei";
 
-import obj_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).obj";
-import stl_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE) STL.stl";
-import dae_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).dae";
+// import obj_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).obj";
+// import stl_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE) STL.stl";
+// import dae_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).dae";
 
 
 
