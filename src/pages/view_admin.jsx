@@ -92,6 +92,8 @@ export default function ViewAdmin() {
 
 
 
+  const [is_admin_delete, set_is_admin_delete]= useState(false);
+  
   useEffect(() => {
 
     if (keep_json_data.length === 0){
@@ -131,7 +133,7 @@ export default function ViewAdmin() {
         set_model_json_data(admin_lists);
       }
     }
-  }, [access_token]); 
+  }, [access_token, is_admin_delete]); 
 
 
 
@@ -143,10 +145,14 @@ export default function ViewAdmin() {
     document.getElementById('search_input').focus();
   }
 
+
+  const [showProcessing, setshowProcessing]= useState(false);
   const [continue_delete, setContinueDelete]= useState(false);
   const continue_delete_= () => {
       cancel_delete_();
       setContinueDelete(!continue_delete);
+
+      setshowProcessing(true);
 
       handleGetCookie();
       if (access_token === null){
@@ -167,14 +173,17 @@ export default function ViewAdmin() {
               }
           )
           .then((response) => {
+              keep_json_data.length= 0;
+              set_is_admin_delete(!is_admin_delete);
               setContinueDelete(false);
           })
           .catch((error) => {
               console.log(error);
               setContinueDelete(false);
           });
-
       }
+
+      setshowProcessing(false);
   }
 
   const navigate= useNavigate();
@@ -275,6 +284,26 @@ export default function ViewAdmin() {
                   }
 
               </div>
+
+
+
+
+              {showProcessing 
+                ? 
+                  // <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
+                  //   <svg className="animate-spin h-10 w-10 border-[6px] border-[#714E2C] border-t-[#714E2C] rounded-full mb-4" viewBox="0 0 24 24">
+                  //   </svg>
+                  //   Please wait...
+                  // </div>
+
+                  <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
+                    <svg className="animate-spin h-10 w-10 bg-blue-500 mb-4" viewBox="0 0 24 24">
+                    </svg>
+                    Deleting admin...
+                  </div> 
+                  
+                  
+                : <div> </div>}
 
 
 

@@ -3,29 +3,88 @@ import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import {ColladaLoader} from 'three/examples/jsm/loaders/ColladaLoader';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
+import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
+import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
+
 import { has_model_loaded, keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
 import AddObjectsModel from "../../pages/add_objects_model";
-import { Html, Text } from "@react-three/drei";
+import { Html, Text, useFBX } from "@react-three/drei";
+
+import obj_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).obj";
+import stl_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE) STL.stl";
+import dae_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).dae";
+
+
+
+function DetectModel (extension, get_model_url) {
+  const loader_lists= [GLTFLoader, FBXLoader, STLLoader, OBJLoader, ColladaLoader];
+// useLoader_lists= [useLoader, useFBX];
+
+  let save_loader;
+
+  if (extension === "gltf" || extension === "glb"){ save_loader= loader_lists[0]; }
+  // else if (extension === "fbx"){return useFBX(`${get_model_url}`);}
+  else if (extension === "fbx"){save_loader= loader_lists[1];}
+  else if (extension === "stl"){save_loader= loader_lists[2];}
+  else if (extension === "obj"){save_loader= loader_lists[3];}
+  else if (extension === "dae"){save_loader= loader_lists[4];}
+  // else if (extension === "ifc"){model_load= useLoader(STLLoader, `${get_model_url}`);}
+  // else{
+  //   return alert("We could not recognize the model file extension, you are trying to view.")
+  // }
+
+  return useLoader(save_loader, `${get_model_url}`);
+}
 
 
 export const ModelViewAnimation = (props) => {
     const get_model_url= keep_for_view_url[0];
+    // GETTING THE FILE EXTENSION
+    // Extract the file name from the URL
+    const fileName = get_model_url.substring(get_model_url.lastIndexOf('/') + 1);
+    // Split the file name into its base name and extension
+    // const [baseName, extension] = fileName.split('.');
+    const file_path = fileName.split('.');
+    const extension= file_path[file_path.length -1];
+
+    console.log(get_model_url);
+    console.log(extension);
+    const model_load= DetectModel(extension, get_model_url);
+
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const show_obj_data= props.props.show_obj_;
     const for_object_view_data= props.props.for_object_view;
-    const for_model_file_data= props.props.for_model_file[0];
-    // console.log(for_model_file_data);
+
 
     const room_ref= useRef();
     const [intersected, set_intersected]= useState(false);
-    const gltf_model= useLoader(GLTFLoader, `${get_model_url}`);
+
+
+
+    // const modelUrl= new URL("stl/Dragon 2.5_stl.stl", import.meta.url);
+    // const model_load= useLoader(GLTFLoader, `${get_model_url}`);
+    // const model_load= useLoader(ColladaLoader, dae_model);
+    // const model_load= useLoader(OBJLoader, "/InteriorTest.obj")
+    // const model_load= useFBX("/Room #1.fbx")
+    // model_load= useLoader(FBXLoader, "/6884/source/6884.fbx");
+ 
+    // const model_load= useLoader(ColladaLoader, "/House/House.dae");
+    // const model_load= useLoader(ColladaLoader, "/simple_house/house.dae");
+    // const model_load= useLoader(STLLoader, stl_model);
+
+   
+
+
+
 
     // if (has_model_loaded.length === 0){
-    //  gltf_model= useLoader(GLTFLoader, `${for_model_file_data}`);
+    //  model_load= useLoader(GLTFLoader, `${for_model_file_data}`);
     // }
-    // else{gltf_model= has_model_loaded[0]}
+    // else{model_load= has_model_loaded[0]}
 
-    let model_children= new THREE.Object3D();
+    let model_children= new THREE.Group();
   
     const {camera, size}= useThree();
     const rayCaster= new THREE.Raycaster();
@@ -34,17 +93,20 @@ export const ModelViewAnimation = (props) => {
     var intersected_points;
 
     let [current_text, set_current_text]= useState("");
+
+    let single_click= false;
   
   
     
   
-    gltf_model.scene.traverse((child) => {
-      if (child.isGroup){
-        model_children= child.children[0].children[0].children;
-      }
+    // model_load.scene.traverse((child) => {
+    //   if (child.isGroup){
 
-      // has_model_loaded.push[gltf_model];
-    });
+    //     model_children= child.children[0].children[0].children;
+    //   }
+
+    //   // has_model_loaded.push[model_load];
+    // });
   
   
     const {rotate_model} = useControls({
@@ -61,7 +123,7 @@ export const ModelViewAnimation = (props) => {
         if (room_ref.current){
           if(rotate_model) {
             room_ref.current.rotation.y -= delta *0.2
-            console.log(model_children);
+            // console.log(model_children);
           } 
     
         }   
@@ -75,6 +137,8 @@ export const ModelViewAnimation = (props) => {
     var intersected_points;
     var lastObject;
     let last_intersects;
+
+    let is_intersects= false;
 
     const keep_small_object_ref= [];
     let ref_object= "";
@@ -95,46 +159,56 @@ export const ModelViewAnimation = (props) => {
         rayCaster.setFromCamera(current_mouse, camera);
         intersects= rayCaster.intersectObjects(model_children);
 
-        
-        if (intersects.length > 0){ 
-          const intersected_object= intersects[0].object;
-          intersected_points= intersects[0].point;
-          text_ref.current.position.x= intersected_points.x;
-          text_ref.current.position.y= intersected_points.y;
+        if (!single_click){
+          if (intersects.length > 0){ 
+            is_intersects= true;
+
+            const intersected_object= intersects[0].object;
+            intersected_points= intersects[0].point;
+            text_ref.current.position.x= intersected_points.x;
+            text_ref.current.position.y= intersected_points.y;
 
 
-          const ref_small2= for_object_view_data[(intersected_object.name)];
+            const ref_small2= for_object_view_data[(intersected_object.name)];
 
-          if (!ref_small2){
-            
-            // if (keep_objects_reference.length === keep_small_object_ref.length){
-            //   notify_double_(false);
-            // }
+            if (!ref_small2){
+              
+              // if (keep_objects_reference.length === keep_small_object_ref.length){
+              //   notify_double_(false);
+              // }
 
-            set_current_text("")
-            if (current_text == ""){
+              set_current_text("")
+              if (current_text == ""){
 
+              }
+
+              if (lastObject){
+                lastObject.material.color.set(new THREE.Color(1, 1, 1));
+              }
+      
+              // keep_small_object_ref.splice(ref_small, 1);
+              intersected_object.material.color.set(new THREE.Color(4, 4, 4));
+              lastObject= intersected_object;
+
+              show_obj_data(null);
             }
+            else{
 
-            if (lastObject){
-              lastObject.material.color.set(new THREE.Color(1, 1, 1));
+              try{
+                const get_text_data= for_object_view_data[intersected_object.name].comment_box;
+                set_current_text(get_text_data);
+              }
+              catch{}
+
+              show_obj_data(intersected_object.name);
             }
-    
-            // keep_small_object_ref.splice(ref_small, 1);
-            intersected_object.material.color.set(new THREE.Color(4, 4, 4));
-            lastObject= intersected_object;
+          
           }
+
           else{
-
-            try{
-              const get_text_data= for_object_view_data[intersected_object.name].comment_box;
-              set_current_text(get_text_data);
-            }
-            catch{}
-
-            show_obj_data(intersected_object.name);
+            is_intersects= false;
+            
           }
-         
         }
       }
     }
@@ -142,15 +216,26 @@ export const ModelViewAnimation = (props) => {
 
 
 
+
+    const handle_single_click = (event) => {
+      if (is_intersects){
+        single_click = !single_click;
+      }
+    }
   
   
   
   
     useEffect(() => {
+      console.log("+++++++++up here+++++++++++++")
+      console.log(model_load);
+      console.log("+++++++++down here+++++++++++++")
       window.addEventListener('mousemove', handle_mouse);
+      window.addEventListener('click', handle_single_click);
   
       return () => {
         window.removeEventListener('mousemove', handle_mouse);
+        window.addEventListener('click', handle_single_click);
       };
     }, []);
   
@@ -163,7 +248,7 @@ export const ModelViewAnimation = (props) => {
       <group >
         <primitive 
           object={
-            gltf_model.scene
+            model_load.scene ? model_load.scene : model_load
           } 
           scale={1} 
           position= {[0, -5, 0]}

@@ -3,13 +3,55 @@ import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import {ColladaLoader} from 'three/examples/jsm/loaders/ColladaLoader';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
+import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
+import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
+
 import { keep_for_edit_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
 import AddObjectsModel from "../../pages/add_objects_model";
 import { Html, Text } from "@react-three/drei";
 
 
+
+
+function DetectModel (extension, get_model_url) {
+  const loader_lists= [GLTFLoader, FBXLoader, STLLoader, OBJLoader, ColladaLoader];
+// useLoader_lists= [useLoader, useFBX];
+
+  let save_loader;
+
+  if (extension === "gltf" || extension === "glb"){ save_loader= loader_lists[0]; }
+  // else if (extension === "fbx"){return useFBX(`${get_model_url}`);}
+  else if (extension === "fbx"){save_loader= loader_lists[1];}
+  else if (extension === "stl"){save_loader= loader_lists[2];}
+  else if (extension === "obj"){save_loader= loader_lists[3];}
+  else if (extension === "dae"){save_loader= loader_lists[4];}
+  // else if (extension === "ifc"){model_load= useLoader(STLLoader, `${get_model_url}`);}
+  // else{
+  //   return alert("We could not recognize the model file extension, you are trying to view.")
+  // }
+
+  return useLoader(save_loader, `${get_model_url}`);
+}
+
+
 export const ModelAnimation = (props) => {
     const get_model_url= keep_for_edit_url[0];
+
+    // GETTING THE FILE EXTENSION
+    // Extract the file name from the URL
+    const fileName = get_model_url.substring(get_model_url.lastIndexOf('/') + 1);
+    // Split the file name into its base name and extension
+    // const [baseName, extension] = fileName.split('.');
+    const file_path = fileName.split('.');
+    const extension= file_path[file_path.length -1];
+
+    // console.log(get_model_url);
+    // console.log(extension);
+    const model_load= DetectModel(extension, get_model_url);
+
+
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const notify_double_= props.props.notify_double_;
     const show_obj_data= props.props.show_obj_;
@@ -17,7 +59,9 @@ export const ModelAnimation = (props) => {
 
     const room_ref= useRef();
     const [intersected, set_intersected]= useState(false);
-    const gltf_model= useLoader(GLTFLoader, `${get_model_url}`);
+
+
+
     let model_children= new THREE.Object3D();
   
     const {camera, size}= useThree();
@@ -31,11 +75,11 @@ export const ModelAnimation = (props) => {
   
     
   
-    gltf_model.scene.traverse((child) => {
-      if (child.isGroup){
-        model_children= child.children[0].children[0].children;
-      }
-    });
+    // model_load.scene.traverse((child) => {
+    //   if (child.isGroup){
+    //     model_children= child.children[0].children[0].children;
+    //   }
+    // });
   
   
     const {rotate_model} = useControls({
@@ -223,7 +267,7 @@ export const ModelAnimation = (props) => {
       <group >
         <primitive 
           object={
-            gltf_model.scene
+            model_load.scene
           } 
           scale={1} 
           position= {[0, -5, 0]}

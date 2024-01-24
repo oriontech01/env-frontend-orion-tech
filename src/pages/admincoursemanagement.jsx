@@ -78,6 +78,7 @@ export default function AdminCourseManagement() {
 
 
 
+    const [is_model_delete, set_is_model_delete]= useState(false);
     const [model_json_data, set_model_json_data]= useState([]);
     const model_json_data_= (res) => {
         keep_json_data.length= 0;
@@ -102,7 +103,7 @@ export default function AdminCourseManagement() {
             }).then(res => model_json_data_(res))
             .catch(e => is_expired_(e));
         }
-    }, []); //the empty array is very important at the back, which means we are saying the effect does not depends on anything so as to prevent it from autorefiring by itself after first run of the page loading, even if there is any varibale or thing that changes in it
+    }, [is_model_delete]); //the empty array is very important at the back, which means we are saying the effect does not depends on anything so as to prevent it from autorefiring by itself after first run of the page loading, even if there is any varibale or thing that changes in it
 
 
 
@@ -117,7 +118,7 @@ export default function AdminCourseManagement() {
 
     const [continue_delete, setContinueDelete]= useState(false);
     const continue_delete_= () => {
-        console.log(selected_models);
+        // console.log(selected_models);
         // setContinueDelete(!continue_delete);
 
 
@@ -147,6 +148,8 @@ export default function AdminCourseManagement() {
             .then((response) => {
                 setContinueDelete(false);
                 cancel_delete_();
+                
+                set_is_model_delete(!is_model_delete);
             })
             .catch((error) => {
                 console.log(error);

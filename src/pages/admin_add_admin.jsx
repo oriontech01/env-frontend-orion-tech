@@ -7,7 +7,8 @@ import success_mark from "../assets1/images/success_mark.png";
 import { useState } from "react";
 import SessionExpired from "../components1/session_expired";
 import axios from "axios";
-import { api_root } from "../api/api_variables";
+import { api_root, keep_json_data } from "../api/api_variables";
+import { handleDeleteCookie } from "../api/delete_cookie";
 
 
 
@@ -38,6 +39,10 @@ export default function AdminAddadmin() {
         navigate('/', {relative: true});
     }
 
+    const handleLogout= () => {
+        handleDeleteCookie();
+        navigate('/admin-login', {relative: true});
+    }
 
 
 
@@ -61,6 +66,7 @@ export default function AdminAddadmin() {
 
     const [password1, set_password1]= useState('');
     const [password2, set_password2]= useState('');
+    let password_validator= "";
     const password1_= (e) => {
         if (password1.trim().length === 0){
             set_validation_text("");
@@ -72,16 +78,16 @@ export default function AdminAddadmin() {
 
     const password2_= (e) => {
         set_password2(e.target.value);
-        if (password2.trim().length === 0){
+        password_validator += e.target.value;
+        const p_trim= password_validator.trim();
+        if (p_trim.length === 0){
             set_validation_text("");
         }
 
-        else{
-          if (password1.trim() !== password2.trim()){
-            return set_validation_text("Password 1 and 2 do not match");
-          }
-          else{set_validation_text("")}
+        if (password1.trim() !== p_trim){
+          return set_validation_text("Password 1 and 2 do not match");
         }
+        else{set_validation_text("")}
     }
 
 
@@ -104,7 +110,6 @@ export default function AdminAddadmin() {
     const handleGetCookie = () => {
         // Retrieve the value of the "exampleCookie" cookie
         access_token = getCookie('access_token');
-        console.log(access_token);
         return
     };
 
@@ -131,7 +136,9 @@ export default function AdminAddadmin() {
           )
           .then((response) => {
               setshowProcessing(false);
-              console.log(JSON.stringify(response.data));
+              keep_json_data.length= 0;
+              alert("Admin added successfully!")
+              // console.log(JSON.stringify(response.data));
           })
           .catch((error) => {
               console.log(error);
@@ -180,7 +187,7 @@ export default function AdminAddadmin() {
                       <h1 className="text-center -ml-[2.0rem]">Report</h1>
                   </div>
 
-                  <h1 className="-ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
+                  <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
               </div>
               
               <div className="h-screen px-40 col-span-3 flex flex-col  items-center pt-20">
@@ -226,7 +233,7 @@ export default function AdminAddadmin() {
                 <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
                   <svg className="animate-spin h-10 w-10 bg-blue-500 mb-4" viewBox="0 0 24 24">
                   </svg>
-                  Uploading data
+                  Creating admin...
                 </div> 
                 
                 

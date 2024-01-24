@@ -122,24 +122,24 @@ export default function AdminAddModel() {
     const [showProcessing, setshowProcessing]= useState(false);
     useEffect(() => {
 
-        function capitalizeEachWord(sentence) {
-            // Split the sentence into words
-            const words = sentence.split(' ');
+        // function capitalizeEachWord(sentence) {
+        //     // Split the sentence into words
+        //     const words = sentence.split(' ');
           
-            // Capitalize the first letter of each word
-            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        //     // Capitalize the first letter of each word
+        //     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
           
-            // Join the words back into a sentence
-            const capitalizedSentence = capitalizedWords.join(' ');
+        //     // Join the words back into a sentence
+        //     const capitalizedSentence = capitalizedWords.join(' ');
           
-            return capitalizedSentence;
-          }
+        //     return capitalizedSentence;
+        //   }
 
 
-        const capital_model_name= capitalizeEachWord(model_name.trim());
+        // const capital_model_name= capitalizeEachWord(model_name.trim());
         if (isFinished){
           // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-          navigate(`/add-model-objects/${capital_model_name}`, {relative: true});
+          navigate(`/add-model-objects/${model_name.toUpperCase().trim()}`, {relative: true});
         }
     }, [isFinished]); //this effect when isLoggedIn changes
 

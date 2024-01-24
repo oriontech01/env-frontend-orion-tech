@@ -4,7 +4,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import image1 from "../assets1/images/1.png";
 import success_mark from "../assets1/images/success_mark.png";
 import { useEffect, useState } from "react";
-import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, store_first_json, store_form_data } from "../api/api_variables";
+import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
 import Nav_New from "../components1/nav_new";
 import { AddAnimation } from "../animation_three_js/add_animation";
 
@@ -19,6 +19,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleDeleteCookie } from "../api/delete_cookie";
 import SessionExpired from "../components1/session_expired";
+import emapping from "../assets1/images/emapping.png"
 
 
 // import model_scene from '../animation_three_js/public/models/room/scene.gltf'
@@ -37,18 +38,30 @@ export default function AddObjectsModel() {
       const { dynamicParam } = useParams();
 
 
+      const navigate= useNavigate();
+
+      function home_page_(event){
+          // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
+          navigate('/', {relative: true});
+      }
+    
+
       const keep_for_model_file= [];
 
-      
+      const [has_loaded, set_has_loaded]= useState(false);
       const model_json_data_= (res) => {
-          keep_for_model_file.length= 0;
-          keep_for_edit_url.length= 0;
+          set_has_loaded(false);
+          // keep_for_model_file.length= 0;
+          // keep_for_edit_url.length= 0;
+          reset_values();
 
           const get_for_object_view= res.data;
             
-            // keep_for_object_view[object_view['id']]= object_view['objects_data'];
-            keep_for_model_file.push(get_for_object_view['file_model']);
-            keep_for_edit_url.push(get_for_object_view['file_model']);
+          // keep_for_object_view[object_view['id']]= object_view['objects_data'];
+          keep_for_model_file.push(get_for_object_view['file_model']);
+          keep_for_edit_url.push(get_for_object_view['file_model']);
+
+          set_has_loaded(true);
       };
 
       const [is_expired, set_is_expired]= useState(false);
@@ -72,6 +85,7 @@ export default function AddObjectsModel() {
             const req= axios.request(
                 {
                     method: 'get',
+                    timeout: 450000,
                     // maxBodyLength: Infinity,
                     url: api_root + 'home-models/get-a-model/'+dynamicParam,
                     headers: { 
@@ -168,7 +182,7 @@ export default function AddObjectsModel() {
 
     
 
-    const navigate= useNavigate();
+    
     let access_token;
     const getCookie = (name) => {
         const cookies = document.cookie.split(';');
@@ -263,78 +277,92 @@ export default function AddObjectsModel() {
                 
                 
                 <section className="col-span-3 object-cover h-screen">
-                  <AddAnimation notify_double_={notify_double_click} show_obj_= {show_obj_d_} for_model_file= {keep_for_model_file}/>
+                  {
+                    has_loaded 
+                      ?
+                        <AddAnimation notify_double_={notify_double_click} show_obj_= {show_obj_d_} for_model_file= {keep_for_model_file}/>
+                      
+                      : ""
+                  }
                 </section>
                 
               
-        
-                <h1  className= " my-6 overflow-y-auto mt-6 text-center flex flex-col">
-                  <div  className={`${!is_double_clk ? "pointer-events-none opacity-50" : ""}  flex flex-col mx-10 mb-15 `}>
-                    <h1  className="text-[#714E2C] font-bold text-left text-2xl pb-8">Input Data</h1>
+                  
+                  <div className="overflow-y-auto"> 
+
+                    <div className="fixed flex w-screen bg-white shadow-sm shadow-black">
+                      <img alt="/" src={emapping} onClick={home_page_} className="cursor-pointer w-[158px] m-4"/>
+                    </div>
+
+                    <h1  className= " my-6 overflow-y-auto mt-24 text-center flex flex-col">
+                      <div  className={`${!is_double_clk ? "pointer-events-none opacity-50" : ""}  flex flex-col mx-10 mb-15 `}>
+                        <h1  className="text-[#714E2C] font-bold text-left text-2xl pb-8">Input Data</h1>
 
 
-                    <label  htmlFor="Listeria" className="flex flex-col text-left text-[#714E2C]">
-                      Listeria
-                    </label>
-                    <select  value={listeria} onChange={e => {set_listeria(e.target.value)}}  className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
-                        <option >select value</option>
-                        <option >Negative</option>
-                        <option >Positive</option>
-                    </select>
+                        <label  htmlFor="Listeria" className="flex flex-col text-left text-[#714E2C]">
+                          Listeria
+                        </label>
+                        <select  value={listeria} onChange={e => {set_listeria(e.target.value)}}  className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
+                            <option >select value</option>
+                            <option >Negative</option>
+                            <option >Positive</option>
+                        </select>
 
-                    <label  htmlFor="APC" className="flex flex-col text-left text-[#714E2C]">
-                      APC
-                    </label>
-                    <input  value={apc} onChange={e =>  {e.target.value <1001 ?  set_apc(e.target.value) : e.target.value=1000}} type="number" min={0} max={1000} placeholder="0 - 1000" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <label  htmlFor="APC" className="flex flex-col text-left text-[#714E2C]">
+                          APC
+                        </label>
+                        <input  value={apc} onChange={e =>  {e.target.value <1001 ?  set_apc(e.target.value) : e.target.value=1000}} type="number" min={0} max={1000} placeholder="0 - 1000" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
 
-                    <label  htmlFor="Salmonella" className="flex flex-col text-left text-[#714E2C]">
-                      Salmonella
-                    </label>
-                    <select  value={salmonella} onChange={e => {set_salmonella(e.target.value)}} className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
-                        <option >select value</option>
-                        <option >Negative</option>
-                        <option >Positive</option>
-                    </select>
+                        <label  htmlFor="Salmonella" className="flex flex-col text-left text-[#714E2C]">
+                          Salmonella
+                        </label>
+                        <select  value={salmonella} onChange={e => {set_salmonella(e.target.value)}} className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
+                            <option >select value</option>
+                            <option >Negative</option>
+                            <option >Positive</option>
+                        </select>
 
-                    <label  htmlFor="Date of sample" className="flex flex-col text-left text-[#714E2C]">
-                      Date of sample:
-                    </label>
-                    <input  value={date_} onChange={e => {set_date_(e.target.value)}} type="date" min={0} max={1000} placeholder="Type here" className= "text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <label  htmlFor="Date of sample" className="flex flex-col text-left text-[#714E2C]">
+                          Date of sample:
+                        </label>
+                        <input  value={date_} onChange={e => {set_date_(e.target.value)}} type="date" min={0} max={1000} placeholder="Type here" className= "text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
 
-                    <label  htmlFor="Time of sample" className="flex flex-col text-left text-[#714E2C]">
-                      Time of sample:
-                    </label>
-                    <input  value={time_} onChange={e => {set_time_(e.target.value)}} type="time" min={0} max={1000} placeholder="Type here" className= "text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <label  htmlFor="Time of sample" className="flex flex-col text-left text-[#714E2C]">
+                          Time of sample:
+                        </label>
+                        <input  value={time_} onChange={e => {set_time_(e.target.value)}} type="time" min={0} max={1000} placeholder="Type here" className= "text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
 
-                    <label  htmlFor="Type of sample" className="flex flex-col text-left text-[#714E2C]">
-                      Type of sample:
-                    </label>
-                    <input  value={type_} onChange={e => {set_type_(e.target.value)}} type="text" min={0} max={1000} placeholder="Type here" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <label  htmlFor="Type of sample" className="flex flex-col text-left text-[#714E2C]">
+                          Type of sample:
+                        </label>
+                        <input  value={type_} onChange={e => {set_type_(e.target.value)}} type="text" min={0} max={1000} placeholder="Type here" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
 
-                    <label  htmlFor="Comment Box" className="flex flex-col text-left text-[#714E2C]">
-                      Comment Box:
-                    </label>
-                    <textarea  value={comment_} onChange={e => {set_comment_(e.target.value)}} type="text" min={0} max={1000} placeholder="Type here" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <label  htmlFor="Comment Box" className="flex flex-col text-left text-[#714E2C]">
+                          Comment Box:
+                        </label>
+                        <textarea  value={comment_} onChange={e => {set_comment_(e.target.value)}} type="text" min={0} max={1000} placeholder="Type here" className="placeholder:text-[#714E2C] text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
 
 
-                    <button  onClick={add_data_call} className="shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] text-white px-8 py-2 font-bold my-2 mb-6">Add Data</button>
-                    <button className="shadow-md shadow-gray-600 drop-shadow hover:bg-[#714E2C] hover:border-white hover:text-white border border-[#714E2C] text-[#714E2C] font-bold text-[15px] px-2 py-2">Cancel</button>
+                        <button  onClick={add_data_call} className="shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] text-white px-8 py-2 font-bold my-2 mb-6">Add Data</button>
+                        <button className="shadow-md shadow-gray-600 drop-shadow hover:bg-[#714E2C] hover:border-white hover:text-white border border-[#714E2C] text-[#714E2C] font-bold text-[15px] px-2 py-2">Cancel</button>
 
-                    {/* <button className="mt-8 shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#08a121] hover:bg-white hover:border-[#08a121] bg-[#08a121] text-white px-8 py-2 font-bold my-2 mb-6">Upload</button>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br /> */}
+                        {/* <button className="mt-8 shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#08a121] hover:bg-white hover:border-[#08a121] bg-[#08a121] text-white px-8 py-2 font-bold my-2 mb-6">Upload</button>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br /> */}
+                      </div>
+
+                      <button onClick={upload_all} className="mx-2 mt-8 shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#08a121] hover:bg-white hover:border-[#08a121] bg-[#08a121] text-white px-8 py-2 font-bold my-2 mb-6">Upload</button>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                    </h1>
+
                   </div>
-
-                  <button onClick={upload_all} className="mx-2 mt-8 shadow-md shadow-gray-600 drop-shadow border border-[#B9A88B] hover:text-[#08a121] hover:bg-white hover:border-[#08a121] bg-[#08a121] text-white px-8 py-2 font-bold my-2 mb-6">Upload</button>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                </h1>
       
 
 

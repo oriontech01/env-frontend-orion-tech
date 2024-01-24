@@ -6,10 +6,11 @@ import { useControls } from "leva";
 export const AmbientLight = () => {
     const {brightness} = useControls({
       brightness: {
-        label: 'Brightness',
-        value: 7,
-        min: 0.1,
-        max: 100.0,
+        label: 'Ambience Light',
+        value: 0.0,
+        min: 0.0,
+        max: 5000.0,
+        step: 0.1
       }
     });
   

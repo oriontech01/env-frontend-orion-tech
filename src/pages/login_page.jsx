@@ -3,9 +3,10 @@ import emapping from "../assets1/images/emapping.png"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { api_root } from "../api/api_variables";
+import Nav_ from "../components1/nav";
 
 export default function LoginPage() {
-    const dashboard_management= useNavigate();
+    const navigate= useNavigate();
 
     var access_token;
     const getCookie = (name) => {
@@ -29,7 +30,7 @@ export default function LoginPage() {
     useEffect(() => {
         handleGetCookie();
         if (access_token !== null){
-          dashboard_management('/admin-model-management', {relative: true});
+          navigate('/admin-model-management', {relative: true});
         }
     }, []);
 
@@ -88,6 +89,10 @@ export default function LoginPage() {
     }
 
 
+    function home_page_(event){
+      // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
+      navigate('/', {relative: true});
+    }
 
 
     function loginPostRes(res){
@@ -135,7 +140,7 @@ export default function LoginPage() {
     useEffect(() => {
         if (isLoggedIn){
           // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-          dashboard_management('/admin-model-management', {relative: true});
+          navigate('/admin-model-management', {relative: true});
         }
     }, [isLoggedIn]); //this effect when isLoggedIn changes
 
@@ -146,38 +151,44 @@ export default function LoginPage() {
 
 
     return (
-      <div className="relative mt-[-15px] flex flex-col max-h-screen h-screen items-center justify-center">
+      <div className="relative h-screen overflow-hidden">
 
-        <img alt="/" src={emapping} className="w-[180px] mx-auto pb-4"/>
+        <Nav_/>
 
-        <div className="items-center mx-auto py-16 bg-[#9c856e] w-[25%] shadow-md shadow-gray-800 rounded-xl">          
-          <h1 className="text-[30px] text-[#ecdec4] font-bold text-center mb-7">Welcome Back!</h1>
+        <div className="relative mt-[-15px] flex flex-col max-h-screen h-screen items-center justify-center">
 
-          <h1 className="text-center space-y-3 flex flex-col mx-6">
-            <input value={username_value} onChange={e => set_username_value(e.target.value)} className="text-left px-4 pl-4 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Username"/>
-            <input value={password_value} onChange={e => set_password_value(e.target.value)} className="text-left px-4 pl-4 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="password" placeholder="Password"/>
+          {/* <img alt="/" onClick={home_page_} src={emapping} className="cursor-pointer w-[180px] mx-auto pb-4"/> */}
 
-            {!error_disp 
-              ? <div className="text-red-100 hidden"> Please all the fields must be filled</div>
+          <div className="items-center mx-auto py-16 bg-[#9c856e] w-[25%] shadow-md shadow-gray-800 rounded-xl">          
+            <h1 className="text-[30px] text-[#ecdec4] font-bold text-center mb-7">Welcome Back!</h1>
+
+            <h1 className="text-center space-y-3 flex flex-col mx-6">
+              <input value={username_value} onChange={e => set_username_value(e.target.value)} className="text-left px-4 pl-4 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Username"/>
+              <input value={password_value} onChange={e => set_password_value(e.target.value)} className="text-left px-4 pl-4 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="password" placeholder="Password"/>
+
+              {!error_disp 
+                ? <div className="text-red-100 hidden"> Please all the fields must be filled</div>
+                
+                : <div className="text-red-100"> Please all the fields must be filled</div>
+              }
+              <button onClick={loginPost} className="border border-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] text-white px-8 py-2 w-30 mx-auto rounded-full font-bold">LOGIN</button>
+
+              <div className="text-red-100">{api_error_disp}</div>
+            </h1>
+          </div>
+
+
+          {showProcessing 
+            ? 
+              <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
+                <svg className="animate-spin h-10 w-10 border-[6px] border-[#714E2C] border-t-[#714E2C] rounded-full mb-4" viewBox="0 0 24 24">
+                </svg>
+                Please wait...
+              </div>
               
-              : <div className="text-red-100"> Please all the fields must be filled</div>
-            }
-            <button onClick={loginPost} className="border border-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] text-white px-8 py-2 w-30 mx-auto rounded-full font-bold">LOGIN</button>
-
-            <div className="text-red-100">{api_error_disp}</div>
-          </h1>
+            : <div> </div>}
         </div>
-
-
-        {showProcessing 
-          ? 
-            <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
-              <svg className="animate-spin h-10 w-10 border-[6px] border-[#714E2C] border-t-[#714E2C] rounded-full mb-4" viewBox="0 0 24 24">
-              </svg>
-              Please wait...
-            </div>
-            
-          : <div> </div>}
+      
       </div>
     );
   }
