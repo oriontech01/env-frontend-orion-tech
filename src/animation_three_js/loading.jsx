@@ -3,5 +3,9 @@ import { Html, useProgress } from '@react-three/drei'
 
 export const Loading= () => {
   const { progress } = useProgress()
-  return <Html center>{progress} % loaded</Html>
+  return <Html center>
+          <div className='bg-white py-2 px-4 rounded-2xl animate-bounce border border-gray-800'>
+            <h1 className='text-green-600 font-bold'>{progress.toFixed(0)}%  </h1>
+          </div>
+        </Html>
 }

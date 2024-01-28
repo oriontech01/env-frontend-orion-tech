@@ -8,10 +8,9 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
-import { keep_for_edit_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
+import { keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
 import AddObjectsModel from "../../pages/add_objects_model";
-import { Html, Text } from "@react-three/drei";
-
+import { Html, Preload, Text } from "@react-three/drei";
 
 
 
@@ -32,13 +31,18 @@ function DetectModel (extension, get_model_url) {
   //   return alert("We could not recognize the model file extension, you are trying to view.")
   // }
 
-  return useLoader(save_loader, `${get_model_url}`);
+
+  // PreloadModel(save_loader, get_model_url)
+  // useLoader(save_loader).preload(`${get_model_url}`);
+  const model_loading= useLoader(save_loader, `${get_model_url}`);
+  // useLoader.preload(save_loader, `${get_model_url}`);
+
+  return model_loading;
 }
 
 
 export const ModelAnimation = (props) => {
-    const get_model_url= keep_for_edit_url[0];
-
+    const get_model_url= keep_for_view_url[0];
     // GETTING THE FILE EXTENSION
     // Extract the file name from the URL
     const fileName = get_model_url.substring(get_model_url.lastIndexOf('/') + 1);
@@ -47,22 +51,48 @@ export const ModelAnimation = (props) => {
     const file_path = fileName.split('.');
     const extension= file_path[file_path.length -1];
 
-    // console.log(get_model_url);
-    // console.log(extension);
     const model_load= DetectModel(extension, get_model_url);
 
+    // const ifcLoader = new IFCLoader();
+
+    // ifcLoader.load('path/to/your/model.ifc', (ifcModel) => {
+    //   // Add the loaded model to the scene
+    //   scene.add(ifcModel);
+    // });
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
-    const notify_double_= props.props.notify_double_;
     const show_obj_data= props.props.show_obj_;
-    const for_model_file_data= props.props.for_model_file[0];
+    const for_object_view_data= props.props.for_object_view;
+
 
     const room_ref= useRef();
     const [intersected, set_intersected]= useState(false);
 
 
 
-    let model_children= new THREE.Object3D();
+    // const modelUrl= new URL("stl/Dragon 2.5_stl.stl", import.meta.url);
+    // const model_load= useLoader(GLTFLoader, `${get_model_url}`);
+    // const model_load= useLoader(ColladaLoader, dae_model);
+    // const model_load= useLoader(OBJLoader, "/InteriorTest.obj")
+    // const model_load= useFBX("/Room #1.fbx")
+    // model_load= useLoader(FBXLoader, "/6884/source/6884.fbx");
+ 
+    // const model_load= useLoader(ColladaLoader, "/House/House.dae");
+    // const model_load= useLoader(ColladaLoader, "/simple_house/house.dae");
+    // const model_load= useLoader(STLLoader, stl_model);
+
+   
+
+
+
+
+    // if (has_model_loaded.length === 0){
+    //  model_load= useLoader(GLTFLoader, `${for_model_file_data}`);
+    // }
+    // else{model_load= has_model_loaded[0]}
+
+    let model_children= new THREE.Group();
+    let model_children_list_keep= [];
   
     const {camera, size}= useThree();
     const rayCaster= new THREE.Raycaster();
@@ -71,15 +101,27 @@ export const ModelAnimation = (props) => {
     var intersected_points;
 
     let [current_text, set_current_text]= useState("");
+
+    let single_click= false;
   
   
     
   
     // model_load.scene.traverse((child) => {
-    //   if (child.isGroup){
-    //     model_children= child.children[0].children[0].children;
+    //   console.log("+++++++++up here+++++++++++++")
+    //   console.log(child);
+    //   console.log("+++++++++down here+++++++++++++")
+    //   if (child.isGroup || child.isMesh){
+    //     model_children_list_keep.push(child);
+    //     // model_children= child.children[0].children[0].children;
     //   }
+
+    //   // has_model_loaded.push[model_load];
     // });
+
+    model_children= model_children_list_keep;
+    // console.log(model_children);
+    console.log(model_load);
   
   
     const {rotate_model} = useControls({
@@ -96,7 +138,7 @@ export const ModelAnimation = (props) => {
         if (room_ref.current){
           if(rotate_model) {
             room_ref.current.rotation.y -= delta *0.2
-            console.log(model_children);
+            // console.log(model_children);
           } 
     
         }   
@@ -110,6 +152,8 @@ export const ModelAnimation = (props) => {
     var intersected_points;
     var lastObject;
     let last_intersects;
+
+    let is_intersects= false;
 
     const keep_small_object_ref= [];
     let ref_object= "";
@@ -130,49 +174,56 @@ export const ModelAnimation = (props) => {
         rayCaster.setFromCamera(current_mouse, camera);
         intersects= rayCaster.intersectObjects(model_children);
 
-        
-        if (intersects.length > 0){ 
-          const intersected_object= intersects[0].object;
-          intersected_points= intersects[0].point;
-          text_ref.current.position.x= intersected_points.x;
-          text_ref.current.position.y= intersected_points.y;
+        if (!single_click){
+          if (intersects.length > 0){ 
+            is_intersects= true;
+
+            const intersected_object= intersects[0].object;
+            intersected_points= intersects[0].point;
+            text_ref.current.position.x= intersected_points.x;
+            text_ref.current.position.y= intersected_points.y;
 
 
-          const ref_small2= keep_small_object_ref.indexOf(intersected_object.name);
+            const ref_small2= for_object_view_data[(intersected_object.name)];
 
-          if (ref_small2 === -1){
-            
-            if (keep_objects_reference.length === keep_small_object_ref.length){
-              notify_double_(null, false);
+            if (!ref_small2){
+              
+              // if (keep_objects_reference.length === keep_small_object_ref.length){
+              //   notify_double_(false);
+              // }
+
+              set_current_text("")
+              if (current_text == ""){
+
+              }
+
+              if (lastObject){
+                lastObject.material.color.set(new THREE.Color(1, 1, 1));
+              }
+      
+              // keep_small_object_ref.splice(ref_small, 1);
+              intersected_object.material.color.set(new THREE.Color(4, 4, 4));
+              lastObject= intersected_object;
+
+              show_obj_data(null);
             }
+            else{
 
-            set_current_text("")
-            if (current_text == ""){
+              try{
+                const get_text_data= for_object_view_data[intersected_object.name].comment_box;
+                set_current_text(get_text_data);
+              }
+              catch{}
 
+              show_obj_data(intersected_object.name);
             }
-
-            if (lastObject){
-              lastObject.material.color.set(new THREE.Color(1, 1, 1));
-            }
-    
-            // keep_small_object_ref.splice(ref_small, 1);
-            intersected_object.material.color.set(new THREE.Color(4, 4, 4));
-            lastObject= intersected_object;
+          
           }
+
           else{
-            // const ob_details= `
-            //   ${}
-            // `
-
-
-            try{
-              const get_text_data= keep_objects_data_reference[intersected_object.name].comment_box;
-              set_current_text(get_text_data);
-            }
-            catch{}
-            show_obj_data(intersected_object.name);
+            is_intersects= false;
+            
           }
-         
         }
       }
     }
@@ -180,81 +231,23 @@ export const ModelAnimation = (props) => {
 
 
 
-    //++++++++ DOUBLE CLICK EVENT ++++++++++++++++
-    const handle_double_click= (event) => {
-        // console.log(event.target.localName);
-        
-        if (event.target.localName === "canvas"){
-          const x = (event.clientX / size.width) * 2 - 1;
-          const y = -(event.clientY / size.height) * 2 + 1;
-    
-          const current_mouse= { x, y };
-    
-          rayCaster.setFromCamera(current_mouse, camera);
-          const intersects2= rayCaster.intersectObjects(model_children);
 
-          // if (last_intersects){
-          //   if (keep_objects_reference.indexOf(last_intersects.name)=== -1){
-          //     last_intersects.material.color.set(new THREE.Color(4, 4, 4));
-          //     notify_double_();
-          //   }
-          //   last_intersects= null;
-          // }
-
-
-          if (intersects2.length != 0){ 
-              intersected_points= intersects[0].point;
-              // const list_keep_obj= Object.keys(keep_objects_data[0]);
-              ref_object= keep_objects_reference.indexOf(intersects2[0].object.name);
-              const ref_small= keep_small_object_ref.indexOf(intersects2[0].object.name);
-              
-              if (ref_object === -1){
-                  // window.removeEventListener('dblclick', handle_double_click);
-                  if(ref_small !== -1){
-                    notify_double_(null, false);
-
-                    keep_small_object_ref.splice(ref_small, 1);
-                    intersects2[0].object.material.color.set(new THREE.Color(1, 1, 1));
-                  }
-                  //++++TO PREVENT FURTHER PICKING WHEN THEY HAVE NOT POPULATED THE ONE THAT THEY PICK CURRENTLY
-                  else if(keep_objects_reference.length === keep_small_object_ref.length){
-                    notify_double_(intersects2[0].object.name, true);
-
-                    intersects2[0].object.material.color.set(new THREE.Color(0, 1, 0));
-                    keep_small_object_ref.push(intersects2[0].object.name);
-                    //++++++++++++++++ I HAVE TO EQUATE lastObject= "" TO EMPTY BECAUSE THE MOUSE MOVE BEFORE THE DOUBLE CLICK WAS MADE HAD ALREADY STORED THIS AS OUR LAST OBJECT ++++++++++
-                    lastObject= "";
-                    // keep_objects_data.push(intersects2[0].object.name);  
-                  }
-              }
-              else{
-                keep_objects_data.splice(ref_object, 1);
-                // delete keep_objects_data_reference.object_name;
-                //If you want to delete an entire object with a specific key from another object in JavaScript,
-                delete keep_objects_data_reference[intersects2[0].object.name];
-                console.log(keep_objects_data_reference);
-                keep_objects_reference.splice(ref_object, 1);
-                keep_small_object_ref.splice(ref_object, 1);
-                intersects2[0].object.material.color.set(new THREE.Color(1, 1, 1));
-              }
-              
-              // console.log(keep_objects_data);
-          } 
-        }
-
+    const handle_single_click = (event) => {
+      if (is_intersects){
+        single_click = !single_click;
+      }
     }
-    
   
   
   
   
     useEffect(() => {
       window.addEventListener('mousemove', handle_mouse);
-      window.addEventListener('dblclick', handle_double_click);
+      window.addEventListener('click', handle_single_click);
   
       return () => {
         window.removeEventListener('mousemove', handle_mouse);
-        window.removeEventListener('dblclick', handle_double_click);
+        window.addEventListener('click', handle_single_click);
       };
     }, []);
   
@@ -264,10 +257,11 @@ export const ModelAnimation = (props) => {
   
   
     return (
+
       <group >
         <primitive 
           object={
-            model_load.scene
+            model_load.scene ? model_load.scene : model_load
           } 
           scale={1} 
           position= {[0, -5, 0]}
@@ -299,6 +293,49 @@ export const ModelAnimation = (props) => {
       
         </Text>
       </group>
+      // <Preload all >
+
+      //   <group >
+      //     <primitive 
+      //       object={
+      //         model_load.scene ? model_load.scene : model_load
+      //       } 
+      //       scale={1} 
+      //       position= {[0, -5, 0]}
+      //       ref={room_ref}
+      //       // onPointerEnter= {e => (handle_mouse_enter(e))}
+      //       // onPointerLeave= {e => (handle_mouse_leave(e))}
+      //     />
+
+
+
+      //     <Text
+      //       ref={text_ref}
+      //       // scale={scale}
+      //       // color= {text_color} // def
+      //       position={[0, 0, 0]}
+            
+      //     >
+
+      //       {/* Pipeloluwa */}
+      //       <Html center>
+      //         <div className={`${current_text === "" ? "" : "bg-green-600/80 shadow shadow-black min-h-4 w-44 py-2 px-4 rounded-xl"}`}>
+      //           <p className={` text-[14px] text-white `}>
+      //             {current_text}
+      //             {/* <br></br>
+      //             wffef */}
+      //           </p>
+      //         </div>
+      //       </Html>
+        
+      //     </Text>
+      //   </group>
+
+      // </Preload>
     );
   }
+
+// Inside a React component, potentially a setup function
+// useLoader(GLTFLoader).preload("path/to/your/model.glb");
+// useLoader.preload(save_loader, `${get_model_url}`);
   

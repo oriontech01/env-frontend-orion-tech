@@ -4,7 +4,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import image1 from "../assets1/images/1.png";
 import success_mark from "../assets1/images/success_mark.png";
 import { useEffect, useState } from "react";
-import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
+import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_for_object_view, keep_for_view_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
 import Nav_New from "../components1/nav_new";
 import { AddAnimation } from "../animation_three_js/add_animation";
 
@@ -12,7 +12,7 @@ import { AddAnimation } from "../animation_three_js/add_animation";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import background from '../animation_three_js/assets/images/background2.jpg';
+// import background from '../animation_three_js/assets/images/background2.jpg';
 import { ModelAnimation } from "../animation_three_js/animation_components/model_animation";
 import { AmbientLight } from "../animation_three_js/animation_components/ambient_light";
 import axios from "axios";
@@ -51,6 +51,8 @@ export default function AddObjectsModel() {
       const [has_loaded, set_has_loaded]= useState(false);
       const model_json_data_= (res) => {
           set_has_loaded(false);
+
+          keep_for_object_view.length= 0;
           // keep_for_model_file.length= 0;
           // keep_for_edit_url.length= 0;
           reset_values();
@@ -59,7 +61,13 @@ export default function AddObjectsModel() {
             
           // keep_for_object_view[object_view['id']]= object_view['objects_data'];
           keep_for_model_file.push(get_for_object_view['file_model']);
-          keep_for_edit_url.push(get_for_object_view['file_model']);
+
+          keep_for_view_url.push(get_for_object_view['file_model']);
+
+          for (let i =0; i < get_for_object_view['objects_relationship'].length; i++){
+            const get_object= get_for_object_view['objects_relationship'][i];
+            keep_for_object_view[get_object['object_name']]= get_object;
+          }
 
           set_has_loaded(true);
       };

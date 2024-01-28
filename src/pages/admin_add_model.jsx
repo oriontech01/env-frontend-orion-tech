@@ -326,7 +326,7 @@ export default function AdminAddModel() {
                             <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center top-0 bottom-0 left-0 right-0">
                             <svg className="animate-spin h-10 w-10 bg-blue-500 mb-4" viewBox="0 0 24 24">
                             </svg>
-                            Uploadind data...
+                            Uploading data...
                             </div>
                                 
                             : <div> </div>}

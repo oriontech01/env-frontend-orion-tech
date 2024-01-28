@@ -10,12 +10,19 @@ import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
 import { has_model_loaded, keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
 import AddObjectsModel from "../../pages/add_objects_model";
-import { Html, Text, useFBX } from "@react-three/drei";
+import { Html, Preload, Text, useFBX } from "@react-three/drei";
+
+// import { IFCModel } from "web-ifc-three/IFC/components/IFCModel";
+// import { IFCLoader } from "web-ifc-three";
 
 // import obj_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).obj";
 // import stl_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE) STL.stl";
 // import dae_model from "./FACTORY ARCH VIZ (ROOM 1 ALONE).dae";
 
+
+// function PreloadModel (loader_name, model_url_path) {
+//   useLoader(loader_name).preload(`${model_url_path}`);
+// }
 
 
 function DetectModel (extension, get_model_url) {
@@ -35,7 +42,13 @@ function DetectModel (extension, get_model_url) {
   //   return alert("We could not recognize the model file extension, you are trying to view.")
   // }
 
-  return useLoader(save_loader, `${get_model_url}`);
+
+  // PreloadModel(save_loader, get_model_url)
+  // useLoader(save_loader).preload(`${get_model_url}`);
+  const model_loading= useLoader(save_loader, `${get_model_url}`);
+  // useLoader.preload(save_loader, `${get_model_url}`);
+
+  return model_loading;
 }
 
 
@@ -49,9 +62,14 @@ export const ModelViewAnimation = (props) => {
     const file_path = fileName.split('.');
     const extension= file_path[file_path.length -1];
 
-    console.log(get_model_url);
-    console.log(extension);
     const model_load= DetectModel(extension, get_model_url);
+
+    // const ifcLoader = new IFCLoader();
+
+    // ifcLoader.load('path/to/your/model.ifc', (ifcModel) => {
+    //   // Add the loaded model to the scene
+    //   scene.add(ifcModel);
+    // });
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const show_obj_data= props.props.show_obj_;
@@ -85,6 +103,7 @@ export const ModelViewAnimation = (props) => {
     // else{model_load= has_model_loaded[0]}
 
     let model_children= new THREE.Group();
+    let model_children_list_keep= [];
   
     const {camera, size}= useThree();
     const rayCaster= new THREE.Raycaster();
@@ -100,13 +119,20 @@ export const ModelViewAnimation = (props) => {
     
   
     // model_load.scene.traverse((child) => {
-    //   if (child.isGroup){
-
-    //     model_children= child.children[0].children[0].children;
+    //   console.log("+++++++++up here+++++++++++++")
+    //   console.log(child);
+    //   console.log("+++++++++down here+++++++++++++")
+    //   if (child.isGroup || child.isMesh){
+    //     model_children_list_keep.push(child);
+    //     // model_children= child.children[0].children[0].children;
     //   }
 
     //   // has_model_loaded.push[model_load];
     // });
+
+    model_children= model_children_list_keep;
+    // console.log(model_children);
+    console.log(model_load);
   
   
     const {rotate_model} = useControls({
@@ -227,9 +253,6 @@ export const ModelViewAnimation = (props) => {
   
   
     useEffect(() => {
-      console.log("+++++++++up here+++++++++++++")
-      console.log(model_load);
-      console.log("+++++++++down here+++++++++++++")
       window.addEventListener('mousemove', handle_mouse);
       window.addEventListener('click', handle_single_click);
   
@@ -245,6 +268,7 @@ export const ModelViewAnimation = (props) => {
   
   
     return (
+
       <group >
         <primitive 
           object={
@@ -280,6 +304,49 @@ export const ModelViewAnimation = (props) => {
       
         </Text>
       </group>
+      // <Preload all >
+
+      //   <group >
+      //     <primitive 
+      //       object={
+      //         model_load.scene ? model_load.scene : model_load
+      //       } 
+      //       scale={1} 
+      //       position= {[0, -5, 0]}
+      //       ref={room_ref}
+      //       // onPointerEnter= {e => (handle_mouse_enter(e))}
+      //       // onPointerLeave= {e => (handle_mouse_leave(e))}
+      //     />
+
+
+
+      //     <Text
+      //       ref={text_ref}
+      //       // scale={scale}
+      //       // color= {text_color} // def
+      //       position={[0, 0, 0]}
+            
+      //     >
+
+      //       {/* Pipeloluwa */}
+      //       <Html center>
+      //         <div className={`${current_text === "" ? "" : "bg-green-600/80 shadow shadow-black min-h-4 w-44 py-2 px-4 rounded-xl"}`}>
+      //           <p className={` text-[14px] text-white `}>
+      //             {current_text}
+      //             {/* <br></br>
+      //             wffef */}
+      //           </p>
+      //         </div>
+      //       </Html>
+        
+      //     </Text>
+      //   </group>
+
+      // </Preload>
     );
   }
+
+// Inside a React component, potentially a setup function
+// useLoader(GLTFLoader).preload("path/to/your/model.glb");
+// useLoader.preload(save_loader, `${get_model_url}`);
   
