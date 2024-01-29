@@ -3,12 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 import { FaCircle } from "react-icons/fa";
 
-import image1 from "../assets1/images/1.png";
-import image2 from "../assets1/images/2.png";
-import image3 from "../assets1/images/3.png";
-import image4 from "../assets1/images/4.png";
-import image5 from "../assets1/images/5.png";
-import image6 from "../assets1/images/6.png";
 import { model_json_data } from "../pages/admincoursemanagement";
 
 import { selected_models } from "../pages/admincoursemanagement";

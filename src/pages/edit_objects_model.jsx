@@ -1,9 +1,6 @@
 import Nav_ from "../components1/nav";
 import { IoSearchSharp } from "react-icons/io5";
 
-import image1 from "../assets1/images/1.png";
-import success_mark from "../assets1/images/success_mark.png";
-
 
 export default function EditObjectsModel() {
 
@@ -17,7 +14,7 @@ export default function EditObjectsModel() {
 
               </div> */}
 
-              <img alt="/" src={image1} className="col-span-3 object-cover w-screen h-screen"/>
+              {/* <img alt="/" src={image1} className="col-span-3 object-cover w-screen h-screen"/> */}
               
               <h1 className=" my-6 overflow-y-auto mt-6 text-center flex flex-col">
                 <div className="flex flex-col mx-10 mb-15">

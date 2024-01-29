@@ -1,8 +1,6 @@
 
 import { IoSearchSharp } from "react-icons/io5";
 
-import image1 from "../assets1/images/1.png";
-import success_mark from "../assets1/images/success_mark.png";
 import { useEffect, useState } from "react";
 import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_for_object_view, keep_for_view_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
 import Nav_New from "../components1/nav_new";

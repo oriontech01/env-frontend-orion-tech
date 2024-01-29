@@ -1,7 +1,6 @@
 import Nav_New from "../components1/nav_new";
 import { IoSearchSharp } from "react-icons/io5";
 
-import image1 from "../assets1/images/1.png";
 
 
 

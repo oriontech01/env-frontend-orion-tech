@@ -1,10 +1,4 @@
 import React, {useEffect, useState} from "react";
-import image1 from "../assets1/images/1.png";
-import image2 from "../assets1/images/2.png";
-import image3 from "../assets1/images/3.png";
-import image4 from "../assets1/images/4.png";
-import image5 from "../assets1/images/5.png";
-import image6 from "../assets1/images/6.png";
 import { useNavigate, Link } from "react-router-dom";
 import { api_root, model_images } from "../api/api_variables";
 import axios from "axios";
