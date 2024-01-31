@@ -106,22 +106,26 @@ export const ModelAnimation = (props) => {
   
   
     
-  
-    // model_load.scene.traverse((child) => {
+
+    try{
+    model_load.scene.traverse((child) => {
     //   console.log("+++++++++up here+++++++++++++")
     //   console.log(child);
     //   console.log("+++++++++down here+++++++++++++")
-    //   if (child.isGroup || child.isMesh){
-    //     model_children_list_keep.push(child);
-    //     // model_children= child.children[0].children[0].children;
-    //   }
+    if (child.isGroup){
+         // model_children_list_keep.push(child);
+         model_children= child.children[0].children[0].children;
+       }
 
     //   // has_model_loaded.push[model_load];
-    // });
+    });
 
-    model_children= model_children_list_keep;
+    } 
+    catch(e){}
+
+   // model_children= model_children_list_keep;
     // console.log(model_children);
-    console.log(model_load);
+    //console.log(model_load);
   
   
     const {rotate_model} = useControls({
