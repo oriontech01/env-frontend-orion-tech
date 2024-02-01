@@ -207,7 +207,7 @@ export default function AddObjectsModel() {
     const handleGetCookie = () => {
         // Retrieve the value of the "exampleCookie" cookie
         access_token = getCookie('access_token');
-        console.log(access_token);
+        // console.log(access_token);
         return
     };
 

@@ -249,7 +249,7 @@ export default function AdminAddModel() {
         
         first_json= JSON.parse(JSON.stringify(model_desc)); //this type of copying, is a deep copy that enables the copying of all the original object as a new object of its own
 
-        console.log(formData.get('model_object'));
+        // console.log(formData.get('model_object'));
         
         keep_m_name.pop(m_name);
         const json_to_string= `{"id":"${m_name}", "description_model":"${m_desc}", "objects_data":[]}`;
@@ -296,7 +296,7 @@ export default function AdminAddModel() {
                                 <div className="relative hover:bg-[#714E2C] hover:text-[#B9A88B] my-4 shadow-md shadow-gray-500  bg-[#B9A88B] text-[#714E2C] py-8 rounded-full">
                                     <TbBoxModel2 className="mx-auto size-[65px] my-2" />
                                     <h1 className="abolute left-0 right-0 top-0 bottom-0">{model_text}</h1>
-                                    <input onChange={e => pick_file_(e)} type="file" accept=".zip, .glb, .dae" className="w-full h-full absolute top-0 bottom-0 left-0 right-0 opacity-0"/>
+                                    <input onChange={e => pick_file_(e)} type="file" accept=".zip, .gltf, .glb, .dae, .obj, .stl, .fbx" className="w-full h-full absolute top-0 bottom-0 left-0 right-0 opacity-0"/>
                                 </div>
 
                                 <div className="relative hover:bg-[#714E2C] hover:text-[#B9A88B] my-4 shadow-md shadow-gray-500  bg-[#B9A88B] text-[#714E2C] py-8 rounded-full">

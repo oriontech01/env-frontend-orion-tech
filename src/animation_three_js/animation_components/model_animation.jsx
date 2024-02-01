@@ -62,6 +62,7 @@ export const ModelAnimation = (props) => {
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const show_obj_data= props.props.show_obj_;
+    const notify_double_= props.props.notify_double_;
     const for_object_view_data= props.props.for_object_view;
 
 
@@ -106,26 +107,51 @@ export const ModelAnimation = (props) => {
   
   
     
-
+  
     try{
-    model_load.scene.traverse((child) => {
-    //   console.log("+++++++++up here+++++++++++++")
-    //   console.log(child);
-    //   console.log("+++++++++down here+++++++++++++")
-    if (child.isGroup){
-         // model_children_list_keep.push(child);
-         model_children= child.children[0].children[0].children;
-       }
+      model_load.scene.traverse((child) => {
+        // console.log("+++++++++up here+++++++++++++")
+        // // console.log(child);
+        // // console.log("+++++++++down here+++++++++++++")
+        // if (child.isGroup){
+        //   console.log(child.children);
+        //   for (let i=0; i < child.isGroup.length; i++){
+        //     console.log(child.isGroup[i]);
+        //   }
+        // }
+        if (child.isGroup || child.isMesh){
+          model_children.push(child);
+          // model_children= child.children[0].children[0].children;
+        }
 
-    //   // has_model_loaded.push[model_load];
-    });
+        // has_model_loaded.push[model_load];
+      });
+    }
 
-    } 
-    catch(e){}
+    catch(e){
+      let children_tracker= 0;
+      if (model_load.isGroup){
+        model_children= model_load.children;
+        // console.log(model_load.children[0]);
+        // model_children_list_keep= model_load.children;
+        // for (let i=0; i < model_load.children.length; i++){
+        //   if (model_load.children.length === 1){
+        //     console.log(model_load.children[i]);
+        //   }
+          
+        //   // model_children.push(model_load.children[i]);
+        // }
+      }
 
-   // model_children= model_children_list_keep;
+      else if (model_load.isMesh){
+        model_children_list_keep.push(model_load);
+      }
+      else{alert("This model does not support object interaction !");}
+    }
+
+    // model_children= model_children_list_keep;
     // console.log(model_children);
-    //console.log(model_load);
+    // console.log(model_load);
   
   
     const {rotate_model} = useControls({
@@ -166,9 +192,9 @@ export const ModelAnimation = (props) => {
     
     //+++++++++++++ MOUSEMOVE  EVENT ++++++++++++++++
     const handle_mouse = (event) => {
+      // console.log(event.target.localName);
 
       if (event.target.localName === "canvas"){
-
         
         const x = (event.clientX / size.width) * 2 - 1;
         const y = -(event.clientY / size.height) * 2 + 1;
@@ -178,60 +204,137 @@ export const ModelAnimation = (props) => {
         rayCaster.setFromCamera(current_mouse, camera);
         intersects= rayCaster.intersectObjects(model_children);
 
-        if (!single_click){
-          if (intersects.length > 0){ 
-            is_intersects= true;
-
-            const intersected_object= intersects[0].object;
-            intersected_points= intersects[0].point;
-            text_ref.current.position.x= intersected_points.x;
-            text_ref.current.position.y= intersected_points.y;
+        if (intersects.length > 0){ 
+          const intersected_object= intersects[0].object;
+          // console.log(intersected_object);
+          intersected_points= intersects[0].point;
+          text_ref.current.position.x= intersected_points.x;
+          text_ref.current.position.y= intersected_points.y;
 
 
-            const ref_small2= for_object_view_data[(intersected_object.name)];
+          const ref_small2= keep_small_object_ref.indexOf(intersected_object.name);
+          console.log(ref_small2);
 
-            if (!ref_small2){
-              
-              // if (keep_objects_reference.length === keep_small_object_ref.length){
-              //   notify_double_(false);
-              // }
+          if (ref_small2 === -1){
+            
+            if (keep_objects_reference.length === keep_small_object_ref.length){
+              notify_double_(null, false);
+            }
 
-              set_current_text("")
-              if (current_text == ""){
+            set_current_text("")
+            if (current_text == ""){
 
-              }
+            }
 
+            try{
               if (lastObject){
                 lastObject.material.color.set(new THREE.Color(1, 1, 1));
               }
-      
-              // keep_small_object_ref.splice(ref_small, 1);
+            }
+            catch(e){}
+    
+            // keep_small_object_ref.splice(ref_small, 1);
+            try{
               intersected_object.material.color.set(new THREE.Color(4, 4, 4));
-              lastObject= intersected_object;
-
-              show_obj_data(null);
             }
-            else{
-
-              try{
-                const get_text_data= for_object_view_data[intersected_object.name].comment_box;
-                set_current_text(get_text_data);
-              }
-              catch{}
-
-              show_obj_data(intersected_object.name);
-            }
-          
+            catch(e){set_current_text("We can not highlight or change the color of this particular object, but this object can still be added anyway");}
+            lastObject= intersected_object;
           }
-
           else{
-            is_intersects= false;
-            
+            // const ob_details= `
+            //   ${}
+            // `
+
+
+            try{
+              const get_text_data= keep_objects_data_reference[intersected_object.name].comment_box;
+              set_current_text(get_text_data);
+            }
+            catch{}
+            show_obj_data(intersected_object.name);
           }
+         
         }
       }
     }
   
+
+
+
+
+
+     //++++++++ DOUBLE CLICK EVENT ++++++++++++++++
+     const handle_double_click= (event) => {
+      // console.log(event.target.localName);
+      
+      if (event.target.localName === "canvas"){
+        const x = (event.clientX / size.width) * 2 - 1;
+        const y = -(event.clientY / size.height) * 2 + 1;
+  
+        const current_mouse= { x, y };
+  
+        rayCaster.setFromCamera(current_mouse, camera);
+        const intersects2= rayCaster.intersectObjects(model_children);
+
+        // if (last_intersects){
+        //   if (keep_objects_reference.indexOf(last_intersects.name)=== -1){
+        //     last_intersects.material.color.set(new THREE.Color(4, 4, 4));
+        //     notify_double_();
+        //   }
+        //   last_intersects= null;
+        // }
+
+
+        if (intersects2.length != 0){ 
+            intersected_points= intersects[0].point;
+            // const list_keep_obj= Object.keys(keep_objects_data[0]);
+            ref_object= keep_objects_reference.indexOf(intersects2[0].object.name);
+            const ref_small= keep_small_object_ref.indexOf(intersects2[0].object.name);
+            
+            if (ref_object === -1){
+                // window.removeEventListener('dblclick', handle_double_click);
+                if(ref_small !== -1){
+                  notify_double_(null, false);
+
+                  keep_small_object_ref.splice(ref_small, 1);
+                  try{
+                    intersects2[0].object.material.color.set(new THREE.Color(1, 1, 1));
+                  }
+                  catch(e){set_current_text("We can not highlight or change the color of this particular object, but this object can still be added anyway");}
+                }
+                //++++TO PREVENT FURTHER PICKING WHEN THEY HAVE NOT POPULATED THE ONE THAT THEY PICK CURRENTLY
+                else if(keep_objects_reference.length === keep_small_object_ref.length){
+                  notify_double_(intersects2[0].object.name, true);
+
+                  try{
+                    intersects2[0].object.material.color.set(new THREE.Color(0, 1, 0));
+                  }
+                  catch(e){}
+                  keep_small_object_ref.push(intersects2[0].object.name);
+                  //++++++++++++++++ I HAVE TO EQUATE lastObject= "" TO EMPTY BECAUSE THE MOUSE MOVE BEFORE THE DOUBLE CLICK WAS MADE HAD ALREADY STORED THIS AS OUR LAST OBJECT ++++++++++
+                  lastObject= "";
+                  // keep_objects_data.push(intersects2[0].object.name);  
+                }
+            }
+            else{
+              keep_objects_data.splice(ref_object, 1);
+              // delete keep_objects_data_reference.object_name;
+              //If you want to delete an entire object with a specific key from another object in JavaScript,
+              delete keep_objects_data_reference[intersects2[0].object.name];
+              // console.log(keep_objects_data_reference);
+              keep_objects_reference.splice(ref_object, 1);
+              keep_small_object_ref.splice(ref_object, 1);
+
+              try{
+                intersects2[0].object.material.color.set(new THREE.Color(1, 1, 1));
+              }
+              catch(e){}
+            }
+            
+            // console.log(keep_objects_data);
+        } 
+      }
+    }
 
 
 
@@ -247,10 +350,12 @@ export const ModelAnimation = (props) => {
   
     useEffect(() => {
       window.addEventListener('mousemove', handle_mouse);
+      window.addEventListener('dblclick', handle_double_click);
       window.addEventListener('click', handle_single_click);
   
       return () => {
         window.removeEventListener('mousemove', handle_mouse);
+        window.removeEventListener('dblclick', handle_double_click);
         window.addEventListener('click', handle_single_click);
       };
     }, []);
@@ -287,7 +392,7 @@ export const ModelAnimation = (props) => {
           {/* Pipeloluwa */}
           <Html center>
             <div className={`${current_text === "" ? "" : "bg-green-600/80 shadow shadow-black min-h-4 w-44 py-2 px-4 rounded-xl"}`}>
-              <p className={` text-[14px] text-white `}>
+              <p className={` text-[14px] text-white text-wrap`}>
                 {current_text}
                 {/* <br></br>
                 wffef */}
