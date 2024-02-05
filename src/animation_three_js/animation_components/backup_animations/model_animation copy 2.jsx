@@ -8,14 +8,15 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
-import { keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
-import AddObjectsModel from "../../pages/add_objects_model";
+import { keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../../api/api_variables";
+import AddObjectsModel from "../../../pages/add_objects_model";
 import { Html, Preload, Text } from "@react-three/drei";
 
 
 
 function DetectModel (extension, get_model_url) {
   const loader_lists= [GLTFLoader, FBXLoader, STLLoader, OBJLoader, ColladaLoader];
+// useLoader_lists= [useLoader, useFBX];
 
   let save_loader;
 
@@ -25,33 +26,98 @@ function DetectModel (extension, get_model_url) {
   else if (extension === "stl"){save_loader= loader_lists[2];}
   else if (extension === "obj"){save_loader= loader_lists[3];}
   else if (extension === "dae"){save_loader= loader_lists[4];}
+  // else if (extension === "ifc"){model_load= useLoader(STLLoader, `${get_model_url}`);}
+  // else{
+  //   return alert("We could not recognize the model file extension, you are trying to view.")
+  // }
 
+
+  // PreloadModel(save_loader, get_model_url)
+  // useLoader(save_loader).preload(`${get_model_url}`);
   const model_loading= useLoader(save_loader, `${get_model_url}`);
+  // useLoader.preload(save_loader, `${get_model_url}`);
 
   return model_loading;
 }
 
 
 
+var group_tracker= [];
+var group_tracker_object= [];
+var group_tracker_object_index= [];
 
+var group_remaining_objects= {};
+var group_remaining_rem_tracker= [];
 
 
 var model_children= new THREE.Group();
 var model_children_list_keep= [];
 
+function iterate_children (child_instance_map_id, child_instance){
+  for (let i= 0; i < child_instance.children.length; i++){
+    console.log(`Task ${i + 1}: ${child_instance.children[i].type}`);
+    console.log(child_instance.children[i]);
+    if (child_instance.children[i].isMesh){
+      model_children_list_keep.push(child_instance.children[i]);
+
+      // if (i === child_instance.children.length - 1){
+      //   delete group_remaining_objects[child_instance_map_id];
+      // }
+    }
+
+    else if(child_instance.children[i].isGroup){
+      if (i + 1 <= child_instance.children.length-1){
+        group_remaining_objects[`${child_instance_map_id}${i}`]= [child_instance, i+1]
+      }
+
+      else{group_remaining_objects[`${child_instance_map_id}${i}`]= [child_instance, 0]}
+    }
+  }
+
+  // console.log(group_remaining_objects);
+
+
+  if (group_remaining_objects.length !== 0){
+    // Get the keys of the object
+    const keys = Object.keys(group_remaining_objects);
+    const last_key_in_group= keys[keys.length - 1];
+
+    console.log(last_key_in_group);
+    console.log(group_remaining_objects[last_key_in_group][1]);
+    console.log(group_remaining_objects[last_key_in_group][0]);
+    // iterate_children(group_remaining_objects[last_key_in_group][1], group_remaining_objects[last_key_in_group][0]);
+  }
+  // else{
+  //   model_children= model_children_list_keep;
+  // }
+  
+  // console.log(model_children);
+  console.log("Stop here");
+  // return;
+  
+}
+
 
 export const ModelAnimation = (props) => {
+    model_children_list_keep.length= 0;
+
     const get_model_url= keep_for_view_url[0];
     // GETTING THE FILE EXTENSION
     // Extract the file name from the URL
     const fileName = get_model_url.substring(get_model_url.lastIndexOf('/') + 1);
     // Split the file name into its base name and extension
+    // const [baseName, extension] = fileName.split('.');
     const file_path = fileName.split('.');
     const extension= file_path[file_path.length -1];
 
     const model_load= DetectModel(extension, get_model_url);
 
+    // const ifcLoader = new IFCLoader();
 
+    // ifcLoader.load('path/to/your/model.ifc', (ifcModel) => {
+    //   // Add the loaded model to the scene
+    //   scene.add(ifcModel);
+    // });
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const show_obj_data= props.props.show_obj_;
@@ -153,7 +219,7 @@ export const ModelAnimation = (props) => {
     
     //+++++++++++++ MOUSEMOVE  EVENT ++++++++++++++++
     const handle_mouse = (event) => {
-      // console.log(model_load);
+      console.log(model_load);
       // console.log(event.target.localName);
 
       if (event.target.localName === "canvas"){

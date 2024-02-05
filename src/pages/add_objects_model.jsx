@@ -253,7 +253,7 @@ export default function AddObjectsModel() {
     // const string_upload= `{"id":"${keep_m_name[0]}", "objects_data":["${keep_objects_data}"]}`
     const json_upload= {"id":dynamicParam, "objects_data": keep_objects_data}
     
-    console.log(json_upload);
+    // console.log(json_upload);
     post_request(json_upload);
   }
 

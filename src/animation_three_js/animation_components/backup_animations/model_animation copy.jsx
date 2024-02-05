@@ -8,14 +8,15 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
-import { keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
-import AddObjectsModel from "../../pages/add_objects_model";
+import { keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../../api/api_variables";
+import AddObjectsModel from "../../../pages/add_objects_model";
 import { Html, Preload, Text } from "@react-three/drei";
 
 
 
 function DetectModel (extension, get_model_url) {
   const loader_lists= [GLTFLoader, FBXLoader, STLLoader, OBJLoader, ColladaLoader];
+// useLoader_lists= [useLoader, useFBX];
 
   let save_loader;
 
@@ -25,33 +26,98 @@ function DetectModel (extension, get_model_url) {
   else if (extension === "stl"){save_loader= loader_lists[2];}
   else if (extension === "obj"){save_loader= loader_lists[3];}
   else if (extension === "dae"){save_loader= loader_lists[4];}
+  // else if (extension === "ifc"){model_load= useLoader(STLLoader, `${get_model_url}`);}
+  // else{
+  //   return alert("We could not recognize the model file extension, you are trying to view.")
+  // }
 
+
+  // PreloadModel(save_loader, get_model_url)
+  // useLoader(save_loader).preload(`${get_model_url}`);
   const model_loading= useLoader(save_loader, `${get_model_url}`);
+  // useLoader.preload(save_loader, `${get_model_url}`);
 
   return model_loading;
 }
 
 
 
+var group_tracker= [];
+var group_tracker_object= [];
+var group_tracker_object_index= [];
 
+var group_remaining_objects= {};
+var group_remaining_rem_tracker= [];
 
 
 var model_children= new THREE.Group();
 var model_children_list_keep= [];
 
+function iterate_children (child_instance_map_id, child_instance){
+  for (let i= 0; i < child_instance.children.length; i++){
+    console.log(`Task ${i + 1}: ${child_instance.children[i].type}`);
+    console.log(child_instance.children[i]);
+    if (child_instance.children[i].isMesh){
+      model_children_list_keep.push(child_instance.children[i]);
+
+      // if (i === child_instance.children.length - 1){
+      //   delete group_remaining_objects[child_instance_map_id];
+      // }
+    }
+
+    else if(child_instance.children[i].isGroup){
+      if (i + 1 <= child_instance.children.length-1){
+        group_remaining_objects[`${child_instance_map_id}${i}`]= [child_instance, i+1]
+      }
+
+      else{group_remaining_objects[`${child_instance_map_id}${i}`]= [child_instance, 0]}
+    }
+  }
+
+  // console.log(group_remaining_objects);
+
+
+  if (group_remaining_objects.length !== 0){
+    // Get the keys of the object
+    const keys = Object.keys(group_remaining_objects);
+    const last_key_in_group= keys[keys.length - 1];
+
+    console.log(last_key_in_group);
+    console.log(group_remaining_objects[last_key_in_group][1]);
+    console.log(group_remaining_objects[last_key_in_group][0]);
+    // iterate_children(group_remaining_objects[last_key_in_group][1], group_remaining_objects[last_key_in_group][0]);
+  }
+  // else{
+  //   model_children= model_children_list_keep;
+  // }
+  
+  // console.log(model_children);
+  console.log("Stop here");
+  // return;
+  
+}
+
 
 export const ModelAnimation = (props) => {
+    model_children_list_keep.length= 0;
+
     const get_model_url= keep_for_view_url[0];
     // GETTING THE FILE EXTENSION
     // Extract the file name from the URL
     const fileName = get_model_url.substring(get_model_url.lastIndexOf('/') + 1);
     // Split the file name into its base name and extension
+    // const [baseName, extension] = fileName.split('.');
     const file_path = fileName.split('.');
     const extension= file_path[file_path.length -1];
 
     const model_load= DetectModel(extension, get_model_url);
 
+    // const ifcLoader = new IFCLoader();
 
+    // ifcLoader.load('path/to/your/model.ifc', (ifcModel) => {
+    //   // Add the loaded model to the scene
+    //   scene.add(ifcModel);
+    // });
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
     const show_obj_data= props.props.show_obj_;
@@ -64,7 +130,26 @@ export const ModelAnimation = (props) => {
 
 
 
+    // const modelUrl= new URL("stl/Dragon 2.5_stl.stl", import.meta.url);
+    // const model_load= useLoader(GLTFLoader, `${get_model_url}`);
+    // const model_load= useLoader(ColladaLoader, dae_model);
+    // const model_load= useLoader(OBJLoader, "/InteriorTest.obj")
+    // const model_load= useFBX("/Room #1.fbx")
+    // model_load= useLoader(FBXLoader, "/6884/source/6884.fbx");
+ 
+    // const model_load= useLoader(ColladaLoader, "/House/House.dae");
+    // const model_load= useLoader(ColladaLoader, "/simple_house/house.dae");
+    // const model_load= useLoader(STLLoader, stl_model);
+
    
+
+
+
+
+    // if (has_model_loaded.length === 0){
+    //  model_load= useLoader(GLTFLoader, `${for_model_file_data}`);
+    // }
+    // else{model_load= has_model_loaded[0]}
 
   
     const {camera, size}= useThree();
@@ -83,7 +168,10 @@ export const ModelAnimation = (props) => {
     
   
     try{
+      // iterate_children(0, model_load.scene);
 
+      
+      // console.log(model_load);
       model_load.scene.traverse((child) => {
         // console.log(child); 
         
@@ -91,27 +179,67 @@ export const ModelAnimation = (props) => {
           model_children_list_keep.push(child);
         }
 
+
+        if (child.isGroup){
+          child.traverse((child) => {
+            console.log(child); 
+          });
+          // alert("It is possible");
+          // model_children= model_load.children;
+        }
+        // console.log("+++++++++up here+++++++++++++")
+        // console.log(child.children);
+        // // console.log("+++++++++down here+++++++++++++")
+        // if (child.isGroup){
+        //   console.log(child.children);
+        //   for (let i=0; i < child.isGroup.length; i++){
+        //     console.log(child.isGroup[i]);
+        //   } 
+        // }
+
+        
+        // if (child.isGroup && child.children.length === 1){
+        //   console.log(child.children.length);  
+        //   console.log(child);  
+
+        //   group_tracker.push(child);
+
+        //   model_children.push(child);
+        //   // model_children= child.children[0].children[0].children;
+        // }
+
+        // else if (child.isGroup || child.isMesh){
+        //   model_children.push(child);
+        //   // model_children= child.children[0].children[0].children;
+        // }
+
+        // has_model_loaded.push[model_load];
       }); 
     }
 
     catch(e){
       let children_tracker= 0;
       if (model_load.isGroup){
-        model_load.traverse((child) => {
-          if (child.isMesh || child.isObject || child.isLineSegments){
-            model_children_list_keep.push(child);
-          }
-  
-        }); 
+        model_children= model_load.children;
+        // console.log(model_load.children[0]);
+        // model_children_list_keep= model_load.children;
+        // for (let i=0; i < model_load.children.length; i++){
+        //   if (model_load.children.length === 1){
+        //     console.log(model_load.children[i]);
+        //   }
+          
+        //   // model_children.push(model_load.children[i]);
+        // }
       }
 
       else if (model_load.isMesh){
         model_children_list_keep.push(model_load);
       }
-      else{alert("This model does not support object interaction !");}
+      // else{alert("This model does not support object interaction !");}
     }
 
     model_children= model_children_list_keep;
+    // console.log(model_load);
     // console.log(model_load);
   
   
@@ -153,7 +281,7 @@ export const ModelAnimation = (props) => {
     
     //+++++++++++++ MOUSEMOVE  EVENT ++++++++++++++++
     const handle_mouse = (event) => {
-      // console.log(model_load);
+      console.log(model_load);
       // console.log(event.target.localName);
 
       if (event.target.localName === "canvas"){

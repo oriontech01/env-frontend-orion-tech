@@ -8,8 +8,8 @@ import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
 import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 
-import { has_model_loaded, keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../api/api_variables";
-import AddObjectsModel from "../../pages/add_objects_model";
+import { has_model_loaded, keep_for_edit_url, keep_for_view_url, keep_objects_data, keep_objects_data_reference, keep_objects_reference } from "../../../api/api_variables";
+import AddObjectsModel from "../../../pages/add_objects_model";
 import { Html, Preload, Text, useFBX } from "@react-three/drei";
 
 
@@ -182,6 +182,10 @@ export const ModelViewAnimation = (props) => {
               if (lastObject){
                 lastObject.material.color.set(new THREE.Color(1, 1, 1));
               }
+      
+              // keep_small_object_ref.splice(ref_small, 1);
+              intersected_object.material.color.set(new THREE.Color(4, 4, 4));
+              lastObject= intersected_object;
 
               show_obj_data(null);
             }
@@ -190,15 +194,6 @@ export const ModelViewAnimation = (props) => {
               try{
                 const get_text_data= for_object_view_data[intersected_object.name].comment_box;
                 set_current_text(get_text_data);
-
-
-                if (lastObject){
-                  lastObject.material.color.set(new THREE.Color(1, 1, 1));
-                }
-        
-                // keep_small_object_ref.splice(ref_small, 1);
-                intersected_object.material.color.set(new THREE.Color(4, 4, 4));
-                lastObject= intersected_object;
               }
               catch{}
 
@@ -230,11 +225,11 @@ export const ModelViewAnimation = (props) => {
   
     useEffect(() => {
       window.addEventListener('mousemove', handle_mouse);
-      window.addEventListener('dblclick', handle_single_click);
+      window.addEventListener('click', handle_single_click);
   
       return () => {
         window.removeEventListener('mousemove', handle_mouse);
-        window.addEventListener('dblclick', handle_single_click);
+        window.addEventListener('click', handle_single_click);
       };
     }, []);
   
@@ -280,7 +275,45 @@ export const ModelViewAnimation = (props) => {
       
         </Text>
       </group>
-    
+      // <Preload all >
+
+      //   <group >
+      //     <primitive 
+      //       object={
+      //         model_load.scene ? model_load.scene : model_load
+      //       } 
+      //       scale={1} 
+      //       position= {[0, -5, 0]}
+      //       ref={room_ref}
+      //       // onPointerEnter= {e => (handle_mouse_enter(e))}
+      //       // onPointerLeave= {e => (handle_mouse_leave(e))}
+      //     />
+
+
+
+      //     <Text
+      //       ref={text_ref}
+      //       // scale={scale}
+      //       // color= {text_color} // def
+      //       position={[0, 0, 0]}
+            
+      //     >
+
+      //       {/* Pipeloluwa */}
+      //       <Html center>
+      //         <div className={`${current_text === "" ? "" : "bg-green-600/80 shadow shadow-black min-h-4 w-44 py-2 px-4 rounded-xl"}`}>
+      //           <p className={` text-[14px] text-white `}>
+      //             {current_text}
+      //             {/* <br></br>
+      //             wffef */}
+      //           </p>
+      //         </div>
+      //       </Html>
+        
+      //     </Text>
+      //   </group>
+
+      // </Preload>
     );
   }
 
