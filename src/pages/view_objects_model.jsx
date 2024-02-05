@@ -214,7 +214,11 @@ export default function ViewObjectsModel() {
                         <label  htmlFor="Listeria" className="flex flex-col text-left text-[#714E2C]">
                           Listeria
                         </label>
-                        <select  value={listeria} onChange={e => {set_listeria(e.target.value)}}  className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]" />
+                        <select  value={listeria} onChange={e => {set_listeria(e.target.value)}}  className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
+                            <option >select value</option>
+                            <option >Negative</option>
+                            <option >Positive</option>
+                        </select>
 
                         <label  htmlFor="APC" className="flex flex-col text-left text-[#714E2C]">
                           APC
@@ -224,7 +228,11 @@ export default function ViewObjectsModel() {
                         <label  htmlFor="Salmonella" className="flex flex-col text-left text-[#714E2C]">
                           Salmonella
                         </label>
-                        <select  value={salmonella} onChange={e => {set_salmonella(e.target.value)}} className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4  py-2  bg-[#B9A88B]" />
+                        <select  value={salmonella} onChange={e => {set_salmonella(e.target.value)}} className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
+                            <option >select value</option>
+                            <option >Negative</option>
+                            <option >Positive</option>
+                        </select>
 
                         <label  htmlFor="Date of sample" className="flex flex-col text-left text-[#714E2C]">
                           Date of sample:
