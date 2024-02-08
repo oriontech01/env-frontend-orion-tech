@@ -201,7 +201,7 @@ export default function ViewAdmin() {
 
   function dashboard_(event){
       // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-      navigate('/admin-model-management', {relative: true});
+      navigate('/admin-super-management', {relative: true});
   }
 
   function home_page_(event){
