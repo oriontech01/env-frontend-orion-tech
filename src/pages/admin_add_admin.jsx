@@ -64,6 +64,8 @@ export default function AdminAddadmin() {
         set_admin_name(e.target.value);
     }
 
+    const [role, set_role]= useState('');
+
     const [password1, set_password1]= useState('');
     const [password2, set_password2]= useState('');
     let password_validator= "";
@@ -156,6 +158,10 @@ export default function AdminAddadmin() {
           return set_validation_text("Enter username");
       }
 
+      if (role === "set user role"){
+        return set_validation_text("Please set a user role");
+    }
+
       if (m_password1.length === 0){
           return set_validation_text("Enter password1");
       }
@@ -165,10 +171,11 @@ export default function AdminAddadmin() {
       }
 
 
-      const new_admin= {'username':m_name,'password':m_password1};
+      const new_admin= {'username':m_name, 'role': role, 'password':m_password1};
       post_request(new_admin);
       // navigate('/add-model-objects', {relative: true});
   }
+
 
 
 
@@ -195,6 +202,12 @@ export default function AdminAddadmin() {
 
                   <h1 className="text-center self-stretch flex flex-col mx-[20%]">
                       <input onChange={admin_name_} className="flex shadow-md shadow-gray-500 text-left my-4 px-4 pl-6 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Username"/>
+
+                        <select  value={role} onChange={e => {set_role(e.target.value)}} className="text-[#714E2C] px-4 mt-1 flex shadow-md shadow-gray-500 text-left my-4   py-2  bg-[#B9A88B]">
+                            <option >set user role</option>
+                            <option >user</option>
+                            <option >admin</option>
+                        </select>
 
                       <input onChange={password1_} className="flex shadow-md shadow-gray-500 text-left my-4 px-4 pl-6 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="password" placeholder="Password"/>
 

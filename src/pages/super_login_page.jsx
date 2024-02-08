@@ -6,10 +6,8 @@ import { api_root } from "../api/api_variables";
 import Nav_ from "../components1/nav";
 import { handleDeleteCookie } from "../api/delete_cookie";
 
-export default function LoginPage() {
+export default function SuperLoginPage() {
     const navigate= useNavigate();
-    
-    var url_path= "/";
 
     var access_token;
     const getCookie = (name) => {
@@ -108,26 +106,9 @@ export default function LoginPage() {
       bearer_token= res.data.token_type + " " + res.data.access_token;
       // console.log(bearer_token);
       setCookie('access_token', bearer_token, 1);
-
-      axios.get(api_root + 'admin/manual_verify_user', {
-          headers: {
-              'Authorization': access_token,
-              'Content-Type': 'application/json', // Add other headers if needed
-            },
-      }).then(res => {
-        if (res.data === "admin"){navigate("/admin-model-management", {relative: true});}
-        else if (res.data === "superuser"){navigate("/admin-super-management", {relative: true})}
-        else{
-          navigate("/", {relative: true})
-        }
-        // setLoggedIn(true);
-      })
-      .catch(e => alert("Sorry, something went wrong"));
-
+      setLoggedIn(true);
       setshowProcessing(false);
     }
-
-
 
     function loginPost(){
       setshowProcessing(true);
@@ -165,7 +146,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (isLoggedIn){
-          navigate(url_path, {relative: true});
+          navigate('/admin-super-management', {relative: true});
         }
     }, [isLoggedIn]); //this effect when isLoggedIn changes
 
@@ -178,7 +159,7 @@ export default function LoginPage() {
     return (
       <div className="relative h-screen overflow-hidden">
 
-        {/* <Nav_/> */}
+        <Nav_/>
 
         <div className="relative mt-[-15px] flex flex-col max-h-screen h-screen items-center justify-center">
 
@@ -186,7 +167,7 @@ export default function LoginPage() {
 
           <div className="items-center mx-auto py-16 bg-[#9c856e] w-[25%] shadow-md shadow-gray-800 rounded-xl">  
             
-            <h1 className="text-[30px] text-[#ecdec4] font-bold text-center mb-7">User Login</h1>
+            <h1 className="text-[30px] text-[#ecdec4] font-bold text-center mb-7">Super Admin Login</h1>
 
             <h1 className="text-center space-y-3 flex flex-col mx-6">
               <input value={username_value} onChange={e => set_username_value(e.target.value)} className="text-left px-4 pl-4 py-2 rounded-full bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Username"/>

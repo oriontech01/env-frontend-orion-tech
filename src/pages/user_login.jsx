@@ -6,10 +6,8 @@ import { api_root } from "../api/api_variables";
 import Nav_ from "../components1/nav";
 import { handleDeleteCookie } from "../api/delete_cookie";
 
-export default function LoginPage() {
+export default function UserLoginPage() {
     const navigate= useNavigate();
-    
-    var url_path= "/";
 
     var access_token;
     const getCookie = (name) => {
@@ -30,12 +28,7 @@ export default function LoginPage() {
         access_token = getCookie('access_token');
     };
 
-    // useEffect(() => {
-    //     handleGetCookie();
-    //     if (access_token !== null){
-    //       navigate('/admin-model-management', {relative: true});
-    //     }
-    // }, []);
+
 
 
 
@@ -92,26 +85,18 @@ export default function LoginPage() {
     }
 
 
-    function home_page_(event){
-      // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-      navigate('/', {relative: true});
-    }
-
 
     function loginPostRes(res){
-      handleGetCookie();
-      if (access_token !== null){
-        handleDeleteCookie();
-      }
-
-
+      
+      handleDeleteCookie();
       bearer_token= res.data.token_type + " " + res.data.access_token;
-      // console.log(bearer_token);
+
       setCookie('access_token', bearer_token, 1);
 
+      
       axios.get(api_root + 'admin/manual_verify_user', {
           headers: {
-              'Authorization': access_token,
+              'Authorization': bearer_token,
               'Content-Type': 'application/json', // Add other headers if needed
             },
       }).then(res => {
@@ -122,12 +107,11 @@ export default function LoginPage() {
         }
         // setLoggedIn(true);
       })
-      .catch(e => alert("Sorry, something went wrong"));
+      .catch(e => alert(bearer_token));
 
       setshowProcessing(false);
+      
     }
-
-
 
     function loginPost(){
       setshowProcessing(true);
@@ -163,12 +147,6 @@ export default function LoginPage() {
     }
 
 
-    useEffect(() => {
-        if (isLoggedIn){
-          navigate(url_path, {relative: true});
-        }
-    }, [isLoggedIn]); //this effect when isLoggedIn changes
-
 
 
 
@@ -178,14 +156,12 @@ export default function LoginPage() {
     return (
       <div className="relative h-screen overflow-hidden">
 
-        {/* <Nav_/> */}
 
         <div className="relative mt-[-15px] flex flex-col max-h-screen h-screen items-center justify-center">
 
           {/* <img alt="/" onClick={home_page_} src={emapping} className="cursor-pointer w-[180px] mx-auto pb-4"/> */}
 
-          <div className="items-center mx-auto py-16 bg-[#9c856e] w-[25%] shadow-md shadow-gray-800 rounded-xl">  
-            
+          <div className="items-center mx-auto py-16 bg-[#9c856e] w-[25%] shadow-md shadow-gray-800 rounded-xl">          
             <h1 className="text-[30px] text-[#ecdec4] font-bold text-center mb-7">User Login</h1>
 
             <h1 className="text-center space-y-3 flex flex-col mx-6">

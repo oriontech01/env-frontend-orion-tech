@@ -1,6 +1,10 @@
 import { IoSearchSharp } from "react-icons/io5";
 import CardsGridManagement from "../components1/cardsgridmanagement";
-import emapping from "../assets1/images/emapping.png"
+import emapping from "../assets1/images/emapping.png";
+import pic1 from "../assets1/pic1.png";
+import pic2 from "../assets1/pic1.png";
+import pic3 from "../assets1/pic1.png";
+
 import { IoAddCircle } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +13,13 @@ import axios from "axios";
 import { api_root, bearer_token, keep_json_data } from "../api/api_variables";
 import SessionExpired from "../components1/session_expired";
 import { handleDeleteCookie } from "../api/delete_cookie";
+import SuperCardsGridManagement from "../components1/super_cards_grid";
 
 
 
 export let selected_models= [];
 
-export default function AdminCourseManagement() {
+export default function SuperAdminReport() {
     var access_token;
 
     const [is_expired, set_is_expired]= useState(false);
@@ -66,7 +71,7 @@ export default function AdminCourseManagement() {
 
     function dashboard_(event){
         // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-        navigate('/admin-model-management', {relative: true});
+        navigate('/admin-super-management', {relative: true});
     }
 
     function home_page_(event){
@@ -85,18 +90,18 @@ export default function AdminCourseManagement() {
         set_model_json_data(res.data);
     };
 
-
+    
 
     useEffect(() => {
         selected_models=[];
 
         handleGetCookie();
         if (access_token === null){
-            navigate('/user-login', {relative: true});
+            navigate('/admin-login------', {relative: true});
         }
 
         else{
-            axios.get(api_root + 'admin/get-user', {
+            axios.get(api_root + 'admin/get-all-users', {
                 headers: {
                     'Authorization': access_token,
                     'Content-Type': 'application/json', // Add other headers if needed
@@ -105,8 +110,6 @@ export default function AdminCourseManagement() {
             .catch(e => is_expired_(e));
         }
     }, [is_model_delete]); //the empty array is very important at the back, which means we are saying the effect does not depends on anything so as to prevent it from autorefiring by itself after first run of the page loading, even if there is any varibale or thing that changes in it
-
-
 
 
 
@@ -173,58 +176,18 @@ export default function AdminCourseManagement() {
                 <img alt="/" src={emapping}  onClick={home_page_} className="cursor-pointer absolute top-5 left-0 right-0 mx-auto w-[158px]"/>
 
                 <div className="absolute top-32  left-0 right-0 w-full space-y-5">
-                    <div onClick={model_add_} className="scale-75 rounded-xl flex mx-auto cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-[#714E2C] border-[#ffffff] hover:text-[#ffffff] hover:bg-[#714E2C] hover:border-[#ffffff] bg-[#ffffff] px-8 py-3">
-                        <IoAddCircle className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-9 "/>
-                        <button className="absolute top-0 bottom-0 right-10 text-[20px]">Add Model</button>
-                    </div>
-
-
-                    <div onClick={cancel_delete_} className="scale-75  rounded-xl flex mx-auto cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-[#714E2C] border-[#ffffff] hover:text-[#ffffff] hover:bg-[#714E2C] hover:border-[#ffffff] bg-[#ffffff] py-3">
-                        <MdDelete className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-6 "/>
-                        <button className="absolute top-0 bottom-0 right-8 text-[20px]">Delete Model</button>
-                    </div>
-
+                    <h1 onClick={dashboard_} className="cursor-pointer text-center">Dashboard</h1>
+                    <h1 onClick={view_admin_} className="cursor-pointer text-center -ml-[1.5rem]">Admins</h1>
+                    <h1 className="text-center -ml-[2.0rem]">Report</h1>
                 </div>
 
                 <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
             </div>
             
             <div className="relative overflow-y-auto overflow-hidden h-screen col-span-3  items-center justify-center">
-
-                <h1 className="text-center flex flex-row relative">
-                    <input type= "search" id="search_input" className="shadow-md shadow-gray-500 absolute  left-32 right-32 mt-[53px] justify-center items-center mx-auto align-middle text-left px-4 pl-16 py-3 rounded-xl bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  placeholder="Search Model"/>
-                    <IoSearchSharp onClick={allow_search} className="absolute left-[9.2rem] right-32 mt-[65px] size-7" color="#714E2C"/>
-                    {/* <input className="absolute left-5 right-5 items-center justify-center mx-auto w-[1026px] h-[79] text-left px-4 pl-16 py-3 rounded-xl mt-[50px] bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Search Model"/> */}
-                </h1>
-
-                {
-                    model_json_data.length !== 0 
-                        ?  
-                        <CardsGridManagement json_data={model_json_data} />
-
-                        : ""
-                }
-
-
-                {cancel_delete 
-                    ?  <div className="fixed h-screen bg-black/70 text-center text-white flex flex-col justify-center items-center  top-0 bottom-0 left-0 right-0">
-                            <div className="flex flex-col items-center rounded-xl px-6 py-14 bg-gray-200 text-red-600">
-                                <h1 className="text-center font-bold">Are you sure you want to delete?</h1>
-                                <div className="flex space-x-4 mt-6">
-                                    <button onClick={cancel_delete_} className="bg-green-900 text-white w-20 py-2 rounded-3xl">
-                                        Cancel
-                                    </button>
-
-                                    <button onClick={continue_delete_} className="bg-gray-900 w-20 py-2 rounded-3xl">
-                                        Yes
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    
-                    
-                    :   <div> </div> 
-                }
+               <img alt="" src={pic1} />
+               <img alt="" src={pic2} />
+               <img alt="" src={pic3} />
             </div>
 
 

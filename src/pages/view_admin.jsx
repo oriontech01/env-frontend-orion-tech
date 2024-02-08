@@ -122,7 +122,10 @@ export default function ViewAdmin() {
           <div onClick={e => profile_click(keep_json_data[0][i].id)} id={username} key={username} className="hover:scale-105 duration-300 rounded-3xl relative flex items-center bg-[#B9A88B] px-4 py-2 mt-2">
             <img alt="/" src={avatar_male} className="flex w-[40px]" />
 
-            <h1 className="font-bold px-4">{username}</h1>
+            <div className="">
+              <h1 className="font-bold px-4">{username}</h1>
+              <h1 className="italic px-4 ">role: {keep_json_data[0][i].role}</h1>
+            </div>
 
             <div onClick={ e => cancel_delete_(keep_json_data[0][i].id)} value={keep_json_data[0][i].id} className="cursor-pointer absolute right-0 mx-px scale-75 shadow-md shadow-gray-600 drop-shadow w-[7rem] h-[2.5rem] border text-white border-[#714E2C] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C]  py-2">
                 <MdDelete className="size-[20px] mt-[0.6rem] absolute top-0 bottom-0 left-[1.05rem]"/>
@@ -208,7 +211,7 @@ export default function ViewAdmin() {
 
   const handleLogout= () => {
       handleDeleteCookie();
-      navigate('/admin-login', {relative: true});
+      navigate('/user-login', {relative: true});
   }
 
   return (
@@ -233,7 +236,7 @@ export default function ViewAdmin() {
                   <div onClick={admin_add_} className="cursor-pointer flex flex-row space-x-5 justify-end mt-4 mr-4">
                       <div className="shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-white border-[#714E2C] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3">
                           <IoAddCircle className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-9 "/>
-                          <button className="absolute top-0 bottom-0 right-10 text-[20px]">Add Admin</button>
+                          <button className="absolute top-0 bottom-0 right-10 text-[20px]">Add User</button>
                       </div>
                   </div>
                   
@@ -244,7 +247,7 @@ export default function ViewAdmin() {
                   </h1>
 
                   <div className="flex flex-col  mt-[125px] mb-32 text-[#714E2C] px-[126px]">
-                    <h1 className="text-2xl font-bold mb-2">Admin(s)</h1>
+                    <h1 className="text-2xl font-bold mb-2">User(s)</h1>
 
                     {model_json_data}
 

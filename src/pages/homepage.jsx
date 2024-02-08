@@ -4,6 +4,7 @@ import Search from "../components1/search";
 
 
 export default function HomePage() {
+
     return (
       <div>
         <Nav_ />

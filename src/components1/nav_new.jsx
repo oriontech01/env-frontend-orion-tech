@@ -12,7 +12,7 @@ const Nav_New= () => {
     const login_navigate= useNavigate();
     function login_(event){
         // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-        login_navigate('/admin-login', {relative: true});
+        login_navigate('/admin-login---', {relative: true});
     }
 
     const navigate= useNavigate();
@@ -35,7 +35,7 @@ const Nav_New= () => {
                 <img alt="/" src={orion_logo} className="w-[60px] h-[55px] mr-4" />
                 <li onClick={home_page_} className="cursor-pointer px-4 font-bold text-[#714E2C]">HOME</li>
                 <li onClick={navigate_page} className="cursor-pointer px-4 font-bold text-[#714E2C]">MODEL LIST</li>
-                <button onClick={login_} className="border border-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3 rounded-xl font-bold">LOGIN</button>
+                {/* <button onClick={login_} className="border border-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3 rounded-xl font-bold">ADMIN LOGIN</button> */}
             </ul>
         </div>
     );

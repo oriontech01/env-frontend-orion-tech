@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 import { FaCircle } from "react-icons/fa";
 
-import { model_json_data } from "../pages/admincoursemanagement";
 
 import { selected_models } from "../pages/admincoursemanagement";
 import { keep_for_edit_name, keep_for_edit_url, keep_for_object_view, save_for_object_view } from "../api/api_variables";
@@ -72,42 +71,40 @@ const CardsGridManagement= (model_json_data) => {
     const model_images= [];
     var cards= [false, false, false, false, false, false];
 
-    for (let i =0; i <  json_data.length; i ++){
-        const user_models= json_data[i].user_models;
-        for (let i2= 0; i2 < user_models.length; i2 ++ ){
-            // console.log(user_models[i2].picture_cover);
-            model_images.push(
-                <div key={user_models[i2].picture_cover}>
-                    <div className={`${!isImageLoaded ? "animate-pulse shadow-md drop-shadow-lg shadow-[#30302e] relative w-[367px] h-[243px] bg-[#d4d2d2] rounded-xl overflow-hidden" : "shadow-md drop-shadow-lg shadow-[#30302e] relative w-[367px] h-[243px] bg-[#d4d2d2] rounded-xl overflow-hidden"}`}>
-                        <img onLoad={handleImageLoad} alt="/" src={user_models[i2].picture_cover} className={`${isImageLoaded ? "opacity-100" : "opacity-0"} absolute object-cover w-[100%] h-[100%]`}/>
-                        
-                        <div className="hover:bg-slate-100 hover:scale-105 duration-300">
-                            <div className="flex absolute w-[367px] h-[243px] bg-[#3D3328] opacity-75 rounded-xl"></div>
-                            {/* {cards[index] === true 
-                                ? <div> </div>
-                                
-                                
-                                : <FaCircle onClick={select_card(index)} className="shadow-2xl shadow-black drop-shadow size-6 absolute right-0  m-6 text-[#C3BFBF]"/>
-                            } */}
+    const user_models= json_data.user_models;
+    for (let i2= 0; i2 < user_models.length; i2 ++ ){
+        // console.log(user_models[i2].picture_cover);
+        model_images.push(
+            <div key={user_models[i2].picture_cover}>
+                <div className={`${!isImageLoaded ? "animate-pulse shadow-md drop-shadow-lg shadow-[#30302e] relative w-[367px] h-[243px] bg-[#d4d2d2] rounded-xl overflow-hidden" : "shadow-md drop-shadow-lg shadow-[#30302e] relative w-[367px] h-[243px] bg-[#d4d2d2] rounded-xl overflow-hidden"}`}>
+                    <img onLoad={handleImageLoad} alt="/" src={user_models[i2].picture_cover} className={`${isImageLoaded ? "opacity-100" : "opacity-0"} absolute object-cover w-[100%] h-[100%]`}/>
+                    
+                    <div className="hover:bg-slate-100 hover:scale-105 duration-300">
+                        <div className="flex absolute w-[367px] h-[243px] bg-[#3D3328] opacity-75 rounded-xl"></div>
+                        {/* {cards[index] === true 
+                            ? <div> </div>
                             
-                            <input type="checkbox" id={i2} onClick={e => selectValue_(user_models[i2].id)} className="shadow-2xl shadow-black drop-shadow size-6 absolute right-0  m-6" />
-                            <h1 className="absolute top-[144px] font-bold text-white text-[20px] mx-6">
-                                {user_models[i2].id}
-                            </h1>
-                            <p className="absolute top-[175px] text-white text-[14px] mx-6">
-                                {/* Dangote apartment is located at Puzzler street,Maitama, Abuja. */}
-                                {user_models[i2].description_model}
-                            </p>
-                        </div> 
-                    </div>
-
-                    <div className="mx-4 my-4 flex flex-row justify-between">
-                        {/* <button  onClick={e => {model_edit_(user_models[i2].id, user_models[i2].file_model)}} className="shadow-md shadow-gray-600 drop-shadow  hover:bg-[#714E2C] hover:border-white hover:text-white border border-[#714E2C] text-[#714E2C] font-bold text-[15px] px-8 py-3 rounded-2xl">Edit Model</button> */}
-                        <button onClick={e => {model_view_(user_models[i2].id)}} className="shadow-md shadow-gray-600 drop-shadow border border-white text-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3 rounded-2xl text-[15px] font-bold">View Model</button>
-                    </div>
+                            
+                            : <FaCircle onClick={select_card(index)} className="shadow-2xl shadow-black drop-shadow size-6 absolute right-0  m-6 text-[#C3BFBF]"/>
+                        } */}
+                        
+                        <input type="checkbox" id={i2} onClick={e => selectValue_(user_models[i2].id)} className="shadow-2xl shadow-black drop-shadow size-6 absolute right-0  m-6" />
+                        <h1 className="absolute top-[144px] font-bold text-white text-[20px] mx-6">
+                            {user_models[i2].id}
+                        </h1>
+                        <p className="absolute top-[175px] text-white text-[14px] mx-6">
+                            {/* Dangote apartment is located at Puzzler street,Maitama, Abuja. */}
+                            {user_models[i2].description_model}
+                        </p>
+                    </div> 
                 </div>
-            );
-        }
+
+                <div className="mx-4 my-4 flex flex-row justify-between">
+                    {/* <button  onClick={e => {model_edit_(user_models[i2].id, user_models[i2].file_model)}} className="shadow-md shadow-gray-600 drop-shadow  hover:bg-[#714E2C] hover:border-white hover:text-white border border-[#714E2C] text-[#714E2C] font-bold text-[15px] px-8 py-3 rounded-2xl">Edit Model</button> */}
+                    <button onClick={e => {model_view_(user_models[i2].id)}} className="shadow-md shadow-gray-600 drop-shadow border border-white text-white hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3 rounded-2xl text-[15px] font-bold">View Model</button>
+                </div>
+            </div>
+        );
     }
 
 

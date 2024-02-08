@@ -9,12 +9,13 @@ import axios from "axios";
 import { api_root, bearer_token, keep_json_data } from "../api/api_variables";
 import SessionExpired from "../components1/session_expired";
 import { handleDeleteCookie } from "../api/delete_cookie";
+import SuperCardsGridManagement from "../components1/super_cards_grid";
 
 
 
 export let selected_models= [];
 
-export default function AdminCourseManagement() {
+export default function SuperAdminCourseManagement() {
     var access_token;
 
     const [is_expired, set_is_expired]= useState(false);
@@ -64,6 +65,10 @@ export default function AdminCourseManagement() {
         navigate('/view-admin', {relative: true});
     }
 
+    function report_page(event){
+        navigate('/admin-super-report', {relative: true});
+    }
+
     function dashboard_(event){
         // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
         navigate('/admin-model-management', {relative: true});
@@ -85,18 +90,18 @@ export default function AdminCourseManagement() {
         set_model_json_data(res.data);
     };
 
-
+    
 
     useEffect(() => {
         selected_models=[];
 
         handleGetCookie();
         if (access_token === null){
-            navigate('/user-login', {relative: true});
+            navigate('/admin-login------', {relative: true});
         }
 
         else{
-            axios.get(api_root + 'admin/get-user', {
+            axios.get(api_root + 'admin/get-all-users', {
                 headers: {
                     'Authorization': access_token,
                     'Content-Type': 'application/json', // Add other headers if needed
@@ -105,8 +110,6 @@ export default function AdminCourseManagement() {
             .catch(e => is_expired_(e));
         }
     }, [is_model_delete]); //the empty array is very important at the back, which means we are saying the effect does not depends on anything so as to prevent it from autorefiring by itself after first run of the page loading, even if there is any varibale or thing that changes in it
-
-
 
 
 
@@ -173,37 +176,34 @@ export default function AdminCourseManagement() {
                 <img alt="/" src={emapping}  onClick={home_page_} className="cursor-pointer absolute top-5 left-0 right-0 mx-auto w-[158px]"/>
 
                 <div className="absolute top-32  left-0 right-0 w-full space-y-5">
-                    <div onClick={model_add_} className="scale-75 rounded-xl flex mx-auto cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-[#714E2C] border-[#ffffff] hover:text-[#ffffff] hover:bg-[#714E2C] hover:border-[#ffffff] bg-[#ffffff] px-8 py-3">
-                        <IoAddCircle className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-9 "/>
-                        <button className="absolute top-0 bottom-0 right-10 text-[20px]">Add Model</button>
-                    </div>
-
-
-                    <div onClick={cancel_delete_} className="scale-75  rounded-xl flex mx-auto cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-[#714E2C] border-[#ffffff] hover:text-[#ffffff] hover:bg-[#714E2C] hover:border-[#ffffff] bg-[#ffffff] py-3">
-                        <MdDelete className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-6 "/>
-                        <button className="absolute top-0 bottom-0 right-8 text-[20px]">Delete Model</button>
-                    </div>
-
+                    <h1 onClick={dashboard_} className="cursor-pointer text-center">Dashboard</h1>
+                    <h1 onClick={view_admin_} className="cursor-pointer text-center -ml-[1.5rem]">Admins</h1>
+                    <h1 onClick={report_page} className="cursor-pointer text-center -ml-[2.0rem]">Report</h1>
                 </div>
 
                 <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
             </div>
             
             <div className="relative overflow-y-auto overflow-hidden h-screen col-span-3  items-center justify-center">
+                <div className="flex flex-row space-x-5 justify-end mt-4 mr-4">
+                    <div onClick={model_add_} className="scale-75 cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-white border-[#714E2C] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C] px-8 py-3">
+                        <IoAddCircle className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-9 "/>
+                        <button className="absolute top-0 bottom-0 right-10 text-[20px]">Add Model</button>
+                    </div>
 
+                    <div onClick={cancel_delete_} className="scale-75 cursor-pointer shadow-md shadow-gray-600 drop-shadow relative w-[13rem] h-[2.5rem] border text-white border-[#714E2C] hover:text-[#714E2C] hover:bg-white hover:border-[#714E2C] bg-[#714E2C]  py-3">
+                        <MdDelete className="size-[23px] mt-[0.5rem] absolute top-0 bottom-0 left-6 "/>
+                        <button className="absolute top-0 bottom-0 right-8 text-[20px]">Delete Model</button>
+                    </div>
+                </div>
+                
                 <h1 className="text-center flex flex-row relative">
                     <input type= "search" id="search_input" className="shadow-md shadow-gray-500 absolute  left-32 right-32 mt-[53px] justify-center items-center mx-auto align-middle text-left px-4 pl-16 py-3 rounded-xl bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  placeholder="Search Model"/>
                     <IoSearchSharp onClick={allow_search} className="absolute left-[9.2rem] right-32 mt-[65px] size-7" color="#714E2C"/>
                     {/* <input className="absolute left-5 right-5 items-center justify-center mx-auto w-[1026px] h-[79] text-left px-4 pl-16 py-3 rounded-xl mt-[50px] bg-[#B9A88B] placeholder-[#714E2C] text-[#714E2C]"  type="text" placeholder="Search Model"/> */}
                 </h1>
 
-                {
-                    model_json_data.length !== 0 
-                        ?  
-                        <CardsGridManagement json_data={model_json_data} />
-
-                        : ""
-                }
+                <SuperCardsGridManagement json_data={model_json_data} />
 
 
                 {cancel_delete 

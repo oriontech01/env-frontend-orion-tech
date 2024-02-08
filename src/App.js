@@ -12,6 +12,10 @@ import AdminAddadmin from "./pages/admin_add_admin";
 import EditObjectsModel from "./pages/edit_objects_model";
 import AdminEditModel from "./pages/admin_edit_model";
 import ViewObjectsModel from "./pages/view_objects_model";
+import UserLoginPage from "./pages/user_login";
+import SuperLoginPage from "./pages/super_login_page";
+import SuperAdminCourseManagement from "./pages/super_admin_management";
+import SuperAdminReport from "./pages/report_page";
 
 
 function App() {
@@ -23,11 +27,15 @@ function App() {
           <Route index element={<HomePage/>}/>
           <Route path="view-all" element={<ViewAll/>}/>
           <Route path="single-model-view" element= {<SingleModelView />} />
-          <Route path="admin-login" element= {<LoginPage />} />
+          {/* <Route path="user-login" element= {<UserLoginPage />} /> */}
+          <Route path="user-login" element= {<UserLoginPage />} />
+          {/* <Route path="---super-admin-login---" element= {<SuperLoginPage />} /> */}
+          <Route path="admin-super-management" element= {<SuperAdminCourseManagement />} />
           <Route path="admin-model-management" element= {<AdminCourseManagement />} />
           <Route path="admin-add-model" element= {<AdminAddModel />} />
           <Route path="add-model-objects/:dynamicParam" element= {<AddObjectsModel />} />
           <Route path="view-model-objects/:dynamicParam" element= {<ViewObjectsModel />} />
+          <Route path="admin-super-report" element= {<SuperAdminReport />} />
           <Route path="view-admin" element= {<ViewAdmin />} />
           <Route path="add-admin" element= {<AdminAddadmin />} />
           <Route path="admin-edit-model" element= {<AdminEditModel />} />
