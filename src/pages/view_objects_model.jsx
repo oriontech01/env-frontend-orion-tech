@@ -21,6 +21,7 @@ export default function ViewObjectsModel() {
 
 
 
+
   const navigate= useNavigate();
   const handleLogout= () => {
       handleDeleteCookie();
@@ -58,10 +59,10 @@ export default function ViewObjectsModel() {
       return null;
   };
 
-  // const handleGetCookie = () => {
-  //     // Retrieve the value of the "exampleCookie" cookie
-  //     access_token = getCookie('access_token');
-  // };
+  const handleGetCookie = () => {
+      access_token = getCookie('access_token');
+  };
+
 
   const [model_json_data, set_model_json_data]= useState([]);
   const [has_loaded, set_has_loaded]= useState(false);
@@ -94,15 +95,21 @@ export default function ViewObjectsModel() {
 
 
   useEffect(() => {
+        handleGetCookie();
+        if (access_token === null){
+            navigate('/user-login', {relative: true});
+        }
+
       axios.request(
           {
               method: 'get',
               timeout: 450000,
               // maxBodyLength: Infinity,
               url: api_root + 'home-models/get-a-model/'+dynamicParam,
-              headers: { 
-                'Content-Type': 'application/json'
-              }
+              headers: {
+                    'Authorization': access_token,
+                    'Content-Type': 'application/json', 
+              },
               
           }
       )

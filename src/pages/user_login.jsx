@@ -100,6 +100,8 @@ export default function UserLoginPage() {
               'Content-Type': 'application/json', // Add other headers if needed
             },
       }).then(res => {
+        setCookie("login_role", res.data, 1);
+
         if (res.data === "admin"){navigate("/admin-model-management", {relative: true});}
         else if (res.data === "superuser"){navigate("/admin-super-management", {relative: true})}
         else{

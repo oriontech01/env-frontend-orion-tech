@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 const Search= () => {
 
     var access_token;
+    var role_value;
 
     const [is_expired, set_is_expired]= useState(false);
     const is_expired_ = (e) => {
@@ -41,6 +42,7 @@ const Search= () => {
     const handleGetCookie = () => {
         // Retrieve the value of the "exampleCookie" cookie
         access_token = getCookie('access_token');
+        role_value= getCookie('login_role')
     };
 
     const navigate= useNavigate();
@@ -63,23 +65,26 @@ const Search= () => {
     
 
     useEffect(() => {
-
         handleGetCookie();
-        if (access_token === null){
+        if (access_token === null || role_value === null){
             navigate('/user-login', {relative: true});
         }
 
 
         else{
-            model_images.length= 0;
-        
-            axios.get(api_root + 'home-models/get-all-models', {
-                headers: {
-                    'Authorization': access_token,
-                    'Content-Type': 'application/json', // Add other headers if needed
-                    },
-            }).then(res => model_json_data_(res))
-            .catch(e => is_expired_(e));
+            if (role_value === "admin"){navigate("/admin-model-management", {relative: true});}
+            else if (role_value === "superuser"){navigate("/admin-super-management", {relative: true})}
+            else{
+                model_images.length= 0;
+            
+                axios.get(api_root + 'home-models/get-all-models', {
+                    headers: {
+                        'Authorization': access_token,
+                        'Content-Type': 'application/json', // Add other headers if needed
+                        },
+                }).then(res => model_json_data_(res))
+                .catch(e => is_expired_(e));
+            }
         }
     
 
