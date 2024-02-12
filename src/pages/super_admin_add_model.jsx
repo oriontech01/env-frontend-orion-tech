@@ -13,7 +13,7 @@ import { handleDeleteCookie } from "../api/delete_cookie";
 
 
 
-export default function AdminAddModel() {
+export default function SuperAdminAddModel() {
     const navigate= useNavigate();
     const axios_new = require('axios');
 
@@ -117,11 +117,6 @@ export default function AdminAddModel() {
 
 
 
-    const handleLogout= () => {
-        handleDeleteCookie();
-        navigate('/user-login', {relative: true});
-    }
-
 
 
     const [isFinished, setFinished]= useState(false);
@@ -150,6 +145,16 @@ export default function AdminAddModel() {
     }, [isFinished]); //this effect when isLoggedIn changes
 
 
+    function report_page(event){
+        navigate('/admin-super-report', {relative: true});
+    }
+
+
+    const handleLogout= () => {
+        handleDeleteCookie();
+        navigate('/user-login', {relative: true});
+    }
+
 
 
     function loginPostRes(res){
@@ -157,6 +162,7 @@ export default function AdminAddModel() {
         setFinished(true);
         setshowProcessing(false);
       }
+
 
 
 
@@ -278,15 +284,17 @@ export default function AdminAddModel() {
                 <div>
                     <div className="max-h-screen h-screen grid grid-cols-4 justify-center items-center mx-auto bg-[#C3B598] pb-10">
                         
-                        <div className= "text-white relative overflow-hidden h-screen justify-start justify-items-start items-start text-start bg-[#714E2C]"> 
-                            <img alt="/" src={emapping} onClick={home_page_} className="cursor-pointer absolute top-5 left-0 right-0 mx-auto w-[158px]"/>
+                    <div className= "text-white relative overflow-hidden h-screen justify-start justify-items-start items-start text-start bg-[#714E2C]"> 
+                        <img alt="/" src={emapping}  onClick={home_page_} className="cursor-pointer absolute top-5 left-0 right-0 mx-auto w-[158px]"/>
 
-                            <div className="absolute top-32  left-0 right-0 w-full space-y-5">
-                                <h1 onClick={dashboard_} className="cursor-pointer text-center">Dashboard</h1>
-                            </div>
-
-                            <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
+                        <div className="absolute top-32  left-0 right-0 w-full space-y-5">
+                            <h1 onClick={dashboard_} className="cursor-pointer text-center">Dashboard</h1>
+                            <h1 onClick={view_admin_} className="cursor-pointer text-center -ml-[1.5rem]">Admins</h1>
+                            <h1 onClick={report_page} className="cursor-pointer text-center -ml-[2.0rem]">Report</h1>
                         </div>
+
+                        <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
+                    </div>
                         
                         
                         

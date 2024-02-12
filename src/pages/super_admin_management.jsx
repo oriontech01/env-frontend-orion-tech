@@ -58,7 +58,7 @@ export default function SuperAdminCourseManagement() {
 
     function model_add_(event){
         // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
-        navigate('/admin-add-model', {relative: true});
+        navigate('/super-admin-add-model', {relative: true});
     }
 
     function view_admin_(event){

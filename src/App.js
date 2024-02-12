@@ -16,6 +16,7 @@ import UserLoginPage from "./pages/user_login";
 import SuperLoginPage from "./pages/super_login_page";
 import SuperAdminCourseManagement from "./pages/super_admin_management";
 import SuperAdminReport from "./pages/report_page";
+import SuperAdminAddModel from "./pages/super_admin_add_model";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="user-login" element= {<UserLoginPage />} />
           {/* <Route path="---super-admin-login---" element= {<SuperLoginPage />} /> */}
           <Route path="admin-super-management" element= {<SuperAdminCourseManagement />} />
+          <Route path="super-admin-add-model" element= {<SuperAdminAddModel />} />
           <Route path="admin-model-management" element= {<AdminCourseManagement />} />
           <Route path="admin-add-model" element= {<AdminAddModel />} />
           <Route path="add-model-objects/:dynamicParam" element= {<AddObjectsModel />} />
