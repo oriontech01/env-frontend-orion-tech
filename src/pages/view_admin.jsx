@@ -208,6 +208,10 @@ export default function ViewAdmin() {
       navigate('/', {relative: true});
   }
 
+  function report_page(event){
+    navigate('/admin-super-report', {relative: true});
+  }
+
 
   const handleLogout= () => {
       handleDeleteCookie();
@@ -226,7 +230,7 @@ export default function ViewAdmin() {
                 <div className="absolute top-32  left-0 right-0 w-full space-y-5">
                     <h1 onClick={dashboard_} className="cursor-pointer text-center">Dashboard</h1>
                     <h1 onClick={view_admin_} className="cursor-pointer text-center -ml-[1.5rem]">Admins</h1>
-                    <h1 className="text-center -ml-[2.0rem]">Report</h1>
+                    <h1 onClick={report_page} className="cursor-pointer text-center -ml-[2.0rem]">Report</h1>
                 </div>
 
                 <h1 onClick={handleLogout} className="cursor-pointer -ml-[2.0rem] text-center absolute bottom-10 left-0 right-0 underline">Logout</h1>
