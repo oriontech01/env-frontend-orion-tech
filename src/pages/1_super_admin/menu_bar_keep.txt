@@ -1,0 +1,19 @@
+
+
+        <div className="lg:grid lg:grid-cols-5 relative flex w-screen h-screen overflow-hidden">
+            {/* ++++++++++++++++++ FULLSCREEN NAV +++++++++++++++++ */}
+            <DesktopMenu sendActive= {"users"}/>
+
+            {/* +++++++++++++++ USING RELATIVE WITH SCROLLING MAKES THIS WORK ++++++++++++++++ */}
+            <div className="relative overflow-y-scroll lg:col-span-4 flex flex-col w-full">
+                
+              
+
+
+                <NavHeader mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
+
+            </div>
+
+            <MobileMenu mobileMenu= {mobileMenu} sendActive= {"users"} />
+
+        </div>
