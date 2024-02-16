@@ -4,7 +4,7 @@ import axios from "axios";
 //     baseURL: 'https://http://127.0.0.1:8000/'
 // });
 
-export const api_root= 'https://env-api-e61k.onrender.com/';
+export const api_root= 'http://54.163.24.187:8000/'; //     http://54.163.24.187:8000/
 export var bearer_token= null;
 export let keep_json_data= [];
 export let model_images= [];
@@ -28,6 +28,8 @@ export let keep_m_name= [];
 export var store_first_json;
 export var store_form_data;
 
+
+export let active = ["Dashboard"];
 
 
 
