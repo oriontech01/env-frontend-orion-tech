@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 // import { RiEyeCloseLine } from "react-icons/ri";
 // import { RiEyeCloseFill } from "react-icons/ri";
 import { FaEye } from "react-icons/fa";
@@ -77,7 +78,7 @@ export default function LoginScreen() {
        set_api_error_disp(e.response.data.detail);
      }
      catch(e){
-       set_api_error_disp(" something went wrong or please check your internet connection");
+       set_api_error_disp(" something went wrong");
      } 
      setshowProcessing(false);
    }
@@ -128,14 +129,18 @@ export default function LoginScreen() {
             navigate("/", {relative: true})
         }
     })
-    .catch(e => alert(bearer_token));
+    .catch(e => {
+      if (e.message === "Network Error"){
+        api_error_disp_(e)
+      }
+
+    });
 
     setshowProcessing(false);
     
   }
 
   function loginPost(){
-    setshowProcessing(true);
 
     const username= username_value.toLowerCase().trim();
     const password= password_value;
@@ -146,25 +151,29 @@ export default function LoginScreen() {
 
     const json_data= {'username': username,'password': password}
     
-    try{
-      axios.post(
-        api_root + 'login',
-        json_data,
-        {
-          headers:{
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          // withCredentials: true
-        }
-      ).then(res => loginPostRes(res))
-      .catch(e =>api_error_disp_(e));
-      // setLoggedIn(true);
-    }
+    setshowProcessing(true);
+    axios.post(
+      api_root + 'login',
+      json_data,
+      {
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        // withCredentials: true
+      }
+    ).then(res => loginPostRes(res))
+    .catch(e => {
 
-    catch(e){
-      api_error_disp_("Something went wrong, please try again.");
-      console.log(e.message);
-    }
+      if (e.response.status === 404){
+        api_error_disp_(e)
+      }
+
+      else if (e.message === "Network Error"){
+        api_error_disp_(e)
+      }
+      setshowProcessing(false);
+    });
+    // setLoggedIn(true);
   }
 
 
@@ -221,7 +230,7 @@ export default function LoginScreen() {
                             : <div className="text-red-100"> Please all the fields must be filled</div>
                         }
 
-                        <div className="text-red-100">{api_error_disp}</div>
+                        <div className="text-red-600 font-medium underline mt-8 -mb-10 mx-auto">{api_error_disp}</div>
                     </div>
 
                     {/* ++++++++++++++++++ HELPERS +++++++++++++++++++ */}
@@ -237,13 +246,20 @@ export default function LoginScreen() {
                     </div>
 
                     {/* +++++++++++ BUTTON +++++++++++++++++ */}
-                    <button onClick={loginPost} className={`${showProcessing ? 'pointer-events-none opacity-85' : ''} my-button-style my-shadow-style`}>
+                    <button onClick={loginPost} className={`${showProcessing ? 'pointer-events-none animate-pulse' : ''} my-button-style my-shadow-style`}>
                         {/* <svg class="h-6 w-6 mr-3 rounded-full border-[3px] border-l-0 border-t-0 border-e-0" viewBox="0 0 24 24"> */}
                         {
                             showProcessing 
                                 ? 
-                                    <svg class="animate-spin h-6 w-6 mr-5 rounded-full border-[2px] border-t-0 border-e-0" viewBox="0 0 24 24">
-                                    </svg>
+                                    // <svg class="animate-spin h-6 w-6 mr-5 rounded-full border-[2px] border-t-0 border-e-0" viewBox="0 0 24 24">
+                                    // </svg>
+                                    <div>
+                                      <div className='my-circular-progress'>
+                                            <CircularProgress className="mr-6" />
+                                        </div>
+
+                                    </div>
+                                    
                                 
                                 : ""
                         }

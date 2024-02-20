@@ -20,11 +20,15 @@
   }
 
   .my-button-style{
-    @apply cursor-pointer flex justify-center items-center sm:text-[18px] text-[14px] sm:px-6 px-4 text-white font-bold bg-black mt-6 md:py-3 sm:py-2 py-1 rounded-3xl border border-white hover:bg-white hover:border hover:border-black hover:text-black hover:animate-pulse;
+    @apply cursor-pointer flex justify-center items-center sm:text-[18px] text-[14px] sm:px-6 px-4 text-white font-bold bg-black mt-6 md:py-3 sm:py-2 py-1 rounded-3xl border border-white hover:bg-white hover:border hover:border-black hover:text-black;
   }
 
   .my-button-border-style{
-    @apply cursor-pointer flex justify-center items-center text-[18px] px-6 text-black font-bold bg-white mt-6 py-3 rounded-3xl border border-black hover:bg-black hover:border hover:border-white hover:text-white hover:animate-pulse;
+    @apply cursor-pointer flex justify-center items-center text-[18px] px-6 text-black font-bold bg-white mt-6 py-3 rounded-3xl border border-black hover:bg-black hover:border hover:border-white hover:text-white;
+  }
+
+  .my-button-size{
+    @apply size-10
   }
 
   .my-hover-transition{
@@ -33,6 +37,14 @@
 
   .my-screen-padding{
     @apply lg:px-16 sm:px-10 px-5 lg:mt-24 mt-20;
+  }
+
+  .my-hover-circle{
+    @apply hover:bg-gray-300 rounded-full;
+  }
+
+  .my-circular-progress{
+    @apply h-[10px] md:scale-[90%] sm:scale-[75%] scale-[40%] flex justify-center items-center;
   }
 }
 

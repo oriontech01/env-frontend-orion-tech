@@ -8,10 +8,20 @@ import React, { useState, useEffect } from 'react';
 // import { RiEyeCloseFill } from "react-icons/ri";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { BsBoxArrowInUp, BsOption } from "react-icons/bs";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+
+import Box from '@mui/material/Box';
+// import { Option } from '@mui/base/Option';
+// or
+import { Option } from '@mui/base';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import axios from "axios";
-import { api_root } from "../../api/api_variables";
+import { api_root, keep_json_data } from "../../api/api_variables";
 import { handleDeleteCookie } from "../../api/delete_cookie";
+// import { Close } from "@mui/icons-material";
+import { CircularProgress, MenuItem, Select } from "@mui/material";
 
 
 export default function SuperUsersAdd(){
@@ -24,12 +34,15 @@ export default function SuperUsersAdd(){
 
     const [username_value, set_username_value]= useState('');
     const [role, setRole]= useState("Reviewer");
-    const [password_value, set_password_value]= useState('');
-    const [password_value2, set_password_value2]= useState('');
+    const [password1, set_password1]= useState('');
+    const [password2, set_password2]= useState('');
+    let password_validator= "";
  
     const [hidePassword, setHidePassword]= useState(false);
     const [rememberMe, setRememberMe]= useState(false);
     const [showProcessing, setshowProcessing]= useState(false);
+
+    const [showProcessed, setshowProcessed]= useState(false);
  
  
     const navigate= useNavigate();
@@ -81,7 +94,7 @@ export default function SuperUsersAdd(){
       set_error_disp(!error_disp);
     }
  
-    const [api_error_disp, set_api_error_disp]= useState('');
+    const [api_error_disp, set_api_error_disp]= useState("");
     const api_error_disp_= (e) => {
       try{
         set_api_error_disp(e.response.data.detail);
@@ -94,88 +107,134 @@ export default function SuperUsersAdd(){
  
  
  
-    useEffect(() => {
-     const getUsername= localStorage.getItem('username');
-     const getPassword= localStorage.getItem('password');
- 
-     if (getUsername != null) {
-         set_username_value(getUsername);
-     }
- 
-     if (getPassword != null) {
-         set_password_value(getPassword);
-     }
- 
-    }, [])
- 
+    const [validation_text, set_validation_text]= useState("");
+
+
+    const [picture_text, set_picture_text]= useState("Choose a file or drag & drop it here");
+    const [pick_picture, set_pick_picture]= useState(null);
+    const pick_picture_ = (e) => {
+        if (!pick_picture) {
+            const file_picked= e.target.files[0];
+            set_pick_picture(file_picked);
+            
+            try{set_picture_text(file_picked.name);}
+            catch{set_picture_text('Choose a file or drag & drop it here'); set_pick_picture(null);}
+        }
+
+        else{
+            set_pick_picture(null);
+            set_picture_text('Choose a file or drag & drop it here');
+        }
+
+        set_validation_text("")
+    }
     
-    function loginPostRes(res){
-     bearer_token= res.data.token_type + " " + res.data.access_token;
-     axios.get(api_root + 'admin/manual_verify_user', {
-         headers: {
-             'Authorization': bearer_token,
-             'Content-Type': 'application/json', // Add other headers if needed
-           },
-     }).then(res => {
- 
-         handleDeleteCookie();
-         // localStorage.removeItem('username');
-         // localStorage.removeItem('password');
- 
-         setCookie('access_token', bearer_token, 1);
-         setCookie("login_role", res.data, 1);
- 
-         if (rememberMe){
-             localStorage.setItem("username", username_value);
-             localStorage.setItem("password", password_value);
-         }
- 
-       
- 
-         if (res.data === "admin"){navigate("/admin-model-management", {relative: true});}
-         else if (res.data === "superuser"){navigate("/admin-super-management", {relative: true})}
-         else{
-             navigate("/", {relative: true})
-         }
-     })
-     .catch(e => alert(bearer_token));
- 
-     setshowProcessing(false);
-     
-   }
- 
-   function loginPost(){
-     setshowProcessing(true);
- 
-     const username= username_value.toLowerCase().trim();
-     const password= password_value;
- 
-     if (username.length=== 0 || password.length=== 0){
-       return error_disp_();
-     }
- 
-     const json_data= {'username': username,'password': password}
-     
-     try{
-       axios.post(
-         api_root + 'login',
-         json_data,
-         {
-           headers:{
-             'Content-Type': 'application/x-www-form-urlencoded'
-           },
-           // withCredentials: true
-         }
-       ).then(res => loginPostRes(res))
-       .catch(e =>api_error_disp_(e));
-       // setLoggedIn(true);
-     }
- 
-     catch(e){
-       api_error_disp_("Something went wrong, please try again.");
-       console.log(e.message);
-     }
-   }
+
+    const password1_= (e) => {
+        if (password1.trim().length === 0){
+            set_validation_text("");
+        }
+
+        set_password1(e.target.value);
+    }
+
+
+    const password2_= (e) => {
+        set_password2(e.target.value);
+        password_validator += e.target.value;
+        const p_trim= password_validator.trim();
+        if (p_trim.length === 0){
+            set_validation_text("");
+        }
+
+        if (password1.trim() !== p_trim){
+          return set_validation_text("Password 1 and 2 do not match");
+        }
+        else{set_validation_text("")}
+    }
+
+
+
+
+    const post_request= (profile_pic, string_json_upload) => {
+        setshowProcessing(true);
+        handleGetCookie();
+        if (access_token === null){
+            setshowProcessing(false);
+            navigate('/admin-login', {relative: true});
+        }
+        
+        else{
+            axios.request(
+                {
+                    method: 'post',
+                    data: profile_pic,
+                    maxBodyLength: Infinity,
+                    url: api_root + `admin/register?username=${string_json_upload.username}&role=${string_json_upload.role}&password=${string_json_upload.password}`,
+                    headers: { 
+                        'Authorization': access_token,
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }
+            )
+            .then((response) => {
+                setshowProcessing(false);
+                keep_json_data.length= 0;
+                setshowProcessed(true);
+                // console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                try{
+                    set_api_error_disp(error.response.data.detail);
+                }
+                catch(e){
+                    set_api_error_disp("Sorry, something went wrong or check your internet");
+                }
+                setshowProcessing(false);
+            });
+        }
+    }
+
+
+    const form_data= () => {
+        set_api_error_disp("");
+        set_validation_text("");
+        
+        const m_name= username_value.trim();
+        const m_password1= password1.trim();
+        const m_password2= password2.trim();
+
+        if (m_name.length === 0){
+            return set_validation_text("Enter username");
+        }
+
+        if (role === "set user role"){
+            return set_validation_text("Please set a user role");
+        }
+
+        if (!pick_picture) {
+            // alert('Please add a picture file');
+            set_validation_text("Please pick a picture file")
+            return;
+        }
+
+        if (m_password1.length === 0){
+            return set_validation_text("Enter password 1");
+        }
+
+        if (m_password2.length === 0){
+            return set_validation_text("Confirm your password");
+        }
+
+
+        const formData= new FormData();
+        formData.append("picture_cover", pick_picture);
+
+        const new_user= {'username': m_name, 'role': role, 'password':m_password1};
+        
+        post_request(formData, new_user);
+    }
+
 
 
     return(
@@ -186,10 +245,10 @@ export default function SuperUsersAdd(){
             {/* +++++++++++++++ USING RELATIVE WITH SCROLLING MAKES THIS WORK ++++++++++++++++ */}
             <div className="relative lg:col-span-4 flex flex-col w-full h-screen">
 
-                <div className=' scale-75 py-4 absolute left-0 right-0 top-12 bottom-0 flex mx-auto justify-center items-center h-screen'>
-                    <div className='space-y-4 bg-white rounded-2xl shadow-md shadow-gray-500 py-12 mb-2 px-6 w-[570px]'>
+                <div className=' py-4 absolute left-0 right-0 top-12 bottom-0 flex mx-auto justify-center items-center h-screen'>
+                    <div className='overflow-y-scroll h-screen space-y-4 bg-white rounded-2xl shadow-md shadow-gray-500 pt-16 pb-20 mb-2 flex flex-col w-full md:px-[23%] sm:px-[10%] px-[5%]'>
                         <div>
-                            <h1 className='font-bold text-3xl text-center '>
+                            <h1 className='font-bold sm:text-3xl text-2xl text-center '>
                                 Add New User
                             </h1>
 
@@ -208,16 +267,61 @@ export default function SuperUsersAdd(){
                             </div>
 
 
-                            <div className='flex flex-col'>
+                            <div className='sm:shadow-none shadow flex sm:flex-col sm:items-start sm:border-none border sm:py-0 py-2  sm:pr-0 pr-2 items-center sm:gap-x-0 gap-x-5'>
                                 <label className='font-bold pl-2'>
                                     User Role
                                 </label>
 
-                                <select  value={"Tagger"} onChange={e => {setRole(e.target.value)}} className="cursor-pointer w-full py-3 px-6 border border-gray-300 rounded-2xl text-[12px]">
-                                    <option >Admin</option>
-                                    <option >Tagger</option>
-                                    <option >Reviewer</option>
+                                <select value={role} onChange={e => {setRole(e.target.value)}} className="cursor-pointer py-3 sm:pl-6 sm:pr-0 pl-2 pr-2 border border-gray-300 rounded-2xl text-[12px] sm:w-full w-fit">
+                                    
+                                    <option>Tagger</option>
+                                    <option>Reviewer</option>
+                                    
                                 </select>
+
+                                
+
+                                {/* <div className="shadow flex w-full border rounded-xl">
+                                    <Select
+                                        // label= "User Role"
+                                        value={role}
+                                        onChange={e => {setRole(e.target.value)}}
+                                        className="w-full"
+                                        sx={{
+                                            '& .MuiSelect-select':{},
+                                            boxShadow: "none",
+                                            '.MuiOutlinedInput-notchedOutline': { border: 'none', boxShadow: "none"},
+                                        }}
+
+                                        // slotProps={{
+                                        //     borderColor: {className: ""}
+                                        // }}
+                                    >
+
+                                        <MenuItem value={"Tagger"}>Tagger</MenuItem>
+                                        <MenuItem value={"Reviewer"}>Reviewer</MenuItem>
+                                    </Select>
+                                </div> */}
+                            </div>
+
+
+
+
+                            {/* ++++++++++++++ PROFILE PICTURE ++++++++++ */}
+                            <div className={`cursor-pointer relative hover:bg-black/60 hover:border-white hover:text-white ${pick_picture !== null ? "bg-green-500 hover:bg-green-400 text-white" : "bg-gray-200"} sm:mt-8 mb-6 flex flex-col w-full justify-center items-center gap-y-4 border-2 border-gray-400 border-dashed py-8 rounded-2xl`}>
+                                <BsBoxArrowInUp className="size-10"/>
+                                
+                                <div className="flex flex-col gap-y-2 items-center">
+                                    <h1 className="font-bold text-center">{picture_text}</h1>
+                                    <h1 className="italic"> {pick_picture ? "( Click to remove )" : "( .jpg, .png, .webp )"}</h1>
+                                </div>
+
+                                {
+                                    !pick_picture 
+                                    ?   <input  onChange={e => pick_picture_(e)}  type="file" accept=".jpg, .png, .webp" className="opacity-0 absolute left-0 right-0 top-0 bottom-0"/>
+                                    : <div  onClick= {e => pick_picture_(e)}  className="opacity-0 absolute left-0 right-0 top-0 bottom-0"/>
+                                }
+
                             </div>
 
 
@@ -228,7 +332,7 @@ export default function SuperUsersAdd(){
                                 </label>
 
                                 <div className='flex relative items-center mt-6'>
-                                    <input value={password_value} onChange={e => set_password_value(e.target.value)} type={`${hidePassword ? 'text' : 'password'}`} placeholder='Enter your password' className='absolute left-0 right-0 shadow-md py-3 px-2 border rounded-xl'/>
+                                    <input value={password1} onChange={e => password1_(e)} type={`${hidePassword ? 'text' : 'password'}`} placeholder='Enter a password' className='absolute left-0 right-0 shadow-md py-3 px-2 border rounded-xl'/>
 
                                     {
                                         !hidePassword 
@@ -246,7 +350,7 @@ export default function SuperUsersAdd(){
                                 </label>
 
                                 <div className='flex relative items-center mt-6'>
-                                    <input value={password_value} onChange={e => set_password_value(e.target.value)} type={`${hidePassword ? 'text' : 'password'}`} placeholder='Enter your password' className='absolute left-0 right-0 shadow-md py-3 px-2 border rounded-xl'/>
+                                    <input value={password2} onChange={e => password2_(e)} type={`${hidePassword ? 'text' : 'password'}`} placeholder='Confirm the your password' className='absolute left-0 right-0 shadow-md py-3 px-2 border rounded-xl'/>
 
                                     {
                                         !hidePassword 
@@ -257,17 +361,44 @@ export default function SuperUsersAdd(){
                                 </div>
                             </div>
 
+
+
+                            {/* +++++++++++++ VALIDATION TEXT +++++++++ */}
+                            <div className={` ${validation_text === "" ? "hidden" : "font-bold text-red-700 mt-8 -mb-6 text-center underline"}`}>{validation_text}</div>
+
+
+                            {/* ++++++++++++ API ERROR TEXT +++++++++ */}
+                            <div className={`${api_error_disp === "" ? "hidden" : "text-red-600 font-medium underline mt-8 -mb-10 mx-auto" }`}>{api_error_disp}</div>
+
+
                             {/* +++++++++++ BUTTON +++++++++++++++++ */}
-                            <button onClick={loginPost} className={`${showProcessing ? 'pointer-events-none opacity-85' : ''} my-button-style my-shadow-style mt-8`}>
+                            <button onClick={form_data} className={`${showProcessing ? 'pointer-events-none opacity-85' : ''} my-button-style my-shadow-style mt-8`}>
                                 {/* <svg class="h-6 w-6 mr-3 rounded-full border-[3px] border-l-0 border-t-0 border-e-0" viewBox="0 0 24 24"> */}
-                                {
+                                {/* {
                                     showProcessing 
                                         ? 
                                             <svg class="animate-spin h-6 w-6 mr-5 rounded-full border-[2px] border-t-0 border-e-0" viewBox="0 0 24 24">
                                             </svg>
                                         
                                         : ""
-                                }
+                                } */}
+
+
+                            {
+                                showProcessing 
+                                    ? 
+                                        // <svg class="animate-spin h-6 w-6 mr-5 rounded-full border-[2px] border-t-0 border-e-0" viewBox="0 0 24 24">
+                                        // </svg>
+                                        <div>
+                                        <div className='my-circular-progress'>
+                                                <CircularProgress className="mr-6" />
+                                            </div>
+
+                                        </div>
+                                        
+                                    
+                                    : ""
+                            }
 
                                 Create Account
                             </button>
@@ -280,6 +411,44 @@ export default function SuperUsersAdd(){
             {/* <div className="fixed flex flex-col items-center justify-center mx-auto bg-black/75 w-full h-full">
                 <h1 className="font-medium">Account Created Successfully</h1>
             </div> */}
+
+
+
+                {/* +++++++++++ LINEAR PROGRESS BAR ++++++++ */}
+                <div className={`${showProcessing ? "absolute bg-black/50 top-0 bottom-0 left-0 right-0" : ""}`} />
+                    {
+                        showProcessing 
+                            ? 
+                            <Box sx= {{width: "100%"}}>
+                                <LinearProgress />
+                            </Box>
+                        : ""
+                    }
+
+
+
+                {/* +++++++++++++++++ UPLOADED SUCCESFULLY ++++++++ */}
+                {
+                    showProcessed 
+                        ? 
+
+                        <div id="shadow_id" onClick={(e) => {if(e.target.id === "shadow_id"){setshowProcessed(false);}}} className="cursor-pointer pointer-events-auto bg-black/55 absolute top-0 bottom-0 left-0 right-0">
+                            {/* onBlur={(e) => {setshowProcessed(true)}} */}
+                            <button> 
+                                <div onClick={(e) => {}} className="flex flex-col gap-y-3 items-center justify-center absolute bg-white/75 sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] w-[60%] mt-[50px] mx-auto my-shadow-style">
+                                    <IoCheckmarkDoneCircleOutline className="size-[100px] text-green-600"/>
+
+                                    <h1 className="text-center text-black sm:text-2xl text-base">
+                                            Account Created Successfully
+                                    </h1>
+
+                                    {/* <Close onClick={(e) => {setshowProcessed(true)}} className="my-hover-circle absolute top-0 right-0 m-4 rounded-full bg-white text-red-700 my-shadow-style"/> */}
+                                </div>
+                            </button>
+                        </div>
+
+                        : ""
+                }
 
                 <NavHeader navTitle= {"Users"} mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
 

@@ -383,11 +383,11 @@ export default function SuperAdminManagement() {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <h1 className="font-medium text-[20px] w-[220px] truncate">
+                                    <h1 className="font-medium sm:text-[20px] sm:w-[220px] truncate">
                                         Rose court factory
                                     </h1> 
 
-                                    <h1 className="text-[12px] italic w-[220px] truncate">
+                                    <h1 className="text-[12px] italic sm:w-[220px] truncate">
                                         21 Ruthy US
                                     </h1> 
                                 </div>
@@ -408,11 +408,11 @@ export default function SuperAdminManagement() {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <h1 className="font-medium text-[20px]  w-[220px] truncate">
+                                    <h1 className="font-medium sm:text-[20px]  sm:w-[220px] truncate">
                                         Marie Apartment
                                     </h1> 
 
-                                    <h1 className="text-[12px] italic w-[220px] truncate">
+                                    <h1 className="text-[12px] italic sm:w-[220px] truncate">
                                         21 Ruthy US
                                     </h1> 
                                 </div>

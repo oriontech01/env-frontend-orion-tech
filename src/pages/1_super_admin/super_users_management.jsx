@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DesktopMenu from "../../components/1_super_admin/desktop_menu";
 import HistogramChartSuperAdmin from "../../components/1_super_admin/histogram_chart_super_admin";
 import UsersLists from "../../components/1_super_admin/users_lists";
@@ -8,10 +8,33 @@ import { FaSearch } from "react-icons/fa";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NavHeader from "../../components/1_super_admin/nav_header";
+import axios from "axios";
+import { api_root, keep_json_data } from "../../api/api_variables";
 
 
 
 export default function SuperUsersManagement(){
+    var access_token;
+
+    
+    const getCookie = (name) => {
+        const cookies = document.cookie.split(';');
+
+        for (const cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.trim().split('=');
+
+            if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+            }
+        }
+        return null;
+    };
+
+    const handleGetCookie = () => {
+        // Retrieve the value of the "exampleCookie" cookie
+        access_token = getCookie('access_token');
+    };
+
     const [mobileMenu, setMobileMenu]= useState(false);
 
     const navigate= useNavigate();
@@ -23,6 +46,49 @@ export default function SuperUsersManagement(){
     const navigate_add_user = (e) => {
         navigate("/admin-user-add", {relative: true});
     }
+
+
+
+    const [is_expired, set_is_expired]= useState(false);
+    const is_expired_ = (e) => {
+      if (e.code === "ERR_BAD_REQUEST"){
+          set_is_expired(true)
+      }
+      else{set_is_expired(false)}
+    }
+
+
+    const [model_json_data, set_model_json_data]= useState([]);
+    // const model_json_data_= (res) => {
+    //     console.log(res);
+    // };
+
+
+    const [is_admin_delete, set_is_admin_delete]= useState(false);
+
+    useEffect(() => {
+
+        if (keep_json_data.length === 0){
+          handleGetCookie();
+          if (access_token === null){
+              navigate('/admin-login', {relative: true});
+          }
+    
+          else{
+              axios.get(api_root + 'admin/get-all-users', {
+                  headers: {
+                      'Authorization': access_token,
+                      'Content-Type': 'application/json', // Add other headers if needed
+                    },
+              }).then(res => {set_model_json_data(res.data); keep_json_data.push(res.data);})
+              .catch(e => is_expired_(e));
+          }
+        }
+    
+        // else{
+        //     // set_model_json_data(keep_json_data);
+        // }
+      }, [access_token, is_admin_delete]); 
 
 
     return (
@@ -50,7 +116,7 @@ export default function SuperUsersManagement(){
 
 
                         {/* +++++++ USERS LIST ++++++++++ */}
-                        <UsersLists />
+                        <UsersLists model_json_data= {keep_json_data}/>
 
 
                         <div className="relative top-[120px] flex w-full justify-end sm:mt-0 -mt-[35px]">
