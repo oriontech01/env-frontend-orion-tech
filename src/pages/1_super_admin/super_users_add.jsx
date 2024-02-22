@@ -263,7 +263,7 @@ export default function SuperUsersAdd(){
                                 <label className='font-bold pl-2'>
                                     Username
                                 </label>
-                                <input value={username_value} onChange={e => set_username_value(e.target.value)} type='email' placeholder='Enter your email' className='shadow-md py-3 px-2 border rounded-xl'/>
+                                <input value={username_value} onChange={e => set_username_value(e.target.value)} type='email' placeholder='Enter a username' className='shadow-md py-3 px-2 border rounded-xl'/>
                             </div>
 
 
@@ -308,7 +308,7 @@ export default function SuperUsersAdd(){
 
 
                             {/* ++++++++++++++ PROFILE PICTURE ++++++++++ */}
-                            <div className={`cursor-pointer relative hover:bg-black/60 hover:border-white hover:text-white ${pick_picture !== null ? "bg-green-500 hover:bg-green-400 text-white" : "bg-gray-200"} sm:mt-8 mb-6 flex flex-col w-full justify-center items-center gap-y-4 border-2 border-gray-400 border-dashed py-8 rounded-2xl`}>
+                            <div className={`cursor-pointer relative hover:bg-black/60 hover:border-white hover:text-white ${pick_picture !== null ? "bg-green-500 hover:bg-green-400 text-white" : "bg-gray-200"} sm:mt-8 mb-6 flex flex-col w-full justify-center items-center gap-y-4 border-2 border-gray-400 border-dashed py-8 px-2 rounded-2xl`}>
                                 <BsBoxArrowInUp className="size-10"/>
                                 
                                 <div className="flex flex-col gap-y-2 items-center">
@@ -434,8 +434,8 @@ export default function SuperUsersAdd(){
 
                         <div id="shadow_id" onClick={(e) => {if(e.target.id === "shadow_id"){setshowProcessed(false);}}} className="cursor-pointer pointer-events-auto bg-black/55 absolute top-0 bottom-0 left-0 right-0">
                             {/* onBlur={(e) => {setshowProcessed(true)}} */}
-                            <button> 
-                                <div onClick={(e) => {}} className="flex flex-col gap-y-3 items-center justify-center absolute bg-white/75 sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] w-[60%] mt-[50px] mx-auto my-shadow-style">
+                            {/* <button>  */}
+                                <div onClick={(e) => {}} className="flex flex-col gap-y-3 items-center justify-center absolute bg-white sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] md:w-[400px] sm:w-[300px] w-[80%] px-2 mt-[50px] mx-auto my-shadow-style">
                                     <IoCheckmarkDoneCircleOutline className="size-[100px] text-green-600"/>
 
                                     <h1 className="text-center text-black sm:text-2xl text-base">
@@ -444,7 +444,7 @@ export default function SuperUsersAdd(){
 
                                     {/* <Close onClick={(e) => {setshowProcessed(true)}} className="my-hover-circle absolute top-0 right-0 m-4 rounded-full bg-white text-red-700 my-shadow-style"/> */}
                                 </div>
-                            </button>
+                            {/* </button> */}
                         </div>
 
                         : ""

@@ -130,8 +130,16 @@ export default function LoginScreen() {
         }
     })
     .catch(e => {
-      if (e.message === "Network Error"){
+      if (e.response.status === 404){
         api_error_disp_(e)
+      }
+
+      else if (e.message === "Network Error"){
+        api_error_disp_(e)
+      }
+
+      else{
+        api_error_disp_("Sorry, Something went wrong");
       }
 
     });
@@ -171,6 +179,10 @@ export default function LoginScreen() {
       else if (e.message === "Network Error"){
         api_error_disp_(e)
       }
+
+      else{
+        api_error_disp_("Sorry, Something went wrong");
+      }
       setshowProcessing(false);
     });
     // setLoggedIn(true);
@@ -193,14 +205,14 @@ export default function LoginScreen() {
                 </h1>
 
                 <h1 className='text-center text-gray-500 py-2'>
-                    Welcome back! Please enter your details.
+                    Please enter your details.
                 </h1>
 
                 <div className='pt-4 text-gray-700 flex flex-col'>
                     {/* ++++++++++++++ EMAIL ++++++++++++++++++++ */}
                     <div className='flex flex-col'>
                         <label className='font-bold pl-2 pb-2'>
-                            Email
+                            Username
                         </label>
                         <input value={username_value} onChange={e => set_username_value(e.target.value)} type='email' placeholder='Enter your email' className='shadow-md py-3 px-2 border rounded-xl'/>
                     </div>

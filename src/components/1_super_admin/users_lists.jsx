@@ -5,13 +5,15 @@ import { RiDeleteBinLine } from "react-icons/ri";
 
 import { CircularProgress, MenuItem, Select } from "@mui/material";
 import { access_token, handleGetCookie } from '../../api/cookies_logic';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useNavigate } from 'react-router-dom';
-import { api_root } from '../../api/api_variables';
+import { admins_gotten, api_root, selectAllValue, selected_admins, setSelectAllValue } from '../../api/api_variables';
 import axios from 'axios';
 
 
 const UsersLists = (props) => {
     const model_json_data= props.model_json_data;
+    const cancel_delete_= props.cancel_delete_;
 
     const [role, setRole]= useState("Tagger");
 
@@ -21,106 +23,96 @@ const UsersLists = (props) => {
 
 
 
+    const [selectStates1, setSelectStates1]= useState(false);
+    const [selectStates2, setSelectStates2]= useState(false);
+    const [selectStates3, setSelectStates3]= useState(false);
+    const [selectStates4, setSelectStates4]= useState(false);
+    const [selectStates5, setSelectStates5]= useState(false);
+    
+    const keepSelectStates= [[selectStates1,setSelectStates1], [selectStates2,setSelectStates2], [selectStates3,setSelectStates3], [selectStates4,setSelectStates4], [selectStates5,setSelectStates5]];
+
+
+    //+++++++ IF at the end of the useEffect callback, the [] is not supplied, it will automatically triggers on any state changes.
     useEffect( () => {
-        selected_models=[];
-    });
+        admins_gotten.length= 0;
+        selected_admins.length= 0;
 
+        setSelectAllValue(false);
 
+        setSelectStates1(false);
+        setSelectStates2(false);
+        setSelectStates3(false);
+        setSelectStates4(false);
+        setSelectStates5(false);
+    },[model_json_data.length]);
 
+    // useEffect( () => {
+    //     alert("Hey")
+    // },[selected_admins.length]);
 
-    const [cancel_delete, setDelete]= useState(false);
-    const cancel_delete_= () => {
-        setDelete(!cancel_delete);
+    const single_delete = (item_id) => {
+        cancel_delete_(item_id);
     }
 
-
-
-
-    var selected_models= [];
     const selectValue_= (index) => {
-        if (!selected_models.includes(index)){
-            selected_models.push(index);
+        if (!selected_admins.includes(index)){
+            selected_admins.push(index);
         }
         else{
-            const get_index= selected_models.indexOf(index);
-            selected_models.splice(get_index, 1);
+            const get_index= selected_admins.indexOf(index);
+            selected_admins.splice(get_index, 1);
         }
 
-        console.log(selected_models);
+        // console.log(selected_admins);
     }
 
-    const [selectAllValue, setSelectAllValue]= useState(false);
-    const selectAllValue_= (checked) => {
-        if (checked){
-            selected_models.length= 0;
+
+    const selectAllValue_= () => {
+        if (!selectAllValue){
+            selected_admins.length= 0;
+      
             model_json_data[0].map(item => (
-                selected_models.push(item.id)
+                selected_admins.push(item.id)
             ));
 
-            setSelectAllValue(checked);
+            setSelectStates1(true);
+            setSelectStates2(true);
+            setSelectStates3(true);
+            setSelectStates4(true);
+            setSelectStates5(true);
+
         }
         else{
-            selected_models.length= 0;
-            setSelectAllValue(checked);
+            selected_admins.length= 0;
+            
+            setSelectStates1(false);
+            setSelectStates2(false);
+            setSelectStates3(false);
+            setSelectStates4(false);
+            setSelectStates5(false);
+
         }
 
-        console.log(selected_models);
+        setSelectAllValue(!selectAllValue);
+        // console.log(selected_admins);
     }
 
       
 
 
-    const [continue_delete, setContinueDelete]= useState(false);
-    const [is_model_delete, set_is_model_delete]= useState(false);
-    const continue_delete_= () => {
-        // console.log(selected_models);
 
-        setContinueDelete(!continue_delete);
-
-        handleGetCookie();
-        if (access_token === null){
-            navigate('/admin-login---', {relative: true});
-        }
-        
-        else{
-            axios.request(
-                {
-                    method: 'delete',
-                    url: api_root + `admin/delete-model-super-admin?id=[${selected_models}]`,
-                    headers: { 
-                        'Authorization': access_token,
-                        'Content-Type': 'application/json'
-                    },
-
-                    data: selected_models
-                }
-            )
-            .then((response) => {
-                setContinueDelete(false);
-                cancel_delete_();
-                
-                set_is_model_delete(!is_model_delete);
-            })
-            .catch((error) => {
-                console.log(error);
-                setContinueDelete(false);
-                cancel_delete_();
-            });
-
-        }
-    }
 
 
     return (
         <div className="relative top-[100px] flex flex-col gap-y-4 w-full">
             <flex className='text-sm flex justify-between absolute left-0 right-0 top-0 items-center border py-1 px-2'>
                 
-                <flex onClick={e => {selectAllValue_(!selectAllValue)}} className= "flex items-center gap-x-3 ">
-                    <input type='checkbox'  className='size-5'/>
+                <flex onClick={e => {selectAllValue_()}} className= "flex items-center gap-x-3 ">
+                    <input checked={selectAllValue} type='checkbox' className='size-5'/>
                     <h1>Select All</h1>
                 </flex>
 
-                <button className='opacity-65 pointer-events-none rounded-3xl my-shadow-style bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium '>
+                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
                     Delete
                 </button>
             </flex>
@@ -133,24 +125,29 @@ const UsersLists = (props) => {
                     ? 
 
                     
-                    model_json_data[0].map(item => (
+                    model_json_data[0].map((item, index) => (
                         <div className="flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 sm:px-2 px-2 border rounded-xl">     
-                            <div className="sm:relative sm:flex sm:justify-between md:hidden hidden cursor-pointer">
-                                <input checked={selectAllValue} onClick={e => {selectAllValue_(item.id)}} type='checkbox'  className='size-4'/>
-                                <RiDeleteBinLine onClick={(e) => {cancel_delete_(item.id)}} className="hover:bg-gray-300 rounded-full text-red-700 flex scale-[150%] cursor-pointer"/>
+                            <div className="sm:relative sm:flex sm:justify-between md:hidden hidden">
+                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='size-4'/>
+                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className="hover:bg-gray-300 rounded-full text-red-700 flex scale-[150%] cursor-pointer"/>
                             </div>
 
 
 
-                            <div className="md:flex md:pr-4 sm:hidden flex justify-between cursor-pointer">
-                                <input id={item.id}  checked={selectAllValue} onClick={e => {selectValue_(item.id)}} type='checkbox'  className='size-4'/>
-                                <RiDeleteBinLine onClick={(e) => {cancel_delete_(item.id)}} className="sm:hidden text-red-700  flex scale-[150%] cursor-pointer"/>
+                            <div className="md:flex md:pr-4 sm:hidden flex justify-between ">
+                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='size-4'/>
+                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className="sm:hidden text-red-700  flex scale-[150%] cursor-pointer"/>
                             </div>
 
                             <div className="sm:-mt-0 -mt-4 flex items-center md:justify-start justify-center md:w-fit w-full">  
                                 <div className="flex md:flex-row flex-col gap-x-3 items-center">
                                     <div className="my-picture-style w-[52px] h-[52px] rounded-full flex">
-                                        <img onLoad={e => {setIsImageLoaded(true)}} src={item.profile_picture} className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "my-image-cover-style w-[100%] h-[100%] flex"} `}/>
+                                        <LazyLoadImage 
+                                            src={item.profile_picture} 
+                                            onLoad={e => {setIsImageLoaded(true)}}
+                                            className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "my-image-cover-style w-[100%] h-[100%] flex"} `}
+                                        />
+                                        {/* <img onLoad={e => {setIsImageLoaded(true)}} src={item.profile_picture} className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "my-image-cover-style w-[100%] h-[100%] flex"} `}/> */}
                                     </div>
 
                                     <div className="flex flex-col sm:w-[150px] w-[90px]">
@@ -186,7 +183,7 @@ const UsersLists = (props) => {
                                     View Profile
                                 </button>
 
-                                <RiDeleteBinLine onClick={(e) => {cancel_delete_(item.id)}} className="hover:bg-gray-300 rounded-full text-red-700 md:flex hidden scale-[150%] cursor-pointer"/>
+                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className="hover:bg-gray-300 rounded-full text-red-700 md:flex hidden scale-[150%] cursor-pointer"/>
                             </div>
                         </div>
                     ))
@@ -202,6 +199,9 @@ const UsersLists = (props) => {
             }  
 
         </div>
+
+
+
     )
 }
 

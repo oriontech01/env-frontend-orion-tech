@@ -15,12 +15,28 @@
     @apply shadow shadow-gray-700;
   }
 
+  .my-shadow-style2{
+    @apply shadow-sm shadow-gray-500
+  }
+
   .my-image-cover-style{
     @apply object-cover w-full h-full;
   }
 
   .my-button-style{
     @apply cursor-pointer flex justify-center items-center sm:text-[18px] text-[14px] sm:px-6 px-4 text-white font-bold bg-black mt-6 md:py-3 sm:py-2 py-1 rounded-3xl border border-white hover:bg-white hover:border hover:border-black hover:text-black;
+  }
+
+  .my-small-button-style{
+    @apply cursor-pointer flex justify-center items-center text-[14px] py-2 px-4 font-bold rounded-3xl;
+  }
+
+  .my-black-button-color-style{
+    @apply text-white bg-black hover:bg-white hover:border hover:border-black hover:text-black border border-white;
+  }
+
+  .my-white-button-color-style{
+    @apply text-black bg-white border border-black hover:bg-black hover:border hover:border-white hover:text-white;
   }
 
   .my-button-border-style{

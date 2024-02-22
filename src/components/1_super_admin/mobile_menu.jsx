@@ -19,7 +19,7 @@ export default function MobileMenu (props) {
         }
 
         if (menu_value === "models"){
-            navigate("/admin-user-view", {relative: true});
+            navigate("/admin-model-management", {relative: true});
         }
 
         if (menu_value === "users"){

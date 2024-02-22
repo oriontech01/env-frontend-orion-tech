@@ -9,12 +9,13 @@ import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NavHeader from "../../components/1_super_admin/nav_header";
 import axios from "axios";
-import { admins_gotten, api_root, keep_json_data, selected_admins, set_admins_gotten } from "../../api/api_variables";
+import { admins_gotten, api_root, keep_json_data_model, selected_admins, set_admins_gotten } from "../../api/api_variables";
 import { DeleteForever } from "@mui/icons-material";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import ModelsLists from "../../components/1_super_admin/models_lists";
 
 
-export default function SuperUsersManagement(){
+export default function SuperModelsManagement(){
     var access_token;
     
     const getCookie = (name) => {
@@ -44,7 +45,7 @@ export default function SuperUsersManagement(){
     }
 
     const navigate_add_user = (e) => {
-        navigate("/admin-user-add", {relative: true});
+        navigate("/admin-model-add", {relative: true});
     }
 
 
@@ -62,7 +63,7 @@ export default function SuperUsersManagement(){
     const model_json_data_= (res) => {
         // ++++++++++++++ I HAVE TO REFRESH THE STATE SO THAT AFTER THE KEEP_JSON_DATA IS POPULATED, IT WILL DISPLAY ON THE SCREEN ++++++++++++
         setRefreshState("");
-        keep_json_data.push(res.data);
+        keep_json_data_model.push(res.data);
     };
 
 
@@ -70,14 +71,14 @@ export default function SuperUsersManagement(){
 
     useEffect(() => {
 
-        if (keep_json_data.length === 0){
+        if (keep_json_data_model.length === 0){
           handleGetCookie();
           if (access_token === null){
               navigate('/', {relative: true});
           }
     
           else{
-              axios.get(api_root + 'admin/get-all-users', {
+              axios.get(api_root + 'home-models/get-all-models', {
                   headers: {
                       'Authorization': access_token,
                       'Content-Type': 'application/json', // Add other headers if needed
@@ -136,7 +137,7 @@ export default function SuperUsersManagement(){
             axios.request(
                 {
                     method: 'delete',
-                    url: api_root + "admin/delete-admin",
+                    url: api_root + "admin/delete-model-super-admin",
                     headers: { 
                         'Authorization': access_token,
                         'Content-Type': 'application/json'
@@ -146,7 +147,7 @@ export default function SuperUsersManagement(){
                 }
             )
             .then((response) => {
-                keep_json_data.length= 0;
+                keep_json_data_model.length= 0;
                 admins_gotten.length= 0;
                 selected_admins.length= 0;
 
@@ -185,18 +186,17 @@ export default function SuperUsersManagement(){
         <div className="lg:grid lg:grid-cols-5 relative flex w-screen h-screen overflow-hidden">
             
             {/* ++++++++++++++++++ FULLSCREEN NAV +++++++++++++++++ */}
-            <DesktopMenu sendActive= {"users"}/>
+            <DesktopMenu sendActive= {"models"}/>
 
 
             {/* +++++++++++++++ USING RELATIVE WITH SCROLLING MAKES THIS WORK ++++++++++++++++ */}
             <div className="relative overflow-y-scroll lg:col-span-4 flex flex-col w-full">
                 {/* ++++++++++++++++++++ ADD USER BUTTON ++++++++++ */}
 
-
                 <div className="my-screen-padding absolute md:top-0 top-6 left-0 right-0 grid grid-rows-4 w-full h-screen">
                     <div className="flex flex-col w-full">
 
-
+                        
                         {/* +++++++++++++ SEARCH INPUT +++++++++ */}
                         <div className="relative top-12 flex items-center w-full">
                             <input type="text" placeholder="Search users" className="absolute border rounded-3xl p-4 w-full sm:h-[53px] h-[40px] my-shadow-style sm:focus:pl-[68px] focus:pl-[40px] focus:placeholder-transparent sm:pl-[64px] pl-[35px] sm:text-base text-sm"/>
@@ -209,7 +209,9 @@ export default function SuperUsersManagement(){
 
 
                         {/* +++++++ USERS LIST ++++++++++ */}
-                        <UsersLists model_json_data= {keep_json_data} cancel_delete_= {cancel_delete_}/>
+                        <ModelsLists model_json_data= {keep_json_data_model} cancel_delete_= {cancel_delete_}/>
+
+
 
                     </div>
 
@@ -218,13 +220,13 @@ export default function SuperUsersManagement(){
 
 
 
-                <button onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} onClick={ (e) => {navigate_add_user(e)}} className="fixed sm:right-[50px] right-[12px] bottom-8 my-small-button-style my-black-button-color-style  my-shadow-style flex items-center rounded-full text-2xl">
+                <button onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} onClick={ (e) => {navigate_add_user(e)}} className="fixed sm:right-[52px] right-[12px] bottom-8 my-small-button-style my-black-button-color-style  my-shadow-style flex items-center rounded-full text-2xl">
                     +
                 </button>
                 
                 {floatButtonHelp 
                     ? 
-                    <h1 className="fixed right-10 sm:flex hidden bottom-[85px] text-white bg-black rounded-xl px-2 text-sm font-medium text-center">Add User</h1>
+                    <h1 className="fixed right-10 sm:flex hidden bottom-[85px] text-white bg-black rounded-xl px-2 text-sm font-medium text-center">Add Model</h1>
                     : ""
                 }
 
@@ -236,7 +238,7 @@ export default function SuperUsersManagement(){
                         
                             cancel_delete 
                             ? 
-                            <div id="shadow_delete2"  onClick={(e) => {if(e.target.id === "shadow_delete2"){cancel_delete_();}}} className='bg-black/55 fixed flex items-center justify-center w-full h-full top-0 bottom-0'>
+                            <div  id="shadow_delete"  onClick={(e) => {if(e.target.id === "shadow_delete"){cancel_delete_();}}} className='bg-black/55 fixed flex items-center justify-center w-full h-full top-0 bottom-0'>
                                 <div className="fixed left-0 right-0 sm:mx-auto bg-white flex flex-col justify-center py-8 px-2 rounded-2xl my-shadow-style items-center md:w-[400px] sm:w-[300px] w-[80%] mx-auto h-[250px]">
                                     {
                                         !showProcessing
@@ -311,12 +313,12 @@ export default function SuperUsersManagement(){
                 }
 
 
-                <NavHeader navTitle= {"Users"} mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
+                <NavHeader navTitle= {"Models"} mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
 
             </div>
 
 
-            <MobileMenu mobileMenu= {mobileMenu} sendActive= {"users"} />
+            <MobileMenu mobileMenu= {mobileMenu} sendActive= {"models"} />
 
         </div>
     );
