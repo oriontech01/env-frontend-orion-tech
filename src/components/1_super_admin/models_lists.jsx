@@ -16,10 +16,13 @@ const ModelsLists = (props) => {
     const cancel_delete_= props.cancel_delete_;
 
     const [role, setRole]= useState("Tagger");
-
-
     const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+
     const navigate= useNavigate();
+    const navigate_add_objects= (model_name) => {
+        navigate(`/add-objects-model/${model_name.toUpperCase().trim()}`, {relative: true});
+    }
 
 
 
@@ -107,12 +110,12 @@ const ModelsLists = (props) => {
         <div className="relative top-[100px] flex flex-col gap-y-4 w-full">
             <flex className='text-sm flex justify-between absolute left-0 right-0 top-0 items-center border py-1 px-2'>
                 
-                <flex onClick={e => {selectAllValue_()}} className= "flex items-center gap-x-3 ">
+                <flex onClick={e => {selectAllValue_()}} className= "cursor-pointer flex items-center gap-x-3 ">
                     <input checked={selectAllValue} type='checkbox' className='size-5'/>
                     <h1>Select All</h1>
                 </flex>
 
-                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
+                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style text-white bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
                     Delete
                 </button>
             </flex>
@@ -154,7 +157,7 @@ const ModelsLists = (props) => {
                                             </div>
 
                                             <div className='absolute ml-2 mt-2 border border-white rounded-sm  flex shadow-sm shadow-black'>
-                                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}}  type='checkbox'/>
+                                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}}  type='checkbox' className='size-5'/>
                                             </div>
                                         </div>
 
@@ -165,11 +168,11 @@ const ModelsLists = (props) => {
 
 
                                         <div className='flex w-full justify-center items-center gap-x-3'>
-                                            <button className='my-small-button-style my-white-button-color-style border-gray-500 w-full'>
+                                            <button onClick={(e) => {navigate_add_objects(item.id)}} className='my-small-button-style my-white-button-color-style border-gray-500 w-full'>
                                                 Tag Model
                                             </button>
 
-                                            <div className=' p-2 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
+                                            <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
                                                 <RiDeleteBinLine onClick={e => {single_delete(item.id)}}  size={20} className="rounded-full text-red-700 cursor-pointer"/>
                                             </div>
                                         </div>

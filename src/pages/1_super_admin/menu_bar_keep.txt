@@ -1,4 +1,7 @@
-
+        const [mobileMenu, setMobileMenu]= useState(false);
+        const mobileMenu_ = () => {
+            setMobileMenu(!mobileMenu);
+        }
 
         <div className="lg:grid lg:grid-cols-5 relative flex w-screen h-screen overflow-hidden">
             {/* ++++++++++++++++++ FULLSCREEN NAV +++++++++++++++++ */}
@@ -10,7 +13,7 @@
               
 
 
-                <NavHeader mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
+                <NavHeader navTitle= {"Models"} mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
 
             </div>
 

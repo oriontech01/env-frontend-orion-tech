@@ -24,11 +24,11 @@
   }
 
   .my-button-style{
-    @apply cursor-pointer flex justify-center items-center sm:text-[18px] text-[14px] sm:px-6 px-4 text-white font-bold bg-black mt-6 md:py-3 sm:py-2 py-1 rounded-3xl border border-white hover:bg-white hover:border hover:border-black hover:text-black;
+    @apply cursor-pointer flex justify-center items-center text-[18px] sm:px-6 px-4 text-white font-bold bg-black mt-6 md:py-3 sm:py-2 h-[60px] md:h-fit rounded-3xl border border-white hover:bg-white hover:border hover:border-black hover:text-black;
   }
 
   .my-small-button-style{
-    @apply cursor-pointer flex justify-center items-center text-[14px] py-2 px-4 font-bold rounded-3xl;
+    @apply cursor-pointer flex justify-center items-center text-[14px] sm:py-2 px-4 h-[60px] md:h-fit font-bold rounded-3xl;
   }
 
   .my-black-button-color-style{

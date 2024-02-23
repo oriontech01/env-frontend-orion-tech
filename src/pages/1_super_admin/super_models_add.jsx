@@ -330,7 +330,7 @@ export default function SuperModelsAdd(){
                                     : ""
                             }
 
-                                Create Account
+                                Upload Model
                             </button>
                         </div>
                     </div>

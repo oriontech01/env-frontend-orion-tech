@@ -220,13 +220,14 @@ export default function SuperModelsManagement(){
 
 
 
-                <button onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} onClick={ (e) => {navigate_add_user(e)}} className="fixed sm:right-[52px] right-[12px] bottom-8 my-small-button-style my-black-button-color-style  my-shadow-style flex items-center rounded-full text-2xl">
+                {/* +++++++++++++++ FLOATING BUTTON AND HELPER ++++++++++++ */}
+                <button onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} onClick={ (e) => {navigate_add_user(e)}} className="fixed sm:right-[52px] right-[12px] w-[60px] bottom-8 my-small-button-style my-black-button-color-style  my-shadow-style flex items-center rounded-full text-3xl">
                     +
                 </button>
                 
                 {floatButtonHelp 
                     ? 
-                    <h1 className="fixed right-10 sm:flex hidden bottom-[85px] text-white bg-black rounded-xl px-2 text-sm font-medium text-center">Add Model</h1>
+                    <h1 className="fixed right-[45px] sm:flex hidden bottom-[95px] text-white bg-black rounded-xl px-2 text-sm font-medium text-center">Add Model</h1>
                     : ""
                 }
 
@@ -247,9 +248,9 @@ export default function SuperModelsManagement(){
                                             <DeleteForever className="text-red-700 scale-[150%]"/>
                                             <h1 className="text-center text-md font-medium">Are you sure you want to delete this model?</h1>
 
-                                            <flex className="flex gap-x-4">
-                                                <button onClick={(e) => {continue_delete_();}} className="bg-white border hover:bg-black my-shadow-style hover:text-white w-[70px] rounded-3xl">Yes</button>
-                                                <button onClick={ (e) => {cancel_delete_();}} className="my-shadow-style bg-red-700 hover:bg-red-500 w-[70px] rounded-3xl">No</button>
+                                            <flex className="flex gap-x-12">
+                                                <button onClick={(e) => {continue_delete_();}} className=" bg-white border hover:bg-black my-shadow-style hover:text-white w-[70px] rounded-3xl">Yes</button>
+                                                <button onClick={ (e) => {cancel_delete_();}} className="my-shadow-style text-white bg-red-700 hover:bg-red-500 w-[70px] rounded-3xl">No</button>
                                             </flex>
                                         </flex>
                                         
@@ -278,7 +279,7 @@ export default function SuperModelsManagement(){
                 {
                     showProcessed 
                         ? 
-                        <div  id="shadow_id2" onClick={(e) => {if(e.target.id === "shadow_id2"){setshowProcessed(false);}}} className="cursor-pointer pointer-events-auto bg-black/55 absolute top-0 bottom-0 left-0 right-0">
+                        <div  id="shadow_id2" onClick={(e) => {if(e.target.id === "shadow_id2"){setshowProcessed(false);}}} className="cursor-pointer pointer-events-auto bg-black/55 fixed top-0 bottom-0 left-0 right-0 ">
         
                             <div className="flex flex-col gap-y-3 items-center justify-center absolute bg-white sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] md:w-[400px] sm:w-[300px] w-[80%] px-2 mt-[50px] mx-auto my-shadow-style">
                                 <IoCheckmarkDoneCircleOutline className="size-[100px] text-green-600"/>

@@ -107,12 +107,12 @@ const UsersLists = (props) => {
         <div className="relative top-[100px] flex flex-col gap-y-4 w-full">
             <flex className='text-sm flex justify-between absolute left-0 right-0 top-0 items-center border py-1 px-2'>
                 
-                <flex onClick={e => {selectAllValue_()}} className= "flex items-center gap-x-3 ">
+                <flex onClick={e => {selectAllValue_()}} className= "cursor-pointer flex items-center gap-x-3 ">
                     <input checked={selectAllValue} type='checkbox' className='size-5'/>
                     <h1>Select All</h1>
                 </flex>
 
-                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
+                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style text-white bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
                     Delete
                 </button>
             </flex>
@@ -128,14 +128,15 @@ const UsersLists = (props) => {
                     model_json_data[0].map((item, index) => (
                         <div className="flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 sm:px-2 px-2 border rounded-xl">     
                             <div className="sm:relative sm:flex sm:justify-between md:hidden hidden">
-                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='size-4'/>
-                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className="hover:bg-gray-300 rounded-full text-red-700 flex scale-[150%] cursor-pointer"/>
+                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='size-5'/>
+                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className=" hover:bg-gray-300 rounded-full text-red-700 flex scale-[150%] cursor-pointer"/>
                             </div>
 
 
 
                             <div className="md:flex md:pr-4 sm:hidden flex justify-between ">
-                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='size-4'/>
+                                {/* ++++++++++++++++++++++++++ I PUT Z-10 TO MAKE THE CHECKBUTTON CLICKABLE  BECAUSE THE DIV ELEMENT THAT FOLLOWS IT PREVENTS IT FROM  RECEIVING POINTER +++++++++++++ */}
+                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}} type='checkbox'  className='z-10 size-5'/>
                                 <RiDeleteBinLine onClick={e => {single_delete(item.id)}} className="sm:hidden text-red-700  flex scale-[150%] cursor-pointer"/>
                             </div>
 
@@ -150,9 +151,9 @@ const UsersLists = (props) => {
                                         {/* <img onLoad={e => {setIsImageLoaded(true)}} src={item.profile_picture} className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "my-image-cover-style w-[100%] h-[100%] flex"} `}/> */}
                                     </div>
 
-                                    <div className="flex flex-col sm:w-[150px] w-[90px]">
+                                    <div className="flex flex-col w-[190px]">
                                         <h1 className="md:text-start text-center text-[20px] truncate">
-                                            {item.username}
+                                            {item.username}telretjrlkrwrwrwfskjlfvfjl
                                         </h1> 
 
                                         <h1 className="md:text-start text-center text-[12px] italic text-wrap text-ellipsis">
@@ -165,12 +166,12 @@ const UsersLists = (props) => {
 
 
 
-                            <div className='sm:text-center md:mt-0 mt-3 text-sm'>
+                            <div className='text-center md:mt-0 mt-3 text-sm'>
                                 Reg Date: {item.registration_date}
                             </div>
 
-                            <div className="flex md:mt-0 mt-6 md:w-fit sm:w-full w-fit mx-auto">
-                                <select onClick={e => selectValue_(item.id)} value= {item.role === "admin" ? "Tagger" : "Reviewer"} onChange={e => {setRole(e.target.value)}} className="cursor-pointer md:w-fit w-full py-2 px-6 border border-gray-300 rounded-2xl text-[12px]">
+                            <div className="flex md:mt-0 mt-6 md:w-fit w-full mx-auto">
+                                <select onClick={e => selectValue_(item.id)} value= {item.role === "admin" ? "Tagger" : "Reviewer"} onChange={e => {setRole(e.target.value)}} className="cursor-pointer md:w-fit w-full py-2 px-6 border border-gray-300 rounded-2xl text-[12px] h-[60px] md:h-fit">
                                     <option >Tagger</option>
                                     <option >Reviewer</option>
                                 </select>
@@ -179,7 +180,7 @@ const UsersLists = (props) => {
 
 
                             <div className="flex items-center gap-x-6 md:w-fit w-full">
-                                <button className="my-shadow-style md:w-fit w-full py-2 cursor-pointer flex md:justify-start justify-center md:items-start items-center text-[12px]  px-6 text-black  bg-white md:mt-0 mt-2 rounded-3xl border border-gray-300 hover:bg-black hover:border hover:border-white hover:text-white">
+                                <button className="my-shadow-style md:w-fit w-full py-2 cursor-pointer flex md:justify-start justify-center md:items-start items-center text-[12px]  px-6 text-black  bg-white md:mt-0 mt-2 rounded-3xl border border-gray-300 hover:bg-black hover:border hover:border-white hover:text-white h-[60px] md:h-fit">
                                     View Profile
                                 </button>
 

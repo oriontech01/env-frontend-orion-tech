@@ -14,7 +14,3 @@ export const getCookie = (name) => {
     return null;
 };
 
-export const handleGetCookie = () => {
-    // Retrieve the value of the "exampleCookie" cookie
-    access_token = getCookie('access_token');
-};
