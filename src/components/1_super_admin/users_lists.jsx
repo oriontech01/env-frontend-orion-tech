@@ -14,8 +14,16 @@ import axios from 'axios';
 const UsersLists = (props) => {
     const model_json_data= props.model_json_data;
     const cancel_delete_= props.cancel_delete_;
+    const update_role= props.update_role;
 
-    const [role, setRole]= useState("Tagger");
+
+    const role_= (user_id, user_role) => {
+        let selectedRole= user_role;
+        user_role === "Tagger" ? selectedRole="admin" : selectedRole="user";
+
+        const roleJson= {"id": user_id, "role": selectedRole};
+        update_role(roleJson);
+    }
 
 
     const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -151,9 +159,9 @@ const UsersLists = (props) => {
                                         {/* <img onLoad={e => {setIsImageLoaded(true)}} src={item.profile_picture} className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "my-image-cover-style w-[100%] h-[100%] flex"} `}/> */}
                                     </div>
 
-                                    <div className="flex flex-col w-[190px]">
+                                    <div className="flex flex-col w-[190px] md:pr-3">
                                         <h1 className="md:text-start text-center text-[20px] truncate">
-                                            {item.username}telretjrlkrwrwrwfskjlfvfjl
+                                            {item.username}
                                         </h1> 
 
                                         <h1 className="md:text-start text-center text-[12px] italic text-wrap text-ellipsis">
@@ -171,7 +179,7 @@ const UsersLists = (props) => {
                             </div>
 
                             <div className="flex md:mt-0 mt-6 md:w-fit w-full mx-auto">
-                                <select onClick={e => selectValue_(item.id)} value= {item.role === "admin" ? "Tagger" : "Reviewer"} onChange={e => {setRole(e.target.value)}} className="cursor-pointer md:w-fit w-full py-2 px-6 border border-gray-300 rounded-2xl text-[12px] h-[60px] md:h-fit">
+                                <select value= {item.role === "admin" ? "Tagger" : "Reviewer"}  onChange={e => {role_(item.id, e.target.value)}} className="cursor-pointer md:w-fit w-full py-2 px-6 border border-gray-300 rounded-2xl text-[12px] h-[60px] md:h-fit">
                                     <option >Tagger</option>
                                     <option >Reviewer</option>
                                 </select>

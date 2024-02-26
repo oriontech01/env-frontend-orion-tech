@@ -4,8 +4,9 @@ import axios from "axios";
 //     baseURL: 'https://http://127.0.0.1:8000/'
 // });
 
-export const api_root= "http://54.163.24.187:8000/"; // http://54.163.24.187:8000/    http://54.163.24.187:8000/
+export const api_root= "http://54.163.24.187:8000/";    // http://54.163.24.187:8000/
 export var bearer_token= null;
+export let keep_user_data= [];
 export let keep_json_data= [];
 export let keep_json_data_model= [];
 export let model_images= [];
@@ -41,6 +42,8 @@ export var selectAllValue= false;
 export const setSelectAllValue= (value) => {
     selectAllValue= value;
 }
+
+
 
 
 

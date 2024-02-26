@@ -39,7 +39,7 @@ export default function DesktopMenu (props) {
 
 
     return (
-        <div className="lg:flex flex-col pb-8 pt-2 hidden bg-[#363636]">
+        <div className="h-screen lg:flex flex-col pb-8 pt-2 hidden bg-[#363636]">
 
             <img alt="logo" src={emapping} className="xl:scale-[65%] lg:scale-[75%] mx-auto"/>
 

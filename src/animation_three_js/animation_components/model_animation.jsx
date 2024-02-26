@@ -1,5 +1,5 @@
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { useControls } from "leva";
+import {useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -54,6 +54,7 @@ export const ModelAnimation = (props) => {
 
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
+    const canvasRef= props.canvasRef;
     const show_obj_data= props.props.show_obj_;
     const notify_double_= props.props.notify_double_;
     const for_object_view_data= props.props.for_object_view;
@@ -68,6 +69,7 @@ export const ModelAnimation = (props) => {
 
   
     const {camera, size}= useThree();
+    // const renderer= new THREE.WebGL1Renderer();
     const rayCaster= new THREE.Raycaster();
 
     const text_ref= useRef();
@@ -151,29 +153,29 @@ export const ModelAnimation = (props) => {
   
 
     
+    
     //+++++++++++++ MOUSEMOVE  EVENT ++++++++++++++++
     const handle_mouse = (event) => {
-      // console.log(model_load);
-      // console.log(event.target.localName);
 
       if (event.target.localName === "canvas"){
-        // event.target.left   event.target.right
-        console.log(event.target);
-        // const width= event.target.width / 2;
-        // const height= (event.target.height - event.target.top) / 2;
 
-        const width= size.width;
-        const height= size.height;
-        // const height= (size.height - size.top);
+        // // TO CORRECT MOUSE CLICKING INACCURATE CLICKING BECAUSE THE CANVAS IS NOT ON FULLSCREEN AND ITS ARRANGED WITH OTHER HTML ELMENTS
+        // let canvasBounds = this.renderer.context.canvas.getBoundingClientRect();
+        // this.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+        // this.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
 
-        // console.log(width);
-        // console.log(height);
-        // console.log("+++++++++");
-        // console.log(size);
-        // console.log(event.clientY);
+
+        // TO CORRECT MOUSE CLICKING INACCURATE CLICKING BECAUSE THE CANVAS IS NOT ON FULLSCREEN AND ITS ARRANGED WITH OTHER HTML ELMENTS
+        // console.log(canvasRef.current.getBoundingClientRect());
+        let canvasBounds = canvasRef.current.getBoundingClientRect();
+        const x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+        const y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
         
-        const x = (event.clientX / width) * 2 - 1;
-        const y = -(event.clientY / height) * 2 + 1;
+
+        // const width= size.width;
+        // const height= size.height;
+        // const x = (event.clientX / width) * 2 - 1;
+        // const y = -(event.clientY / height) * 2 + 1;
     
         const current_mouse= { x, y };
     
@@ -185,7 +187,7 @@ export const ModelAnimation = (props) => {
           // console.log(intersected_object);
           intersected_points= intersects[0].point;
           text_ref.current.position.x= intersected_points.x;
-          text_ref.current.position.y= intersected_points.y;
+          text_ref.current.position.y= intersected_points.y -5;
 
 
           const ref_small2= keep_small_object_ref.indexOf(intersected_object.name);
@@ -244,8 +246,12 @@ export const ModelAnimation = (props) => {
       // console.log(event.target.localName);
       
       if (event.target.localName === "canvas"){
-        const x = (event.clientX / size.width) * 2 - 1;
-        const y = -(event.clientY / size.height) * 2 + 1;
+        // const x = (event.clientX / size.width) * 2 - 1;
+        // const y = -(event.clientY / size.height) * 2 + 1;
+
+        let canvasBounds = canvasRef.current.getBoundingClientRect();
+        const x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+        const y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
   
         const current_mouse= { x, y };
   
@@ -337,6 +343,7 @@ export const ModelAnimation = (props) => {
     return (
 
       <group >
+
         <primitive 
           object={
             model_load.scene ? model_load.scene : model_load
@@ -371,45 +378,7 @@ export const ModelAnimation = (props) => {
       
         </Text>
       </group>
-      // <Preload all >
-
-      //   <group >
-      //     <primitive 
-      //       object={
-      //         model_load.scene ? model_load.scene : model_load
-      //       } 
-      //       scale={1} 
-      //       position= {[0, -5, 0]}
-      //       ref={room_ref}
-      //       // onPointerEnter= {e => (handle_mouse_enter(e))}
-      //       // onPointerLeave= {e => (handle_mouse_leave(e))}
-      //     />
-
-
-
-      //     <Text
-      //       ref={text_ref}
-      //       // scale={scale}
-      //       // color= {text_color} // def
-      //       position={[0, 0, 0]}
-            
-      //     >
-
-      //       {/* Pipeloluwa */}
-      //       <Html center>
-      //         <div className={`${current_text === "" ? "" : "bg-green-600/80 shadow shadow-black min-h-4 w-44 py-2 px-4 rounded-xl"}`}>
-      //           <p className={` text-[14px] text-white `}>
-      //             {current_text}
-      //             {/* <br></br>
-      //             wffef */}
-      //           </p>
-      //         </div>
-      //       </Html>
-        
-      //     </Text>
-      //   </group>
-
-      // </Preload>
+     
     );
   }
 

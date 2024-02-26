@@ -40,7 +40,7 @@ export default function MobileMenu (props) {
 
    
     return (
-        <div className="lg:hidden h-full ">
+        <div className="lg:hidden h-screen ">
             {
                 mobileMenu 
                     ? 

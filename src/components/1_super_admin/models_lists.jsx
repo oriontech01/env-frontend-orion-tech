@@ -24,6 +24,10 @@ const ModelsLists = (props) => {
         navigate(`/add-objects-model/${model_name.toUpperCase().trim()}`, {relative: true});
     }
 
+    const navigate_view_objects= (model_name) => {
+        navigate(`/view-objects-model/${model_name.toUpperCase().trim()}`, {relative: true});
+    }
+
 
 
     const [selectStates1, setSelectStates1]= useState(false);
@@ -162,7 +166,7 @@ const ModelsLists = (props) => {
                                         </div>
 
 
-                                        <button className='my-small-button-style my-black-button-color-style w-full'>
+                                        <button onClick={(e) => {navigate_view_objects(item.id)}} className='my-small-button-style my-black-button-color-style w-full'>
                                             View Model
                                         </button>
 

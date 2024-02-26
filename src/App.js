@@ -7,6 +7,7 @@ import SuperUsersAdd from "./pages/1_super_admin/super_users_add";
 import SuperModelsManagement from "./pages/1_super_admin/super_models_management";
 import SuperModelsAdd from "./pages/1_super_admin/super_models_add";
 import AddObjectsModel from "./pages/add_objects_model";
+import ViewObjectsModel from "./pages/view_objects_model";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="admin-user-add" element= {<SuperUsersAdd />} />
 
           <Route path="add-objects-model/:dynamicParam" element= {<AddObjectsModel />} />
+          <Route path="view-objects-model/:dynamicParam" element= {<ViewObjectsModel />} />
 
         </Routes>
       </BrowserRouter>

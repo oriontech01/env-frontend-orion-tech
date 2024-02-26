@@ -5,30 +5,19 @@ import UsersLists from "../../components/1_super_admin/users_lists";
 import PieChartSuperAdmin from "../../components/1_super_admin/pie_chart_super_admin";
 import MobileMenu from "../../components/1_super_admin/mobile_menu";
 import { FaSearch } from "react-icons/fa";
-import { Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NavHeader from "../../components/1_super_admin/nav_header";
 import axios from "axios";
 import { admins_gotten, api_root, keep_json_data, selected_admins, set_admins_gotten } from "../../api/api_variables";
 import { DeleteForever } from "@mui/icons-material";
-import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { IoCheckmarkDoneCircle, IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { getCookie } from "../../api/cookies_logic";
 
 
 export default function SuperUsersManagement(){
     var access_token;
     
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-
-        for (const cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.trim().split('=');
-
-            if (cookieName === name) {
-            return decodeURIComponent(cookieValue);
-            }
-        }
-        return null;
-    };
 
     const handleGetCookie = () => {
         // Retrieve the value of the "exampleCookie" cookie
@@ -68,6 +57,8 @@ export default function SuperUsersManagement(){
 
     const [is_admin_delete, set_is_admin_delete]= useState(false);
 
+
+
     useEffect(() => {
 
         if (keep_json_data.length === 0){
@@ -106,8 +97,75 @@ export default function SuperUsersManagement(){
 
       const [showProcessed, setshowProcessed]= useState(false);
       const [showProcessing, setshowProcessing]= useState(false);
+
+      const [showUpdateProcessed, setshowUpdateProcessed]= useState(false);
+      const [showUpdateProcessing, setshowUpdateProcessing]= useState(false);
       const [cancel_delete, setDelete]= useState(false);
 
+
+
+
+
+    //   +++++++++++ UPDATE USER ++++++++++
+      const update_role = (admin_data) => {
+
+        // console.log(selected_admins);
+
+        handleGetCookie();
+        if (access_token === null){
+            navigate('/', {relative: true});
+        }
+        
+        else{
+            axios.request(
+                {
+                    method: 'put',
+                    url: api_root + "admin/update-user-role",
+                    headers: { 
+                        'Authorization': access_token,
+                        'Content-Type': 'application/json'
+                    },
+
+                    data: admin_data
+                }
+            )
+            .then((response) => {
+                keep_json_data.length= 0;
+                admins_gotten.length= 0;
+                selected_admins.length= 0;
+
+                set_is_admin_delete(!is_admin_delete);
+                setshowUpdateProcessing(false);
+                setshowUpdateProcessed(true);
+            })
+            .catch((e) => {
+                if (e.response.status === 404){
+                    api_error_disp_("This data does not exist or has alread been deleted on the database")
+                }
+        
+                else if (e.message === "Network Error"){
+                    api_error_disp_(e)
+                }
+        
+                else{
+                    api_error_disp_(e);
+                }
+                
+
+                setshowUpdateProcessing(false);
+            });
+            setshowUpdateProcessing(false);
+
+        }
+      }
+
+
+
+
+
+
+
+    //   ++++++++++ DELETE USER +++++++++
       const cancel_delete_= (admin_id) => {
         admins_gotten.length= 0;
 
@@ -119,8 +177,8 @@ export default function SuperUsersManagement(){
         setDelete(!cancel_delete);
       }
 
-      
-      
+    
+
       const continue_delete_= () => {
         setDelete(!cancel_delete);
         setshowProcessing(true);
@@ -209,7 +267,7 @@ export default function SuperUsersManagement(){
 
 
                         {/* +++++++ USERS LIST ++++++++++ */}
-                        <UsersLists model_json_data= {keep_json_data} cancel_delete_= {cancel_delete_}/>
+                        <UsersLists model_json_data= {keep_json_data} cancel_delete_= {cancel_delete_} update_role= {update_role}/>
 
                     </div>
 
@@ -227,6 +285,11 @@ export default function SuperUsersManagement(){
                     <h1 className="fixed right-[43px] sm:flex hidden bottom-[95px] text-white bg-black rounded-xl px-2 text-sm font-medium text-center">Add User</h1>
                     : ""
                 }
+
+
+
+
+
 
                 
                 {/* +++++++++++ DELETE PROMPT +++++++++ */}
@@ -314,6 +377,46 @@ export default function SuperUsersManagement(){
                 <NavHeader navTitle= {"Users"} mobileMenuProp_= {mobileMenu_} mobileMenu= {mobileMenu}/>
 
             </div>
+
+
+
+
+
+        
+            {/* +++++++++++ LINEAR PROGRESS BAR ++++++++ */}
+            <div className={`${showUpdateProcessing ? "fixed h-full flex bg-black/50 top-0 bottom-0 left-0 right-0" : ""}`} />
+            {
+                showUpdateProcessing 
+                    ? 
+                    <Box sx= {{width: "100%"}} className="fixed left-0 right-0 ">
+                        <LinearProgress />
+                    </Box>
+                : ""
+            }
+
+
+            {/* +++++++++++++++++ UPLOADED SUCCESFULLY ++++++++ */}
+            {
+                showUpdateProcessed 
+                    ? 
+
+                    <div id="shadow_id_update" onClick={(e) => {if(e.target.id === "shadow_id_update"){setshowUpdateProcessed(false);}}} className="cursor-pointer pointer-events-auto bg-black/55 fixed h-full top-0 bottom-0 left-0 right-0">
+                        {/* onBlur={(e) => {setshowProcessed(true)}} */}
+                        {/* <button>  */}
+                            <div onClick={(e) => {}} className="flex flex-col gap-y-3 items-center justify-center absolute bg-white sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] md:w-[400px] sm:w-[300px] w-[80%] px-2 mt-[50px] mx-auto my-shadow-style">
+                                <IoCheckmarkDoneCircle className="size-[100px] text-green-600"/>
+
+                                <h1 className="text-center text-black sm:text-2xl text-base">
+                                        User role was changed succcessfully
+                                </h1>
+
+                                {/* <Close onClick={(e) => {setshowProcessed(true)}} className="my-hover-circle absolute top-0 right-0 m-4 rounded-full bg-white text-red-700 my-shadow-style"/> */}
+                            </div>
+                        {/* </button> */}
+                    </div>
+
+                    : ""
+            }
 
 
             <MobileMenu mobileMenu= {mobileMenu} sendActive= {"users"} />

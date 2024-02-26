@@ -3,7 +3,7 @@ import { IoCheckmarkDoneCircle, IoSearchSharp } from "react-icons/io5";
 
 import { useEffect, useState } from "react";
 import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_for_object_view, keep_for_view_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
-import { AddAnimation } from "../animation_three_js/add_animation";
+import { ViewAnimation } from "../animation_three_js/view_animation";
 
 
 import { Box, OrbitControls } from "@react-three/drei";
@@ -24,7 +24,7 @@ import { LinearProgress } from "@mui/material";
 
 
 
-export default function AddObjectsModel() {
+export default function ViewObjectsModel() {
       const { dynamicParam } = useParams();
 
 
@@ -43,13 +43,11 @@ export default function AddObjectsModel() {
           set_has_loaded(false);
 
           keep_for_object_view.length= 0;
-          // keep_for_model_file.length= 0;
-          // keep_for_edit_url.length= 0;
+
           reset_values();
 
           const get_for_object_view= res.data;
             
-          // keep_for_object_view[object_view['id']]= object_view['objects_data'];
           keep_for_model_file.push(get_for_object_view['file_model']);
 
           keep_for_view_url.push(get_for_object_view['file_model']);
@@ -109,13 +107,6 @@ export default function AddObjectsModel() {
         }
     }, []); 
 
-    const [listeria, set_listeria]= useState('');
-    const [apc, set_apc]= useState('');
-    const [salmonella, set_salmonella]= useState('');
-    const [date_, set_date_]= useState('');
-    const [time_, set_time_]= useState('');
-    const [type_, set_type_]= useState('');
-    const [comment_, set_comment_]= useState('');
 
 
 
@@ -126,137 +117,63 @@ export default function AddObjectsModel() {
   
   
   
-    const [file_text, set_file_text]= useState("Choose a file or drag & drop it here");
-    const [pick_picture, set_pick_file]= useState(null);
-    const pick_picture_ = (e) => {
-        if (!pick_picture) {
-            const file_picked= e.target.files[0];
-            set_pick_file(file_picked);
-            
-            try{set_file_text(file_picked.name);}
-            catch{set_file_text('Choose a file or drag & drop it here'); set_pick_file(null);}
-        }
   
-        else{
-            set_pick_file(null);
-            set_file_text('Choose a file or drag & drop it here');
-        }
+    const [listeria, set_listeria]= useState('');
+    const [apc, set_apc]= useState('');
+    const [salmonella, set_salmonella]= useState('');
+    const [date_, set_date_]= useState('');
+    const [time_, set_time_]= useState('');
+    const [type_, set_type_]= useState('');
+    const [comment_, set_comment_]= useState('');
   
-        // set_validation_text("")
-    }
-  
-  
-    const [floatButtonHelp, setFloatButtonHelp]= useState(false);
-  
-
-
-    const [isFinished, setFinished]= useState(false);
-    const [showProcessing, setshowProcessing]= useState(false);
-    const [showProcessed, setshowProcessed]= useState(false);
-
-
-    let [show_obj_d, set_show_obj_d] =useState({});
-    const show_obj_d_= (obj) => {
-      try{
-        notify_double_click(null, true);
-        set_listeria(keep_objects_data_reference[obj].listeria);
-        set_apc(keep_objects_data_reference[obj].apc);
-        set_salmonella(keep_objects_data_reference[obj].salmonella);
-        set_date_(keep_objects_data_reference[obj].date_of_sample);
-        set_time_(keep_objects_data_reference[obj].time_of_sample);
-        set_type_(keep_objects_data_reference[obj].type_of_sample);
-        set_comment_(keep_objects_data_reference[obj].comment_box);
-        // alert(keep_objects_data_reference[obj].comment_box);
-      }
-      catch{}
-    }
-
 
     let [is_double_clk, set_is_double_clk]= useState(false);
-    const [key_value, store_key_value] =useState('');
+
     const notify_double_click= (value, state_value) => {
-      if(value){
-        store_key_value(value);
-      }
       set_is_double_clk(state_value);
     }
 
 
 
-    const add_data_call= () => {
-      const data_json= {
-        "object_name": key_value,
-        "listeria": listeria,
-        "apc": apc,
-        "salmonella": salmonella,
-        "date_of_sample": date_,
-        "time_of_sample": time_,
-        "type_of_sample": type_,
-        "comment_box": comment_
+
+    let [show_obj_d, set_show_obj_d] =useState({});
+    const show_obj_d_= (obj) => {
+      try{
+        if (obj){ 
+          notify_double_click(true);
+
+          set_listeria(keep_for_object_view[obj].listeria);
+          set_apc(keep_for_object_view[obj].apc);
+          set_salmonella(keep_for_object_view[obj].salmonella);
+          set_date_(keep_for_object_view[obj].date_of_sample);
+          set_time_(keep_for_object_view[obj].time_of_sample);
+          set_type_(keep_for_object_view[obj].type_of_sample);
+          set_comment_(keep_for_object_view[obj].comment_box);
+          // alert(keep_objects_data_reference[obj].comment_box);
+        }
+
+        else{
+          notify_double_click(false);
+
+          set_listeria("");
+          set_apc("");
+          set_salmonella("");
+          set_date_("");
+          set_time_("");
+          set_type_("");
+          set_comment_("");
+        
+        }
       }
-
-      keep_objects_data.push(
-        data_json
-      );
-      keep_objects_data_reference[key_value]= data_json;
-      keep_objects_reference.push(key_value);
-
-      // console.log(keep_objects_data);
-      notify_double_click(null, false);
+      catch{}
     }
 
 
+
+
+
+
   
-
-
-
-    const post_request= (json_data) => {
-      setshowProcessing(true);
-
-      handleGetCookie();
-      if (access_token === null){
-          navigate('/', {relative: true});
-      }
-      
-      else{
-          axios.request(
-              {
-                  method: 'post',
-                  data: json_data,
-                  maxBodyLength: Infinity,
-                  url: api_root + 'admin/object-add-model',
-                  headers: { 
-                    'Authorization': access_token,
-                    'Content-Type': 'application/json',
-                  }
-              }
-          )
-          .then((response) => {
-              // console.log(JSON.stringify(response.data));
-              // alert("Data added ")
-              setshowProcessing(false);
-              setshowProcessed(true);
-          })
-          .catch((error) => {
-              console.log(error);
-              setshowProcessing(false);
-          });
-      }
-  }
-
-
-
-
-  const upload_all= () =>{
-    // const string_upload= `{"id":"${keep_m_name[0]}", "objects_data":["${keep_objects_data}"]}`
-    const json_upload= {"id":dynamicParam, "objects_data": keep_objects_data}
-    
-    // console.log(json_upload);
-    post_request(json_upload);
-  }
-
-
-
 
 
     
@@ -272,20 +189,20 @@ export default function AddObjectsModel() {
             {
                 has_loaded 
                   ?
-                    <AddAnimation notify_double_={notify_double_click} show_obj_= {show_obj_d_} for_model_file= {keep_for_model_file}/>
+                    <ViewAnimation show_obj_= {show_obj_d_} for_object_view= {keep_for_object_view} for_model_file= {keep_for_model_file}/>
                   
                   : ""
               }
           </div>
 
 
-          <div className={`${!is_double_clk ? "pointer-events-none opacity-50" : ""} overflow-scroll w-[400px] h-full bg-white`}>
+          <div className={"overflow-scroll w-[400px] h-full bg-white"}>
             <div className="flex flex-col w-full px-4 mb-[200px]">
                 <h1 className="text-lg font-medium">
                   Input Model Data
                 </h1>
 
-                <div className="flex flex-col mt-[30px] gap-y-3 text-sm">
+                <div className="pointer-events-none flex flex-col mt-[30px] gap-y-3 text-sm">
                   <div className='pointer-events-none opacity-30 flex flex-col'>
                       <label className='pl-2'>
                           Name of tagger:
@@ -369,25 +286,15 @@ export default function AddObjectsModel() {
                         Evidence:
                       </label>
 
-                      <div className={`cursor-pointer relative hover:bg-black/60 hover:border-white hover:text-white ${pick_picture !== null ? "bg-green-500 hover:bg-green-400 text-white" : "bg-gray-200"} sm:mt-2 flex flex-col w-full justify-center items-center gap-y-4 border-2 border-gray-400 border-dashed py-8 px-2 rounded-2xl`}>
+                      <div className={`cursor-pointer relative hover:bg-black/60 hover:border-white hover:text-white sm:mt-2 flex flex-col w-full justify-center items-center gap-y-4 border-2 border-gray-400 border-dashed py-8 px-2 rounded-2xl`}>
                           <BsBoxArrowUp className="size-10"/>
                           
                           <div className="flex flex-col gap-y-2 items-center">
-                              <h1 className="font-bold text-center">{pick_picture ? "( Click to remove )" : file_text}</h1>
+                              <h1 className="font-bold text-center">( Click to view file )</h1>
                           </div>
-
-                          {
-                              !pick_picture 
-                              ?   <input  onChange={e => pick_picture_(e)}  type="file" className="opacity-0 absolute left-0 right-0 top-0 bottom-0"/>
-                              : <div  onClick= {e => pick_picture_(e)}  className="opacity-0 absolute left-0 right-0 top-0 bottom-0"/>
-                          }
 
                       </div>
                   </div>
-
-                  <button onClick={(e) => {add_data_call()}} className="mt-5 my-small-button-style gap-x-2 bg-yellow-500 text-white hover:bg-white hover:border hover:border-yellow-500 hover:text-yellow-500 my-shadow-style">
-                    Add data <span className="text-3xl -mt-[6px]">+</span>
-                  </button>
 
                 </div>
 
@@ -395,57 +302,8 @@ export default function AddObjectsModel() {
           </div>
 
 
-
-
-          {/* +++++++++++++++ FLOATING BUTTON AND HELPER ++++++++++++ */}
-          <BsBoxArrowUp onClick={(e) => {upload_all()}} onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} className={`${keep_objects_data.length === 0 ? "pointer-events-none opacity-60" : ""} fixed sm:right-[52px] right-[12px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-green-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-green-500 hover:text-green-500 my-shadow-style flex items-center rounded-full text-3xl`} />
-      
-          {floatButtonHelp 
-              ? 
-              <h1 className="fixed right-[40px] sm:flex hidden bottom-[95px] text-white bg-green-600 rounded-xl px-2 text-sm font-medium text-center">Upload Data</h1>
-              : ""
-          }
-
         </div>
 
-
-
-
-
-          {/* +++++++++++ LINEAR PROGRESS BAR ++++++++ */}
-          <div className={`${showProcessing ? "fixed h-full flex bg-black/50 top-0 bottom-0 left-0 right-0" : ""}`} />
-          {
-              showProcessing 
-                  ? 
-                  <Box sx= {{width: "100%"}} className="absolute left-0 right-0 ">
-                      <LinearProgress />
-                  </Box>
-              : ""
-          }
-
-
-          {/* +++++++++++++++++ UPLOADED SUCCESFULLY ++++++++ */}
-          {
-              showProcessed 
-                  ? 
-
-                  <div id="shadow_id_object" onClick={(e) => {if(e.target.id === "shadow_id_object"){setshowProcessed(false);}}} className="fixed h-full cursor-pointer pointer-events-auto bg-black/55 top-0 bottom-0 left-0 right-0">
-                      {/* onBlur={(e) => {setshowProcessed(true)}} */}
-                      {/* <button>  */}
-                          <div onClick={(e) => {}} className="flex flex-col gap-y-3 items-center justify-center absolute bg-white sm:top-20 top-40 bottom-0 left-0 right-0 sm:h-[70%] h-[50%] md:w-[400px] sm:w-[300px] w-[80%] px-2 mt-[50px] mx-auto my-shadow-style">
-                              <IoCheckmarkDoneCircle className="size-[100px] text-green-600"/>
-
-                              <h1 className="text-center text-black sm:text-2xl text-base">
-                                      Objects Tags Updated Successfully
-                              </h1>
-
-                              {/* <Close onClick={(e) => {setshowProcessed(true)}} className="my-hover-circle absolute top-0 right-0 m-4 rounded-full bg-white text-red-700 my-shadow-style"/> */}
-                          </div>
-                      {/* </button> */}
-                  </div>
-
-                  : ""
-          }
 
       </div>
 

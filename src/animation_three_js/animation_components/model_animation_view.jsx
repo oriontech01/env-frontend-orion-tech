@@ -47,6 +47,7 @@ export const ModelViewAnimation = (props) => {
 
 
     //++++++++++++++++ ACCESSING PROPS +++++++++++++++++
+    const canvasRef= props.canvasRef;
     const show_obj_data= props.props.show_obj_;
     const for_object_view_data= props.props.for_object_view;
 
@@ -148,8 +149,12 @@ export const ModelViewAnimation = (props) => {
       if (event.target.localName === "canvas"){
 
         
-        const x = (event.clientX / size.width) * 2 - 1;
-        const y = -(event.clientY / size.height) * 2 + 1;
+        // const x = (event.clientX / size.width) * 2 - 1;
+        // const y = -(event.clientY / size.height) * 2 + 1;
+
+        let canvasBounds = canvasRef.current.getBoundingClientRect();
+        const x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+        const y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
     
         const current_mouse= { x, y };
     
@@ -163,7 +168,7 @@ export const ModelViewAnimation = (props) => {
             const intersected_object= intersects[0].object;
             intersected_points= intersects[0].point;
             text_ref.current.position.x= intersected_points.x;
-            text_ref.current.position.y= intersected_points.y;
+            text_ref.current.position.y= intersected_points.y -5;
 
 
             const ref_small2= for_object_view_data[(intersected_object.name)];

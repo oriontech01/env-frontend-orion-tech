@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+body{
+  background-color: #ffffff;
+}
+
+
+/* LEVA STYLING */
+/* #leva__root > * {
+  width: 4000px;
+}
+
+#leva__root > * {
+  scale: 50%;
+} */
+
+/* .leva-container {
+  width: 500px;
+} */
+
+
+
+ /* TAILWIND STYLING */
 @layer components {
   .text-header{
     @apply text-2xl font-bold;
@@ -64,7 +87,3 @@
   }
 }
 
-
-body{
-  background-color: #ffffff;
-}

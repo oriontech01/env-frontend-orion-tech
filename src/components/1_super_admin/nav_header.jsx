@@ -1,8 +1,14 @@
-import p1 from "../../assets/images/p1.jpeg";
+import Group from "../../assets/images/Group.png";
+import { FaCircleUser } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
 import { IoArrowUndo } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useEffect, useState } from "react";
+import { api_root, keep_json_data, keep_user_data } from "../../api/api_variables";
+import { getCookie } from "../../api/cookies_logic";
+import axios from "axios";
 
 
 export default function NavHeader (props) {
@@ -10,12 +16,62 @@ export default function NavHeader (props) {
     const mobileMenuProp_= props.mobileMenuProp_;
     const mobileMenu= props.mobileMenu;
 
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
     const navigate= useNavigate();
 
 
     const GoBack= () => {
         navigate(-1);
     }
+
+
+    var access_token;
+    
+
+    const handleGetCookie = () => {
+        // Retrieve the value of the "exampleCookie" cookie
+        access_token = getCookie('access_token');
+    };
+
+    const [is_expired, set_is_expired]= useState(false);
+    const is_expired_ = (e) => {
+      if (e.code === "ERR_BAD_REQUEST"){
+          set_is_expired(true)
+      }
+      else{set_is_expired(false)}
+    }
+
+
+
+    const [refreshState, setRefreshState]= useState();
+    const model_json_data_= (res) => {
+        // ++++++++++++++ I HAVE TO REFRESH THE STATE SO THAT AFTER THE KEEP_JSON_DATA IS POPULATED, IT WILL DISPLAY ON THE SCREEN ++++++++++++
+        setRefreshState("");
+        keep_user_data.push(res.data);
+    };
+
+
+    useEffect(() => {
+
+        if (keep_user_data.length === 0){
+          handleGetCookie();
+          if (access_token === null){
+              navigate('/', {relative: true});
+          }
+    
+          else{
+              axios.get(api_root + 'admin/get-user', {
+                  headers: {
+                      'Authorization': access_token,
+                      'Content-Type': 'application/json', // Add other headers if needed
+                    },
+              }).then(res => {model_json_data_(res); })
+              .catch(e => is_expired_(e));
+          }
+        }
+    
+      }, []); 
 
 
     {/* ++++++++++++++++++++++ HEADER +++++++++++++++++ */}
@@ -31,12 +87,29 @@ export default function NavHeader (props) {
                 <div className=" md:flex hidden flex-row justify-between w-full border-0 ">  
                     <h1 className=" font-bold text-2xl scale-100">{titleMenuProp_}</h1>
 
-                    <div className="flex items-center space-x-4 scale-100 ">
-                        <div className="my-picture-style w-10">
-                            <img alt="profile picture" src={p1} className="object-cover"/>
+                    {
+                        keep_user_data.length !== 0
+                        ?       
+                        <div className="flex items-center space-x-4 scale-100 ">
+                            <div className="my-picture-style w-10">
+                                {/* <img alt="profile picture" src={p1} className="object-cover"/> */}
+
+
+                                <LazyLoadImage 
+                                    alt="profile picture" 
+                                    src={keep_user_data[0].profile_picture !== null
+                                        ? keep_user_data[0].profile_picture : Group}
+                                    onLoad={e => {setIsImageLoaded(true)}}
+                                    className={`object-cover ${!isImageLoaded ? "animate-pulse bg-gray-500 w-full h-full" : " w-[100%] h-[100%] flex"} `}
+                                />
+
+                            </div>
+                            <h1 className="font-bold">{keep_user_data[0].username}</h1>
                         </div>
-                        <h1 className="font-bold">Jakande Bablola</h1>
-                    </div>
+
+                        : <div className="animate-pulse flex w-[200px] h-[50px] bg-gray-300 rounded-lg">
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -44,12 +117,27 @@ export default function NavHeader (props) {
             <div className="md:hidden w-full flex flex-col items-center border shadow">  
                 <h1 className=" font-bold text-2xl scale-75">{titleMenuProp_}</h1>
 
-                <div className="flex items-center space-x-4 scale-75">
-                    <div className="my-picture-style w-10">
-                        <img alt="profile picture" src={p1} className="object-cover"/>
+                {keep_user_data.length !== 0
+                ?   
+                    <div className="flex items-center space-x-4 scale-75">
+                        <div className="my-picture-style w-10">
+ 
+                            <LazyLoadImage 
+                                alt="profile picture" 
+                                src={keep_user_data[0].profile_picture !== null
+                                    ? keep_user_data[0].profile_picture : Group}
+                                onLoad={e => {setIsImageLoaded(true)}}
+                                className={`object-cover ${!isImageLoaded ? "animate-pulse bg-gray-500 w-full h-full" : " w-[100%] h-[100%] flex"} `}
+                            />
+
+                        </div>
+                        <h1 className="font-bold">{keep_user_data[0].username}</h1>
                     </div>
-                    <h1 className="font-bold">Jakande Bablola</h1>
-                </div>
+
+
+                : <div className="animate-pulse flex w-[400px] h-[50px] bg-gray-300 rounded-lg">
+                        </div>
+                }
             </div>
 
 
