@@ -34,6 +34,11 @@ export default function AddObjectsModel() {
           // If you want to rewrite current page in history with the target page, use replace: true. Otherwise, leave out the config object or set replace: false.
           navigate('/', {relative: true});
       }
+
+  
+      const navigate_view_objects= (model_name) => {
+          navigate(`/view-objects-model/${model_name.toUpperCase().trim()}`, {relative: true});
+      }
     
 
       const keep_for_model_file= [];
@@ -147,6 +152,7 @@ export default function AddObjectsModel() {
   
   
     const [floatButtonHelp, setFloatButtonHelp]= useState(false);
+    const [floatButtonHelp2, setFloatButtonHelp2]= useState(false);
   
 
 
@@ -279,7 +285,7 @@ export default function AddObjectsModel() {
           </div>
 
 
-          <div className={`${!is_double_clk ? "pointer-events-none opacity-50" : ""} overflow-scroll w-[400px] h-full bg-white`}>
+          <div className={`md:visible collapse ${!is_double_clk ? "pointer-events-none opacity-50" : ""} overflow-scroll w-[400px] h-full bg-white`}>
             <div className="flex flex-col w-full px-4 mb-[200px]">
                 <h1 className="text-lg font-medium">
                   Input Model Data
@@ -398,11 +404,22 @@ export default function AddObjectsModel() {
 
 
           {/* +++++++++++++++ FLOATING BUTTON AND HELPER ++++++++++++ */}
-          <BsBoxArrowUp onClick={(e) => {upload_all()}} onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} className={`${keep_objects_data.length === 0 ? "pointer-events-none opacity-60" : ""} fixed sm:right-[52px] right-[12px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-green-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-green-500 hover:text-green-500 my-shadow-style flex items-center rounded-full text-3xl`} />
+          <BsBoxArrowUp onClick={(e) => {upload_all()}} onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} className={`md:flex hidden scale-75 ${keep_objects_data.length !== 0 ? "pointer-events-none opacity-60" : ""} fixed right-[320px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-green-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-green-500 hover:text-green-500 my-shadow-style flex items-center rounded-full text-3xl`} />
       
           {floatButtonHelp 
               ? 
-              <h1 className="fixed right-[40px] sm:flex hidden bottom-[95px] text-white bg-green-600 rounded-xl px-2 text-sm font-medium text-center">Upload Data</h1>
+              <h1 className="md:visible hidden fixed right-[305px] bottom-[95px] text-white bg-green-600 rounded-xl px-2 text-sm font-medium text-center">Upload Data</h1>
+              : ""
+          }
+
+
+
+          {/* +++++++++++++++ FLOATING BUTTON2 AND HELPER ++++++++++++ */}
+          <BsBoxArrowUp onClick={(e) => {navigate_view_objects(dynamicParam)}} onMouseLeave={(e) => {setFloatButtonHelp2(false)}} onMouseEnter={(e) => {setFloatButtonHelp2(true)}} className={"md:flex hidden scale-75 fixed right-[402px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-purple-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-purple-500 hover:text-purple-500 my-shadow-style items-center rounded-full text-3xl"} />
+      
+          {floatButtonHelp2
+              ? 
+              <h1 className="md:visible hidden fixed right-[390px] bottom-[95px] text-white bg-purple-600 rounded-xl px-2 text-sm font-medium text-center">View Model</h1>
               : ""
           }
 
