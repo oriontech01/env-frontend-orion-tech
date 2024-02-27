@@ -306,7 +306,7 @@ export default function SuperUsersManagement(){
                                         ?
                                         <flex className="flex flex-col gap-y-4 items-center justify-center w-full h-full">      
                                             <DeleteForever className="text-red-700 scale-[150%]"/>
-                                            <h1 className="text-center text-md font-medium">Are you sure you want to delete this model?</h1>
+                                            <h1 className="text-center text-md font-medium">Are you sure you want to delete this user?</h1>
 
                                             <flex className="flex gap-x-12">
                                                 <button onClick={(e) => {continue_delete_();}} className=" bg-white border hover:bg-black my-shadow-style hover:text-white w-[70px] rounded-3xl">Yes</button>

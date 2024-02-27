@@ -11,6 +11,7 @@ import { api_root } from "../../api/api_variables";
 import { handleDeleteCookie } from "../../api/delete_cookie";
 
 import login_background from "../../assets/images/login-background.webp";
+import emapping from "../../assets/images/emapping.png";
 
 
 
@@ -197,10 +198,16 @@ export default function LoginScreen() {
     
   return (
     <div className='relative flex h-screen w-screen'>
-        <div className='absolute top-0 bottom-0 left-0 right-0 grid grid-cols-2 w-screen h-screen bg-black overflow-hidden'>
+        <div className='absolute top-0 bottom-0 left-0 right-0 grid grid-cols-2 w-screen h-screen bg-white overflow-hidden'>
             <div className='bg-white'></div>
+            {/* <div className='flex h-screen items-center'>
+              <img onLoad={(e) => {set_BgImage(true)}} alt='background image' src={emapping} className='opacity-55 bg-black'/>
+            </div> */}
+
             <img onLoad={(e) => {set_BgImage(true)}} alt='background image' src={login_background} className='flex object-cover h-screen w-screen'/>
         </div>
+
+
 
         {
           bg_Image 

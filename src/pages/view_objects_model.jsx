@@ -196,7 +196,7 @@ export default function ViewObjectsModel() {
           </div>
 
 
-          <div className={"overflow-scroll w-[400px] h-full bg-white"}>
+          <div className={"overflow-scroll w-[400px] h-full pt-4 bg-white"}>
             <div className="flex flex-col w-full px-4 mb-[200px]">
                 <h1 className="text-lg font-medium">
                   Input Model Data

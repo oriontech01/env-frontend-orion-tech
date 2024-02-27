@@ -66,7 +66,6 @@ export const ModelAnimation = (props) => {
 
 
    
-
   
     const {camera, size}= useThree();
     // const renderer= new THREE.WebGL1Renderer();

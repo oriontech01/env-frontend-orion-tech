@@ -42,7 +42,7 @@ export const AddAnimation= (props) => {
 
     {/* <PapicControls className= "fixed"/> */}
 
-    <Canvas ref={canvasRef} camera={{fov:70, position: [0, 15, 55]}} className="max-h-[500px]">
+    <Canvas ref={canvasRef} camera={{fov:70, position: [0, 15, 55]}} className="h-full">
 
       <Suspense fallback={<Loading />}>
         {/* <camera /> */}

@@ -285,7 +285,7 @@ export default function AddObjectsModel() {
           </div>
 
 
-          <div className={`md:visible collapse ${!is_double_clk ? "pointer-events-none opacity-50" : ""} overflow-scroll w-[400px] h-full bg-white`}>
+          <div className={`md:visible collapse ${!is_double_clk ? "pointer-events-none opacity-50" : ""} overflow-scroll w-[400px] h-full bg-white pt-4`}>
             <div className="flex flex-col w-full px-4 mb-[200px]">
                 <h1 className="text-lg font-medium">
                   Input Model Data
@@ -404,11 +404,11 @@ export default function AddObjectsModel() {
 
 
           {/* +++++++++++++++ FLOATING BUTTON AND HELPER ++++++++++++ */}
-          <BsBoxArrowUp onClick={(e) => {upload_all()}} onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} className={`md:flex hidden scale-75 ${keep_objects_data.length !== 0 ? "pointer-events-none opacity-60" : ""} fixed right-[320px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-green-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-green-500 hover:text-green-500 my-shadow-style flex items-center rounded-full text-3xl`} />
+          <BsBoxArrowUp onClick={(e) => {upload_all()}} onMouseLeave={(e) => {setFloatButtonHelp(false)}} onMouseEnter={(e) => {setFloatButtonHelp(true)}} className={`md:flex hidden scale-75 ${keep_objects_data.length === 0 ? "pointer-events-none opacity-60" : ""} fixed right-[320px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-green-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-green-500 hover:text-green-500 my-shadow-style flex items-center rounded-full text-3xl`} />
       
           {floatButtonHelp 
               ? 
-              <h1 className="md:visible hidden fixed right-[305px] bottom-[95px] text-white bg-green-600 rounded-xl px-2 text-sm font-medium text-center">Upload Data</h1>
+              <h1 className="md:visible collapse fixed right-[305px] bottom-[95px] text-white bg-green-600 rounded-xl px-2 text-sm font-medium text-center">Upload Data</h1>
               : ""
           }
 
@@ -419,7 +419,7 @@ export default function AddObjectsModel() {
       
           {floatButtonHelp2
               ? 
-              <h1 className="md:visible hidden fixed right-[390px] bottom-[95px] text-white bg-purple-600 rounded-xl px-2 text-sm font-medium text-center">View Model</h1>
+              <h1 className="md:visible collapse fixed right-[390px] bottom-[95px] text-white bg-purple-600 rounded-xl px-2 text-sm font-medium text-center">View Model</h1>
               : ""
           }
 

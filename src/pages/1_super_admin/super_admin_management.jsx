@@ -258,7 +258,7 @@ export default function SuperAdminManagement() {
                                     <img src={profile_pic1} className="my-image-cover-style w-[100%] h-[100%]  flex"/>
                                 </div>
                                 
-                                <h1 className="lg:text-[12px] sm:text-[12px] text-[9px] w-[400px] font-bold text-center mx-auto truncate">David</h1>
+                                <h1 className="lg:text-[12px] sm:text-[12px] text-[9px] font-bold text-center w-[62px] mx-auto truncate">David</h1>
 
                                 <button className="my-button-style my-shadow-style lg:text-[9px] lg:py-2 sm:py-3 py-2 sm:text-[13px] text-[9px]">
                                     View
