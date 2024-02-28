@@ -1,5 +1,5 @@
-import DesktopMenu from "../../components/1_super_admin/desktop_menu";
-import MobileMenu from "../../components/1_super_admin/mobile_menu";
+import DesktopMenu from "../../components/2_tagger/desktop_menu";
+import MobileMenu from "../../components/2_tagger/mobile_menu";
 import NavHeader from "../nav_header";
 import { useNavigate } from "react-router-dom";
 
@@ -24,7 +24,7 @@ import { handleDeleteCookie } from "../../api/delete_cookie";
 import { CircularProgress, MenuItem, Select } from "@mui/material";
 
 
-export default function SuperModelsAdd(){
+export default function TaggerModelsAdd(){
     const [mobileMenu, setMobileMenu]= useState(false);
 
     const mobileMenu_ = () => {
@@ -70,14 +70,12 @@ export default function SuperModelsAdd(){
         if (access_token === null){
             navigate('/', {relative: true});
             }
-        if (login_role !== "superuser"){
+        if (login_role !== "admin"){
             navigate(-1);
         }
 
-
     }, []); 
-
-
+ 
  
  
  

@@ -8,7 +8,9 @@ export const api_root= 'http://54.163.24.187:8000/'; // http://54.163.24.187:800
 export var bearer_token= null;
 export let keep_user_data= [];
 export let keep_json_data= [];
+export let keep_json_data_tracker= [false];
 export let keep_json_data_model= [];
+export let keep_json_data_model_tracker= [true];
 export let model_images= [];
 export let keep_objects_data= [];
 export let keep_objects_data_reference= {};
@@ -45,6 +47,33 @@ export const setSelectAllValue= (value) => {
 
 
 
+
+export const reset_on_login= () => {
+    bearer_token= null;
+    keep_user_data= [];
+    keep_json_data= [];
+    keep_json_data_tracker= [false];
+    keep_json_data_model= [];
+    keep_json_data_model_tracker= [false];
+    model_images= [];
+    keep_objects_data= [];
+    keep_objects_data_reference= {};
+    keep_objects_reference= [];
+    keep_current_object= [];
+    has_model_loaded= [];
+    save_for_object_view= [];
+    keep_for_edit_name= [];
+    keep_for_edit_url= [];
+    keep_for_view_url= [];
+    keep_for_object_view= {};
+    keep_m_name= [];
+    store_first_json= null;
+    store_form_data= null;
+    active = ["Dashboard"];
+    admins_gotten= [];
+    selected_admins= [];
+    selectAllValue= false;
+}
 
 
 export const reset_values= () => {

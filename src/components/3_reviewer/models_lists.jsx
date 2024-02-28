@@ -113,20 +113,6 @@ const ModelsLists = (props) => {
 
     return (
         <div className="relative top-[100px] flex flex-col gap-y-4 w-full">
-            <flex className='text-sm flex justify-between absolute left-0 right-0 top-0 items-center border py-1 px-2'>
-                
-                <flex onClick={e => {selectAllValue_()}} className= "cursor-pointer flex items-center gap-x-3 ">
-                    <input checked={selectAllValue} type='checkbox' className='size-5'/>
-                    <h1>Select All</h1>
-                </flex>
-
-                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style text-white bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
-                    Delete
-                </button>
-            </flex>
-
-            <br />
-            <br />
 
             {
                 model_json_data_tracker[0] === false
@@ -136,7 +122,7 @@ const ModelsLists = (props) => {
                 :model_json_data.length !== 0
                     ? 
 
-                    <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
+                    <grid className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
                         {
                             model_json_data[0].map((item, index) => (
                                     <div className='p-2 rounded-xl border my-shadow-style2 overflow-hidden flex flex-col w-full justify-center items-center gap-y-2'>
@@ -165,9 +151,6 @@ const ModelsLists = (props) => {
 
                                             </div>
 
-                                            <div className='absolute ml-2 mt-2 border border-white rounded-sm  flex shadow-sm shadow-black'>
-                                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}}  type='checkbox' className='size-5'/>
-                                            </div>
                                         </div>
 
 
@@ -175,16 +158,6 @@ const ModelsLists = (props) => {
                                             View Model
                                         </button>
 
-
-                                        <div className='flex w-full justify-center items-center gap-x-3'>
-                                            <button onClick={(e) => {navigate_add_objects(item.id)}} className='my-small-button-style my-white-button-color-style border-gray-500 w-full'>
-                                                Tag Model
-                                            </button>
-
-                                            <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
-                                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}}  size={20} className="rounded-full text-red-700 cursor-pointer"/>
-                                            </div>
-                                        </div>
                                     </div>
 
                             ))

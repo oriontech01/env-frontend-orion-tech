@@ -16,24 +16,14 @@ export default function MobileMenu (props) {
 
     const navigateMenu = (menu_value) => {
         if (menu_value === "dashboard"){
-            navigate("/admin-super-management", {relative: true});
+            navigate("/tagger-management", {relative: true});
         }
 
         if (menu_value === "models"){
-            navigate("/admin-model-management", {relative: true});
+            navigate("/tagger-model-management", {relative: true});
         }
 
-        if (menu_value === "users"){
-            navigate("/admin-user-management", {relative: true});
-        }
 
-        if (menu_value === "locations"){
-            navigate("/admin-user-view", {relative: true});
-        }
-
-        if (menu_value === "report"){
-            navigate("/admin-user-view", {relative: true});
-        }
 
         if (menu_value === "logout"){
             handleDeleteCookie();
@@ -65,24 +55,6 @@ export default function MobileMenu (props) {
                                     <flex onClick={(e) => {navigateMenu("models")}} className= " flex">
                                         <label value= {"models"} className={`${current_active === "models" ? "font-medium border-2 border-green-300 " : "font-normal opacity-65 border-transparent border-2"} rounded-2xl hover:border-2 hover:border-yellow-300 cursor-pointer text-white p-[8px]`}>
                                         Models
-                                        </label>
-                                    </flex>
-
-                                    <flex onClick={(e) => {navigateMenu("users")}} className= " flex ">
-                                        <label value= {"users"} className={`${current_active === "users" ? "font-medium border-2 border-green-300 " : "font-normal opacity-65 border-transparent border-2"} rounded-2xl hover:border-2 hover:border-yellow-300 cursor-pointer text-white p-[8px]`}>
-                                        Users
-                                        </label>
-                                    </flex>
-
-                                    <flex onClick={(e) => {navigateMenu("locations")}} className= " flex pointer-events-none opacity-30">
-                                        <label value= {"locations"} className={`${current_active === "locations" ? "font-medium border-2 border-green-300 " : "font-normal opacity-65 border-transparent border-2"} rounded-2xl hover:border-2 hover:border-yellow-300 cursor-pointer text-white p-[8px]`}>
-                                        Locations
-                                        </label>
-                                    </flex>
-
-                                    <flex onClick={(e) => {navigateMenu("report")}} className= " flex pointer-events-none opacity-30">
-                                        <label value= {"report"} className={`${current_active === "report" ? "font-medium border-2 border-green-300 " : "font-normal opacity-65 border-transparent border-2"} rounded-2xl hover:border-2 hover:border-yellow-300 cursor-pointer text-white p-[8px]`}>
-                                            Report
                                         </label>
                                     </flex>
 

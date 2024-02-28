@@ -16,7 +16,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleDeleteCookie } from "../api/delete_cookie";
 import DesktopMenu from "../components/1_super_admin/desktop_menu";
-import NavHeader from "../components/1_super_admin/nav_header";
+import NavHeader from "./nav_header";
 import MobileMenu from "../components/1_super_admin/mobile_menu";
 import { getCookie } from "../api/cookies_logic";
 import { BsBoxArrowUp } from "react-icons/bs";

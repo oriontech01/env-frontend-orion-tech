@@ -120,9 +120,9 @@ const ModelsLists = (props) => {
                     <h1>Select All</h1>
                 </flex>
 
-                <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style text-white bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
+                {/* <button onClick={e => {cancel_delete_()}} className={`${selected_admins.length === 0 ? "opacity-35 pointer-events-none " : ""}rounded-3xl my-shadow-style text-white bg-red-500 sm:px-8 px-5 sm:py-2 py-1 hover:bg-black/75 hover:text-red-500 font-medium `}>
                     Delete
-                </button>
+                </button> */}
             </flex>
 
             <br />
@@ -181,9 +181,9 @@ const ModelsLists = (props) => {
                                                 Tag Model
                                             </button>
 
-                                            <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
+                                            {/* <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
                                                 <RiDeleteBinLine onClick={e => {single_delete(item.id)}}  size={20} className="rounded-full text-red-700 cursor-pointer"/>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
 

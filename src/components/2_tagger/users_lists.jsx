@@ -13,7 +13,6 @@ import axios from 'axios';
 
 const UsersLists = (props) => {
     const model_json_data= props.model_json_data;
-    const model_json_data_tracker= props.model_json_data_tracker;
     const cancel_delete_= props.cancel_delete_;
     const update_role= props.update_role;
 
@@ -130,11 +129,7 @@ const UsersLists = (props) => {
             <br />
 
             {
-                model_json_data_tracker[0] === false
-                ? <h1 className='font-medium text-xl text-center'>No User available!</h1>
-
-
-                :model_json_data.length !== 0
+                model_json_data.length !== 0
                     ? 
 
                     
@@ -193,7 +188,7 @@ const UsersLists = (props) => {
 
 
                             <div className="flex items-center gap-x-6 md:w-fit w-full">
-                                <button className="pointer-events-none opacity-30 my-shadow-style md:w-fit w-full py-2 cursor-pointer flex md:justify-start justify-center md:items-start items-center text-[12px]  px-6 text-black  bg-white md:mt-0 mt-2 rounded-3xl border border-gray-300 hover:bg-black hover:border hover:border-white hover:text-white h-[60px] md:h-fit">
+                                <button className="my-shadow-style md:w-fit w-full py-2 cursor-pointer flex md:justify-start justify-center md:items-start items-center text-[12px]  px-6 text-black  bg-white md:mt-0 mt-2 rounded-3xl border border-gray-300 hover:bg-black hover:border hover:border-white hover:text-white h-[60px] md:h-fit">
                                     View Profile
                                 </button>
 

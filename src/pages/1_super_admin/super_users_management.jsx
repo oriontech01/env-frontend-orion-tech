@@ -7,9 +7,9 @@ import MobileMenu from "../../components/1_super_admin/mobile_menu";
 import { FaSearch } from "react-icons/fa";
 import { Box, Button, CircularProgress, LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import NavHeader from "../../components/1_super_admin/nav_header";
+import NavHeader from "../nav_header";
 import axios from "axios";
-import { admins_gotten, api_root, keep_json_data, selected_admins, set_admins_gotten } from "../../api/api_variables";
+import { admins_gotten, api_root, keep_json_data, keep_json_data_tracker, selected_admins, set_admins_gotten } from "../../api/api_variables";
 import { DeleteForever } from "@mui/icons-material";
 import { IoCheckmarkDoneCircle, IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { getCookie } from "../../api/cookies_logic";
@@ -51,7 +51,15 @@ export default function SuperUsersManagement(){
     const model_json_data_= (res) => {
         // ++++++++++++++ I HAVE TO REFRESH THE STATE SO THAT AFTER THE KEEP_JSON_DATA IS POPULATED, IT WILL DISPLAY ON THE SCREEN ++++++++++++
         setRefreshState("");
-        keep_json_data.push(res.data);
+        keep_json_data.length= 0;
+
+        keep_json_data.length= 0;
+        if (res.data.length !== 0){
+            keep_json_data.push(res.data);
+        }
+
+        keep_json_data_tracker.length= 0;
+        keep_json_data.length === 0 ? keep_json_data_tracker.push(false) : keep_json_data_tracker.push(true);
     };
 
 
@@ -63,9 +71,14 @@ export default function SuperUsersManagement(){
 
         if (keep_json_data.length === 0){
           handleGetCookie();
+          const login_role = getCookie('login_role');
           if (access_token === null){
-              navigate('/', {relative: true});
+            navigate('/', {relative: true});
+            }
+          if (login_role !== "superuser"){
+            navigate(-1);
           }
+
     
           else{
               axios.get(api_root + 'admin/get-all-users', {
@@ -184,7 +197,7 @@ export default function SuperUsersManagement(){
         setshowProcessing(true);
         // console.log(selected_admins);
 
-        handleGetCookie();
+        access_token = getCookie('access_token');
         if (access_token === null){
             navigate('/', {relative: true});
         }
@@ -267,7 +280,7 @@ export default function SuperUsersManagement(){
 
 
                         {/* +++++++ USERS LIST ++++++++++ */}
-                        <UsersLists model_json_data= {keep_json_data} cancel_delete_= {cancel_delete_} update_role= {update_role}/>
+                        <UsersLists model_json_data= {keep_json_data} model_json_data_tracker= {keep_json_data_tracker} cancel_delete_= {cancel_delete_} update_role= {update_role}/>
 
                     </div>
 

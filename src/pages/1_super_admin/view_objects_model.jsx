@@ -2,23 +2,23 @@
 import { IoCheckmarkDoneCircle, IoSearchSharp } from "react-icons/io5";
 
 import { useEffect, useState } from "react";
-import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_for_object_view, keep_for_view_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../api/api_variables";
-import { ViewAnimation } from "../animation_three_js/view_animation";
+import { FirstJsonClass, api_root, keep_current_object, keep_for_edit_name, keep_for_edit_url, keep_for_object_view, keep_for_view_url, keep_m_name, keep_objects_data, keep_objects_data_reference, keep_objects_reference, reset_values, store_first_json, store_form_data } from "../../api/api_variables";
+import { ViewAnimation } from "../../animation_three_js/view_animation";
 
 
 import { Box, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 // import background from '../animation_three_js/assets/images/background2.jpg';
-import { ModelAnimation } from "../animation_three_js/animation_components/model_animation";
-import { AmbientLight } from "../animation_three_js/animation_components/ambient_light";
+import { ModelAnimation } from "../../animation_three_js/animation_components/model_animation";
+import { AmbientLight } from "../../animation_three_js/animation_components/ambient_light";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { handleDeleteCookie } from "../api/delete_cookie";
-import DesktopMenu from "../components/1_super_admin/desktop_menu";
-import NavHeader from "./nav_header";
-import MobileMenu from "../components/1_super_admin/mobile_menu";
-import { getCookie } from "../api/cookies_logic";
+import { handleDeleteCookie } from "../../api/delete_cookie";
+import DesktopMenu from "../../components/1_super_admin/desktop_menu";
+import NavHeader from "../nav_header";
+import MobileMenu from "../../components/1_super_admin/mobile_menu";
+import { getCookie } from "../../api/cookies_logic";
 import { BsBoxArrowUp } from "react-icons/bs";
 import { LinearProgress } from "@mui/material";
 
@@ -80,9 +80,14 @@ export default function ViewObjectsModel() {
 
       useEffect(() => {
         handleGetCookie();
+        const login_role = getCookie('login_role');
         if (access_token === null){
-            navigate('/', {relative: true});
+          navigate('/', {relative: true});
+          }
+        if (login_role !== "superuser"){
+            navigate(-1);
         }
+
 
         else{
             const req= axios.request(

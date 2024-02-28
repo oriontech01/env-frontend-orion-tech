@@ -1,6 +1,6 @@
 import DesktopMenu from "../../components/1_super_admin/desktop_menu";
 import MobileMenu from "../../components/1_super_admin/mobile_menu";
-import NavHeader from "../../components/1_super_admin/nav_header";
+import NavHeader from "../nav_header";
 import { useNavigate } from "react-router-dom";
 
 import React, { useState, useEffect } from 'react';
@@ -70,6 +70,18 @@ export default function SuperUsersAdd(){
  
  
  
+    useEffect(() => {
+        access_token = getCookie('access_token');
+        const login_role = getCookie('login_role');
+        if (access_token === null){
+            navigate('/', {relative: true});
+            }
+        if (login_role !== "superuser"){
+            navigate(-1);
+        }
+
+
+    }, []); 
  
  
  
@@ -161,7 +173,7 @@ export default function SuperUsersAdd(){
         handleGetCookie();
         if (access_token === null){
             setshowProcessing(false);
-            navigate('/admin-login', {relative: true});
+            navigate('/', {relative: true});
         }
         
         else{

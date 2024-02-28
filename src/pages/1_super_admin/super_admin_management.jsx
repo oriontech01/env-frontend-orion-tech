@@ -15,13 +15,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MobileMenu from "../../components/1_super_admin/mobile_menu";
-import NavHeader from "../../components/1_super_admin/nav_header";
+import NavHeader from "../nav_header";
 import { api_root, bearer_token, keep_json_data } from "../../api/api_variables";
 import SessionExpired from "../../components/1_super_admin/session_expired";
 import { handleDeleteCookie } from "../../api/delete_cookie";
 import DesktopMenu from "../../components/1_super_admin/desktop_menu";
 import PieChartSuperAdmin from "../../components/1_super_admin/pie_chart_super_admin";
 import HistogramChartSuperAdmin from "../../components/1_super_admin/histogram_chart_super_admin";
+import { getCookie } from "../../api/cookies_logic";
 
 
 
@@ -46,25 +47,6 @@ export default function SuperAdminManagement() {
         else{set_is_expired(false)}
     }
 
-
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-
-        for (const cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.trim().split('=');
-
-            if (cookieName === name) {
-            return decodeURIComponent(cookieValue);
-            }
-        }
-
-        return null;
-    };
-
-    const handleGetCookie = () => {
-        // Retrieve the value of the "exampleCookie" cookie
-        access_token = getCookie('access_token');
-    };
 
 
 
@@ -114,20 +96,16 @@ export default function SuperAdminManagement() {
     useEffect(() => {
         selected_models=[];
 
-        handleGetCookie();
+        access_token = getCookie('access_token');
+        const login_role = getCookie('login_role');
         if (access_token === null){
-            navigate('/admin-login------', {relative: true});
+            navigate('/', {relative: true});
+            }
+        if (login_role !== "superuser"){
+            navigate(-1);
         }
 
-        else{
-            axios.get(api_root + 'admin/get-all-users', {
-                headers: {
-                    'Authorization': access_token,
-                    'Content-Type': 'application/json', // Add other headers if needed
-                  },
-            }).then(res => model_json_data_(res))
-            .catch(e => is_expired_(e));
-        }
+
     }, [is_model_delete]); //the empty array is very important at the back, which means we are saying the effect does not depends on anything so as to prevent it from autorefiring by itself after first run of the page loading, even if there is any varibale or thing that changes in it
 
 
@@ -149,9 +127,9 @@ export default function SuperAdminManagement() {
 
         setContinueDelete(!continue_delete);
 
-        handleGetCookie();
+        access_token = getCookie('access_token');
         if (access_token === null){
-            navigate('/admin-login---', {relative: true});
+            navigate('/', {relative: true});
         }
         
         else{

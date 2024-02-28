@@ -7,9 +7,9 @@ import MobileMenu from "../../components/1_super_admin/mobile_menu";
 import { FaSearch } from "react-icons/fa";
 import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import NavHeader from "../../components/1_super_admin/nav_header";
+import NavHeader from "../nav_header";
 import axios from "axios";
-import { admins_gotten, api_root, keep_json_data_model, selected_admins, set_admins_gotten } from "../../api/api_variables";
+import { admins_gotten, api_root, keep_json_data_model, keep_json_data_model_tracker, selected_admins, set_admins_gotten } from "../../api/api_variables";
 import { DeleteForever } from "@mui/icons-material";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import ModelsLists from "../../components/1_super_admin/models_lists";
@@ -63,7 +63,14 @@ export default function SuperModelsManagement(){
     const model_json_data_= (res) => {
         // ++++++++++++++ I HAVE TO REFRESH THE STATE SO THAT AFTER THE KEEP_JSON_DATA IS POPULATED, IT WILL DISPLAY ON THE SCREEN ++++++++++++
         setRefreshState("");
-        keep_json_data_model.push(res.data);
+
+        keep_json_data_model.length= 0;
+        if (res.data.length !== 0){
+            keep_json_data_model.push(res.data);
+        }
+
+        keep_json_data_model_tracker.length= 0;
+        keep_json_data_model.length === 0 ? keep_json_data_model_tracker.push(false) : keep_json_data_model_tracker.push(true);
     };
 
 
@@ -73,9 +80,14 @@ export default function SuperModelsManagement(){
 
         if (keep_json_data_model.length === 0){
           handleGetCookie();
+          const login_role = getCookie('login_role');
           if (access_token === null){
-              navigate('/', {relative: true});
+            navigate('/', {relative: true});
+            }
+          if (login_role !== "superuser"){
+            navigate(-1);
           }
+
     
           else{
               axios.get(api_root + 'home-models/get-all-models', {
@@ -199,17 +211,17 @@ export default function SuperModelsManagement(){
                         
                         {/* +++++++++++++ SEARCH INPUT +++++++++ */}
                         <div className="relative top-12 flex items-center w-full">
-                            <input type="text" placeholder="Search users" className="absolute border rounded-3xl p-4 w-full sm:h-[53px] h-[40px] my-shadow-style sm:focus:pl-[68px] focus:pl-[40px] focus:placeholder-transparent sm:pl-[64px] pl-[35px] sm:text-base text-sm"/>
+                            <input type="text" placeholder="Search users" className="absolute border rounded-3xl p-4 w-full h-[53px]my-shadow-style sm:focus:pl-[68px] focus:pl-[40px] focus:placeholder-transparent sm:pl-[64px] pl-[35px] sm:text-base text-sm"/>
 
                             <FaSearch className="absolute left-0 sm:mx-[30px] mx-[12px] scale-[130%] text-gray-500"/>
 
-                            <button className="my-button-style sm:text-[18px] text-sm my-0 absolute right-0 sm:py-[16px] sm:px-[29px] px-2 sm:h-[55px] h-[43px] ">Search</button>
+                            <button className="my-button-style sm:text-[18px] text-sm my-0 absolute right-0 sm:py-[16px] sm:px-[29px] px-2 h-[55px] ">Search</button>
                         </div>
 
 
 
                         {/* +++++++ USERS LIST ++++++++++ */}
-                        <ModelsLists model_json_data= {keep_json_data_model} cancel_delete_= {cancel_delete_}/>
+                        <ModelsLists model_json_data= {keep_json_data_model} model_json_data_tracker= {keep_json_data_model_tracker} cancel_delete_= {cancel_delete_}/>
 
 
 
