@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DesktopMenu from "../../components/2_tagger/desktop_menu";
 import HistogramChartSuperAdmin from "../../components/2_tagger/histogram_chart_super_admin";
-import UsersLists from "../../components/2_tagger/users_lists";
+
 import PieChartSuperAdmin from "../../components/2_tagger/pie_chart_super_admin";
 import MobileMenu from "../../components/2_tagger/mobile_menu";
 import { FaSearch } from "react-icons/fa";

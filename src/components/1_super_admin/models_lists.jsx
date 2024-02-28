@@ -130,7 +130,13 @@ const ModelsLists = (props) => {
 
             {
                 model_json_data_tracker[0] === false
-                ? <h1 className='font-medium text-xl text-center'>No Model available!</h1>
+                ? 
+
+                <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
+                    <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+                    <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+                    <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+                </grid>
 
 
                 :model_json_data.length !== 0
@@ -192,13 +198,9 @@ const ModelsLists = (props) => {
                     </grid>
                     
 
-                    : 
+                    : <h1 className='font-medium text-xl text-center'>No Model available!</h1>
 
-                    <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                    </grid>
+
             }  
 
         </div>

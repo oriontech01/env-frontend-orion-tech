@@ -131,7 +131,12 @@ const UsersLists = (props) => {
 
             {
                 model_json_data_tracker[0] === false
-                ? <h1 className='font-medium text-xl text-center'>No User available!</h1>
+                ? 
+                <grid className= "grid grid-rows-3 gap-y-4">
+                    <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
+                    <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
+                    <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
+                </grid>
 
 
                 :model_json_data.length !== 0
@@ -203,13 +208,9 @@ const UsersLists = (props) => {
                     ))
                     
 
-                    : 
+                    : <h1 className='font-medium text-xl text-center'>No User available!</h1>
 
-                    <grid className= "grid grid-rows-3 gap-y-4">
-                        <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-36 flex md:flex-row flex-col md:items-center justify-between w-full md:h-[65px] p-3 px-6 border rounded-xl" />
-                    </grid>
+
             }  
 
         </div>

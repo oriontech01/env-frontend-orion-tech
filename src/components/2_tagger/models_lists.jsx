@@ -130,75 +130,73 @@ const ModelsLists = (props) => {
 
             {
                 model_json_data_tracker[0] === false
-                ? <h1 className='font-medium text-xl text-center'>No Model available!</h1>
+                ?                 <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
+                <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+                <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+                <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
+            </grid>
 
 
-                :model_json_data.length !== 0
-                    ? 
+            :model_json_data.length !== 0
+                ? 
 
-                    <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
-                        {
-                            model_json_data[0].map((item, index) => (
-                                    <div className='p-2 rounded-xl border my-shadow-style2 overflow-hidden flex flex-col w-full justify-center items-center gap-y-2'>
-                                        
-                                        <div className='relative w-full h-[160px] rounded-xl overflow-hidden'>
-                                            <LazyLoadImage 
-                                                src={item.picture_cover} 
-                                                onLoad={e => {setIsImageLoaded(true)}}
-                                                className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "absolute my-image-cover-style w-[100%] h-[100%] flex"} `}
-                                            />
+                <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
+                    {
+                        model_json_data[0].map((item, index) => (
+                                <div className='p-2 rounded-xl border my-shadow-style2 overflow-hidden flex flex-col w-full justify-center items-center gap-y-2'>
+                                    
+                                    <div className='relative w-full h-[160px] rounded-xl overflow-hidden'>
+                                        <LazyLoadImage 
+                                            src={item.picture_cover} 
+                                            onLoad={e => {setIsImageLoaded(true)}}
+                                            className={`${!isImageLoaded ? "animate-pulse bg-gray-500 px-4 py-4 object-cover w-full h-full" : "absolute my-image-cover-style w-[100%] h-[100%] flex"} `}
+                                        />
 
-                                            <div className='opacity-0 hover:opacity-100 hover:scale-105 hover:transition hover:duration-300 flex flex-col items-center justify-center absolute text-white bg-black/60 w-full h-full p-2'>
-                                                <h1 className='text-lg font-medium'>
-                                                    {item.id}
+                                        <div className='opacity-0 hover:opacity-100 hover:scale-105 hover:transition hover:duration-300 flex flex-col items-center justify-center absolute text-white bg-black/60 w-full h-full p-2'>
+                                            <h1 className='text-lg font-medium'>
+                                                {item.id}
+                                            </h1>
+
+                                            <div className='flex flex-col w-full px-2 items-center justify-center overflow-hidden mt-3 text-sm italic font-mono'>
+                                                <h1 className='truncate w-full text-wrap'>
+                                                    {item.description_model}
                                                 </h1>
 
-                                                <div className='flex flex-col w-full px-2 items-center justify-center overflow-hidden mt-3 text-sm italic font-mono'>
-                                                    <h1 className='truncate w-full text-wrap'>
-                                                        {item.description_model}
-                                                    </h1>
-
-                                                    <h1 className='truncate w-full text-wrap'>
-                                                        Date & Time: {item.date_and_time_of_sample}
-                                                    </h1>
-                                                </div>
-
+                                                <h1 className='truncate w-full text-wrap'>
+                                                    Date & Time: {item.date_and_time_of_sample}
+                                                </h1>
                                             </div>
 
-                                            <div className='absolute ml-2 mt-2 border border-white rounded-sm  flex shadow-sm shadow-black'>
-                                                <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}}  type='checkbox' className='size-5'/>
-                                            </div>
                                         </div>
 
-
-                                        <button onClick={(e) => {navigate_view_objects(item.id)}} className='my-small-button-style my-black-button-color-style w-full'>
-                                            View Model
-                                        </button>
-
-
-                                        <div className='flex w-full justify-center items-center gap-x-3'>
-                                            <button onClick={(e) => {navigate_add_objects(item.id)}} className='my-small-button-style my-white-button-color-style border-gray-500 w-full'>
-                                                Tag Model
-                                            </button>
-
-                                            {/* <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
-                                                <RiDeleteBinLine onClick={e => {single_delete(item.id)}}  size={20} className="rounded-full text-red-700 cursor-pointer"/>
-                                            </div> */}
+                                        <div className='absolute ml-2 mt-2 border border-white rounded-sm  flex shadow-sm shadow-black'>
+                                            <input checked={keepSelectStates[index][0]} onClick={e => {selectValue_(item.id); keepSelectStates[index][1](!keepSelectStates[index][0])}}  type='checkbox' className='size-5'/>
                                         </div>
                                     </div>
 
-                            ))
-                        }
-                    </grid>
-                    
 
-                    : 
+                                    <button onClick={(e) => {navigate_view_objects(item.id)}} className='my-small-button-style my-black-button-color-style w-full'>
+                                        View Model
+                                    </button>
 
-                    <grid className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-x-4 gap-y-6">
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                        <div className="animate-pulse bg-gray-500 h-[250px] rounded-xl" />
-                    </grid>
+
+                                    <div className='flex w-full justify-center items-center gap-x-3'>
+                                        <button onClick={(e) => {navigate_add_objects(item.id)}} className='my-small-button-style my-white-button-color-style border-gray-500 w-full'>
+                                            Tag Model
+                                        </button>
+
+                                        <div className='md:p-2 p-4 cursor-pointer hover:bg-gray-300 border border-gray-500 rounded-full'>
+                                            <RiDeleteBinLine onClick={e => {single_delete(item.id)}}  size={20} className="rounded-full text-red-700 cursor-pointer"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        ))
+                    }
+                </grid>
+                
+
+                : <h1 className='font-medium text-xl text-center'>No Model available!</h1>
             }  
 
         </div>
