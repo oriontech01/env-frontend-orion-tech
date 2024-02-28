@@ -16,6 +16,6 @@ export const Point_Light = () => {
   
   
     return (
-      <pointLight intensity={brightness2} position={[0, 800, 0]}/>
+      <pointLight color="#fff"  intensity={brightness2} position={[0, 800, 0]}/>
     );
   }

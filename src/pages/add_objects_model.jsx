@@ -20,6 +20,7 @@ import NavHeader from "./nav_header";
 import MobileMenu from "../components/1_super_admin/mobile_menu";
 import { getCookie } from "../api/cookies_logic";
 import { BsBoxArrowUp } from "react-icons/bs";
+import { FaEye } from "react-icons/fa";
 import { LinearProgress } from "@mui/material";
 
 
@@ -415,7 +416,7 @@ export default function AddObjectsModel() {
 
 
           {/* +++++++++++++++ FLOATING BUTTON2 AND HELPER ++++++++++++ */}
-          <BsBoxArrowUp onClick={(e) => {navigate_view_objects(dynamicParam)}} onMouseLeave={(e) => {setFloatButtonHelp2(false)}} onMouseEnter={(e) => {setFloatButtonHelp2(true)}} className={"md:flex hidden scale-75 fixed right-[402px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-purple-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-purple-500 hover:text-purple-500 my-shadow-style items-center rounded-full text-3xl"} />
+          <FaEye onClick={(e) => {navigate_view_objects(dynamicParam)}} onMouseLeave={(e) => {setFloatButtonHelp2(false)}} onMouseEnter={(e) => {setFloatButtonHelp2(true)}} className={"md:flex hidden scale-75 fixed right-[402px] md:h-[60px] w-[60px] bottom-8 my-small-button-style bg-purple-500 text-white hover:animate-pulse hover:border hover:bg-white hover:border-purple-500 hover:text-purple-500 my-shadow-style items-center rounded-full text-3xl"} />
       
           {floatButtonHelp2
               ? 
