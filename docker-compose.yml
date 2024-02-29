@@ -3,7 +3,7 @@ version: '3.8'
 services:
   env_frontend:
     container_name: env-frontend
-    build: .
-#    image: oriontechmen/env-frontend
+#    build: .
+    image: oriontechmen/env-frontend
     ports:
       - "80:80"
