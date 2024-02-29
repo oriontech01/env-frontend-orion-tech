@@ -8,11 +8,10 @@ RUN yarn install
 
 COPY . .
 
-EXPOSE 3000
+#EXPOSE 3000
 
-#RUN yarn build
+RUN yarn build
 
-CMD yarn start
-# FROM nginx:alpine
+FROM nginx:alpine
 
-# COPY --from=build /reactapp/build/ /usr/share/nginx/html
+COPY --from=build /reactapp/build/ /usr/share/nginx/html
