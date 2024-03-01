@@ -8,10 +8,14 @@ RUN yarn install
 
 COPY . .
 
-#EXPOSE 3000
+EXPOSE 3000
 
 RUN yarn build
 
-FROM nginx:alpine
+RUN npm install -g serve
 
-COPY --from=build /reactapp/build/ /usr/share/nginx/html
+CMD serve -s build
+
+# FROM nginx:alpine
+
+# COPY --from=build /reactapp/build/ /usr/share/nginx/html
