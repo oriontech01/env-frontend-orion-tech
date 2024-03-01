@@ -337,6 +337,7 @@ export default function AddObjectsModel() {
                           <option >Positive</option>
                           <option >Negative</option>
                       </select>
+                      <input value={salmonella} onChange={e => {set_salmonella(e.target.value)}} className="cursor-pointer w-full border shadow border-gray-300 rounded-2xl h-[47px] pl-1"/>
                   </div>
 
                   <div className='flex flex-col'>
