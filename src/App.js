@@ -17,7 +17,7 @@ function App() {
   return (
     <div>
       {/* <BrowserRouter basename="/home"> */}
-      <BrowserRouter basename="/home">
+      <BrowserRouter>
         <Routes>
           <Route path="*" element= {<NOT_FOUND_404 />} />
 
