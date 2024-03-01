@@ -6,4 +6,4 @@ services:
 #    build: .
     image: oriontechmen/env-frontend
     ports:
-      - "80:80"
+      - "80:3000"
