@@ -4,6 +4,6 @@ services:
   env_frontend:
     container_name: env-frontend
 #    build: .
-    image: oriontechmen/env-frontend
+    image: oriontechmen/env-frontend:dev
     ports:
       - "80:3000"
